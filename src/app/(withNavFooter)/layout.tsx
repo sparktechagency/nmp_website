@@ -1,7 +1,10 @@
 import Navbar from "@/components/Shared/Navbar";
-import React from "react";
+import React, { ReactNode } from "react";
 
-const layout = ({ children }) => {
+type LayoutProps = {
+  children: ReactNode;
+};
+const layout = ({ children }: LayoutProps) => {
   return (
     <div>
       <Navbar />
