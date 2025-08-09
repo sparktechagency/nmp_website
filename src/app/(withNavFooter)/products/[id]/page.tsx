@@ -6,6 +6,7 @@ import Image from "next/image";
 import image from "../../../../assets/image/Rectangle 161.png";
 import { FaStar } from "react-icons/fa";
 import { IoIosCart } from "react-icons/io";
+import Link from "next/link";
 
 const ProductDetails = () => {
   const params = useParams();
@@ -14,9 +15,9 @@ const ProductDetails = () => {
 
   const [quantity, setQuantity] = useState(1);
 
-  const increaseQty = () => setQuantity(prev => prev + 1);
+  const increaseQty = () => setQuantity((prev) => prev + 1);
   const decreaseQty = () => {
-    if (quantity > 1) setQuantity(prev => prev - 1);
+    if (quantity > 1) setQuantity((prev) => prev - 1);
   };
 
   return (
@@ -70,9 +71,11 @@ const ProductDetails = () => {
 
           {/* Add to Cart */}
           <div className="mt-10">
-            <button className="flex justify-center items-center gap-2 bg-blue-100 px-4 py-2 text-blue-600 hover:bg-blue-200 rounded">
-              Add to cart <IoIosCart />
-            </button>
+            <Link href="/cart">
+              <button className="flex justify-center items-center gap-2 bg-blue-100 px-4 py-2 text-blue-600 hover:bg-blue-200 rounded">
+                Add to cart <IoIosCart />
+              </button>
+            </Link>
           </div>
         </div>
       </div>

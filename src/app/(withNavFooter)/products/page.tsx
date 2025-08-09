@@ -5,6 +5,7 @@ import React from "react";
 import { FaStar } from "react-icons/fa";
 import product from "../../../assets/image/Rectangle 161.png";
 import { Dropdown, Select } from "antd";
+import Link from "next/link";
 const ProductsPage = () => {
   const products = [
     {
@@ -157,9 +158,11 @@ const ProductsPage = () => {
                 </div>
 
                 <div className="mt-4 flex justify-between items-center gap-3">
-                  <button className="px-4 py-2 border border-blue-500 rounded-md ">
-                    Add to Cart
-                  </button>
+                  <Link href="/cart">
+                    <button className="px-4 py-2 border border-blue-500 rounded-md ">
+                      Add to Cart
+                    </button>
+                  </Link>
                   <button className="px-4 py-2 border border-blue-500 rounded-md ">
                     Buy Now
                   </button>

@@ -87,17 +87,17 @@ const FeatureProducts = () => {
             <span className="absolute top-2 left-2 bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-full z-10 shadow-md">
               {product.discount}
             </span>
-
-            <div className="flex justify-center my-3">
-              <Image
-                src={product.image}
-                height={200}
-                width={200}
-                alt={product.name}
-                className="rounded-md"
-              />
-            </div>
-
+            <Link href={`/products/${product._id}`}>
+              <div className="flex justify-center my-3">
+                <Image
+                  src={product.image}
+                  height={200}
+                  width={200}
+                  alt={product.name}
+                  className="rounded-md"
+                />
+              </div>
+            </Link>
             <h1 className="font-bold mt-4 text-blue-500 text-center text-xl my-2">
               {product.name}
             </h1>
@@ -120,7 +120,7 @@ const FeatureProducts = () => {
             </div>
 
             <div className="mt-4 flex justify-between items-center gap-3">
-              <Link href={`/products/${product._id}`}>
+              <Link href='/cart'>
                 <button className="px-4 py-2 border border-blue-500 rounded-md">
                   Add to Cart
                 </button>
