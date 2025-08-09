@@ -3,6 +3,7 @@ import Image from "next/image";
 import React from "react";
 import { FaStar } from "react-icons/fa";
 import product from "../../../assets/image/banner.png";
+import { MdKeyboardDoubleArrowRight } from "react-icons/md";
 const FeatureProducts = () => {
   const products = [
     {
@@ -60,12 +61,23 @@ const FeatureProducts = () => {
       rating: 5,
       image: product,
     },
+    {
+      id: 6,
+      name: "VaporKing Elite",
+      description:
+        "Premium build quality with a powerful battery and advanced temperature control features.",
+      price: 300,
+      originalPrice: 375,
+      discount: "20% OFF",
+      rating: 5,
+      image: product,
+    },
   ];
 
   return (
     <div className="container mx-auto">
       <SectionTitle heading={"Feature Products"} />
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 p-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
         {products.map((product) => (
           <div
             key={product.id}
@@ -116,6 +128,12 @@ const FeatureProducts = () => {
             </div>
           </div>
         ))}
+      </div>
+      <div className="flex justify-center items-center my-20 text-white">
+        <button className="flex justify-center items-center gap-2 px-4 py-2  bg-orange-400  rounded-md ">
+          See More
+          <MdKeyboardDoubleArrowRight className="" />
+        </button>
       </div>
     </div>
   );
