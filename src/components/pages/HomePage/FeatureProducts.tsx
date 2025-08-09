@@ -8,7 +8,7 @@ import Link from "next/link";
 const FeatureProducts = () => {
   const products = [
     {
-      id: 1,
+      _id: 1,
       name: "GeekVape",
       description:
         "Sleek design, powerful performance, and unmatched flavor delivery — perfect for everyday vaping.",
@@ -19,7 +19,7 @@ const FeatureProducts = () => {
       image: product,
     },
     {
-      id: 2,
+      _id: 2,
       name: "VapeMaster Pro",
       description:
         "Advanced chipset with adjustable airflow, providing a smooth and customizable vaping experience.",
@@ -30,7 +30,7 @@ const FeatureProducts = () => {
       image: product,
     },
     {
-      id: 3,
+      _id: 3,
       name: "CloudChaser X",
       description:
         "Designed for cloud enthusiasts, delivering massive vapor output with a sleek ergonomic body.",
@@ -41,7 +41,7 @@ const FeatureProducts = () => {
       image: product,
     },
     {
-      id: 4,
+      _id: 4,
       name: "NanoVape",
       description:
         "Compact and portable, perfect for on-the-go vaping without sacrificing power or flavor.",
@@ -52,7 +52,7 @@ const FeatureProducts = () => {
       image: product,
     },
     {
-      id: 5,
+      _id: 5,
       name: "VaporKing Elite",
       description:
         "Premium build quality with a powerful battery and advanced temperature control features.",
@@ -63,7 +63,7 @@ const FeatureProducts = () => {
       image: product,
     },
     {
-      id: 6,
+      _id: 6,
       name: "VaporKing Elite",
       description:
         "Premium build quality with a powerful battery and advanced temperature control features.",
@@ -81,7 +81,7 @@ const FeatureProducts = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
         {products.map((product) => (
           <div
-            key={product.id}
+            key={product._id}
             className="relative bg-white shadow-lg rounded-lg p-4 text-blue-500"
           >
             <span className="absolute top-2 left-2 bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-full z-10 shadow-md">
@@ -120,9 +120,12 @@ const FeatureProducts = () => {
             </div>
 
             <div className="mt-4 flex justify-between items-center gap-3">
-              <button className="px-4 py-2 border border-blue-500 rounded-md ">
-                Add to Cart
-              </button>
+              <Link href={`/products/${product._id}`}>
+                <button className="px-4 py-2 border border-blue-500 rounded-md">
+                  Add to Cart
+                </button>
+              </Link>
+
               <button className="px-4 py-2 border border-blue-500 rounded-md ">
                 Buy Now
               </button>
