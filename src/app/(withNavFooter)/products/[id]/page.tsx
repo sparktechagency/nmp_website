@@ -36,7 +36,7 @@ const ProductDetails = () => {
           {/* Rating */}
           <div className="flex items-center gap-2">
             {Array(5)
-              .fill()
+              .fill((null))
               .map((_, i) => (
                 <FaStar key={i} className="text-orange-400" />
               ))}
