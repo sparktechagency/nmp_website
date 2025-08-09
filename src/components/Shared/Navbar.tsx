@@ -109,7 +109,7 @@ const NavBar = () => {
               {labels.map((item, index) => (
                 <Link href={item.link} key={index}>
                   <button
-                    className="px-4 font-medium text-lg"
+                    className="px-4 font-medium text-lg cursor-pointer "
                     onClick={() => select(index)}
                   >
                     {item.name}
