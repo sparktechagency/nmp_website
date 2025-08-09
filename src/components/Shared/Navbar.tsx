@@ -117,7 +117,7 @@ const NavBar = () => {
                 </Link>
               ))}
               <div className="flex justify-between items-center gap-3">
-                <RiSearchLine />
+                {/* <RiSearchLine /> */}
                 <IoCartOutline />
                 <FaRegUser />
               </div>
