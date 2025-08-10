@@ -2,6 +2,7 @@
 import React from "react";
 import { ConfigProvider, Form, Input } from "antd";
 import type { FormProps } from "antd";
+import Link from "next/link";
 
 interface ContactFormValues {
   name: string;
@@ -109,12 +110,14 @@ const CheckoutPage: React.FC = () => {
 
             <Form.Item className="text-center">
               <div className="text-white">
-                <button
-                  type="submit"
-                  className="w-full py-3 font-bold text-2xl bg-[#3f67bc]   rounded-md shadow-lg"
-                >
-                  Pay with stipes
-                </button>
+                <Link href="/order-confirmed">
+                  <button
+                    type="submit"
+                    className="w-full py-3 font-bold text-2xl bg-[#3f67bc]   rounded-md shadow-lg"
+                  >
+                    Pay with stipes
+                  </button>
+                </Link>
               </div>
             </Form.Item>
           </Form>
