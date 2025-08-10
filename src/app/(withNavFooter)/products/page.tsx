@@ -4,8 +4,8 @@ import Image from "next/image";
 import React from "react";
 import { FaStar } from "react-icons/fa";
 import product from "../../../assets/image/Rectangle 161.png";
-import { Dropdown, Select } from "antd";
 import Link from "next/link";
+import VapeFilter from "@/components/pages/Categories/vapeFilter";
 const ProductsPage = () => {
   const products = [
     {
@@ -75,38 +75,17 @@ const ProductsPage = () => {
       image: product,
     },
   ];
-  const { Option } = Select;
+
   return (
     <div className="container mx-auto my-10">
       <div className=" w-full flex justify-start items-start gap-10">
-        <div className=" w-full md:w-[30%]">
-          <h1>Filter By</h1>
-
-          <div style={{ width: "100%" }}>
-            <Select
-              mode="multiple"
-              placeholder="Select Brand(s)"
-              defaultOpen
-              style={{ width: "100%" }}
-              dropdownStyle={{ maxHeight: 240, overflowY: "auto" }}
-              onChange={(values) => console.log("Selected brands:", values)}
-            >
-              {/* List your brands here */}
-              <Option value="geekvape">Geek Vape</Option>
-              <Option value="vaporesso">Vaporesso</Option>
-              <Option value="smok">SMOK</Option>
-              <Option value="uwell">Uwell</Option>
-              <Option value="smok2">SMOK2</Option>
-              <Option value="smok3">SMOK3</Option>
-              <Option value="smok4">SMOK4</Option>
-              <Option value="smok5">SMOK5</Option>
-              {/* add more brands */}
-            </Select>
-          </div>
+        <div className="w-full md:w-[30%]">
+          <VapeFilter />
         </div>
+
         <div className=" w-full md:w-[70%]">
           <div className="flex justify-between items-center gap-5">
-            <h1>All Products</h1>
+            <h1 className="text-2xl font-bold">All Products</h1>
             <div className="mt-4 md:mt-0">
               <Search
                 allowClear
