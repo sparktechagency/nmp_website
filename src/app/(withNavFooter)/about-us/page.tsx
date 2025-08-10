@@ -2,6 +2,8 @@ import Image from "next/image";
 import React from "react";
 import { FaLeaf, FaCloud, FaRegSmile } from "react-icons/fa";
 import image from "../../../assets/image/image 19.png";
+import Facts from "@/components/pages/AboutUs/Facts";
+import Reviews from "@/components/pages/AboutUs/Reviews";
 
 const AboutUs = () => {
   return (
@@ -22,10 +24,10 @@ const AboutUs = () => {
         <div>
           <h1 className="text-4xl font-bold mb-6 text-gray-800">About Us</h1>
           <p className="text-gray-600 mb-6 leading-relaxed">
-            We are passionate about creating premium vaping experiences.
-            Our mission is to deliver safe, stylish, and satisfying vape
-            products that elevate your lifestyle. Every product is crafted
-            with attention to detail, quality, and innovation.
+            We are passionate about creating premium vaping experiences. Our
+            mission is to deliver safe, stylish, and satisfying vape products
+            that elevate your lifestyle. Every product is crafted with attention
+            to detail, quality, and innovation.
           </p>
 
           {/* Features */}
@@ -59,6 +61,8 @@ const AboutUs = () => {
           </div>
         </div>
       </div>
+      <Facts></Facts>
+      <Reviews />
     </div>
   );
 };
