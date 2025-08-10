@@ -3,6 +3,8 @@ import user1 from "../../../assets/image/Ellipse 1.png";
 import user2 from "../../../assets/image/Ellipse 1 (1).png";
 import Image from "next/image";
 import { FaStar } from "react-icons/fa";
+import Link from "next/link";
+import { MdKeyboardDoubleArrowRight } from "react-icons/md";
 
 const Reviews = () => {
   const reviews = [
@@ -24,7 +26,9 @@ const Reviews = () => {
 
   return (
     <div className="container mx-auto my-20">
-      <h1 className="text-3xl font-bold text-center pb-20">Reviews</h1>
+      <h1 className="text-3xl font-bold text-center pb-20">
+        Ratings & Reviews
+      </h1>
 
       <div className="flex flex-col gap-10">
         {reviews.map((review) => (
@@ -53,6 +57,14 @@ const Reviews = () => {
             </div>
           </div>
         ))}
+      </div>
+      <div className="flex justify-center items-center my-20 text-white">
+        <Link href="/products">
+          <button className="flex justify-center items-center gap-2 px-4 py-2  bg-orange-400  rounded-md  cursor-pointer">
+            See More
+            <MdKeyboardDoubleArrowRight className="" />
+          </button>
+        </Link>
       </div>
     </div>
   );

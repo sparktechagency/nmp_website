@@ -89,11 +89,14 @@ const NavBar = () => {
               ))}
 
               <div className="flex justify-between items-center gap-3">
-                <RiSearchLine />
-                <IoCartOutline />
-                <FaRegUser />
+                {/* <RiSearchLine /> */}
+                <Link href="/cart">
+                  <IoCartOutline />
+                </Link>
+                <Link href="/sign-in">
+                  <FaRegUser />
+                </Link>
               </div>
-              {/* Auth related logic can be conditionally handled here */}
             </div>
           </div>
         </div>
@@ -118,8 +121,12 @@ const NavBar = () => {
               ))}
               <div className="flex justify-between items-center gap-3">
                 {/* <RiSearchLine /> */}
-                <IoCartOutline />
-                <FaRegUser />
+                <Link href="/cart">
+                  <IoCartOutline />
+                </Link>
+                <Link href="/sign-in">
+                  <FaRegUser />
+                </Link>
               </div>
             </div>
           </div>
