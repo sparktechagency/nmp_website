@@ -3,7 +3,7 @@
 import { Form, Input, message } from "antd";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import OtpInput from "react-otp-input";
 import image from "../../../assets/image/cuate.png";
@@ -14,20 +14,21 @@ interface FormValues {
 
 const VerifyOtp: React.FC = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const email = searchParams.get("email") || "";
+  // const searchParams = useSearchParams();
+  // const email = searchParams.get("email") || "";
 
   const [otp, setOtp] = useState<string>("");
 
   const onFinish = async (values: FormValues) => {
     const data = {
-      email,
-      resetCode: Number(otp),
+      // email,
+      // resetCode: Number(otp),
     };
     try {
       // await verifyPassword(data).unwrap();
       message.success("Password changed successfully!");
-      router.push(`/new-password?email=${email}`);
+      // router.push(`/new-password?email=${email}`);
+      router.push(`/new-password`);
     } catch (error) {
       console.error(error);
     }

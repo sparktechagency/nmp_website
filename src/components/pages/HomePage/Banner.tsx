@@ -1,6 +1,7 @@
 import Image from "next/image";
 import React from "react";
 import banner from "../../../assets/image/banner.png";
+import Link from "next/link";
 
 const Banner = () => {
   return (
@@ -20,12 +21,15 @@ const Banner = () => {
             <span className="text-indigo-400">Pure Satisfaction</span>
           </h1>
           <p className="text-lg md:text-xl font-medium mb-8 leading-relaxed opacity-90">
-            Explore Our Premium Collection of Vapes and Accessories That Deliver <br /> 
+            Explore Our Premium Collection of Vapes and Accessories That Deliver{" "}
+            <br />
             Unmatched Quality and Flavor.
           </p>
-          <button className="bg-indigo-600 hover:bg-indigo-700 transition-all duration-300 ease-in-out text-white font-bold text-lg md:text-xl px-8 py-3 rounded-full shadow-lg shadow-indigo-500/50 hover:shadow-indigo-600/70 uppercase tracking-wide">
-            Shop Now
-          </button>
+          <Link href="/products">
+            <button className="bg-indigo-600 hover:bg-indigo-700 transition-all duration-300 ease-in-out text-white font-bold text-lg md:text-xl px-8 py-3 rounded-full shadow-lg shadow-indigo-500/50 hover:shadow-indigo-600/70 uppercase tracking-wide">
+              Shop Now
+            </button>
+          </Link>
         </div>
       </div>
     </div>

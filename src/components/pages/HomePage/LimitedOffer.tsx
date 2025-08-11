@@ -3,10 +3,11 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import productImg from "../../../assets/image/Rectangle 161.png";
+import Link from "next/link";
 
 const LimitedOffer: React.FC = () => {
   const calculateTimeLeft = () => {
-    const targetDate = new Date("2025-08-15T00:00:00").getTime(); 
+    const targetDate = new Date("2025-08-15T00:00:00").getTime();
     const now = new Date().getTime();
     const difference = targetDate - now;
 
@@ -58,9 +59,11 @@ const LimitedOffer: React.FC = () => {
             ))}
           </div>
           <div className="text-white">
-            <button className="bg-[#3f67bc]  px-6 py-2 rounded-md transition">
-              Shop Now
-            </button>
+            <Link href="/products">
+              <button className="bg-[#3f67bc]  px-6 py-2 rounded-md transition">
+                Shop Now
+              </button>
+            </Link>
           </div>
         </div>
 
