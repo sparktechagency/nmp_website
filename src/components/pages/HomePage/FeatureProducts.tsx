@@ -120,15 +120,16 @@ const FeatureProducts = () => {
             </div>
 
             <div className="mt-4 flex justify-between items-center gap-3">
-              <Link href='/cart'>
-                <button className="px-4 py-2 border border-blue-500 rounded-md">
+              <Link href="/cart">
+                <button className="px-4 py-2 border border-blue-500 rounded-md ">
                   Add to Cart
                 </button>
               </Link>
-
-              <button className="px-4 py-2 border border-blue-500 rounded-md ">
-                Buy Now
-              </button>
+              <Link href="/cart">
+                <button className="px-4 py-2 border border-blue-500 rounded-md ">
+                  Buy Now
+                </button>
+              </Link>
             </div>
           </div>
         ))}

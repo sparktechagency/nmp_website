@@ -2,6 +2,7 @@ import Image from "next/image";
 import React from "react";
 import { FaStar } from "react-icons/fa";
 import product from "../../../assets/image/banner.png";
+import Link from "next/link";
 const Liquids = () => {
   const products = [
     {
@@ -116,12 +117,16 @@ const Liquids = () => {
             </div>
 
             <div className="mt-4 flex justify-between items-center gap-3">
-              <button className="px-4 py-2 border border-blue-500 rounded-md ">
-                Add to Cart
-              </button>
-              <button className="px-4 py-2 border border-blue-500 rounded-md ">
-                Buy Now
-              </button>
+              <Link href="/cart">
+                <button className="px-4 py-2 border border-blue-500 rounded-md ">
+                  Add to Cart
+                </button>
+              </Link>
+              <Link href="/cart">
+                <button className="px-4 py-2 border border-blue-500 rounded-md ">
+                  Buy Now
+                </button>
+              </Link>
             </div>
           </div>
         ))}

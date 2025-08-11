@@ -75,7 +75,7 @@ const NewPassword: React.FC = () => {
                     type="submit"
                     className="text-center w-full font-bold text-2xl bg-[#ffc071]  px-10 py-2 rounded-md shadow-lg"
                   >
-                    Log In
+                    Reset Password
                   </button>
                 </div>
               </Link>
