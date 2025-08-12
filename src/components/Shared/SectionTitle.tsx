@@ -4,7 +4,7 @@ type SectionTitleProps = {
 
 const SectionTitle = ({ heading }: SectionTitleProps) => {
   return (
-    <div className="flex items-center justify-center h-[50vh] text-center">
+    <div className="flex items-center justify-center h-[20vh] text-center">
       <div>
         <h1 className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-transparent bg-clip-text inline-block">
           {heading}
