@@ -1,10 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Form, Input, Checkbox } from "antd";
+import { Form, Input, Checkbox, message } from "antd";
 import image from "../../../assets/image/Rectangle 29 (1).png";
+import { useRegisterMutation } from "@/redux/features/auth/authApi";
 
 interface SignUpValues {
   name: string;
@@ -16,21 +18,30 @@ interface SignUpValues {
 
 const SignUpPage: React.FC = () => {
   const [form] = Form.useForm<SignUpValues>();
+  const [register] = useRegisterMutation();
 
-  const onFinish = (values: SignUpValues) => {
-    // TODO: replace with your sign-up call
-    console.log("Received values of form:", values);
+  const onFinish = async (values: SignUpValues) => {
+    console.log("Form values:", values);
+    try {
+      const data = {
+        fullName: values.name,
+        email: values.email,
+        password: values.password,
+      };
+      const res = await register(data).unwrap();
+      
+      message.success(res?.message);
+    } catch (error: any) {
+      message.error(error?.data?.message);
+    }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center p-4">
-      {/* Outer shell like the login page */}
       <div className="w-full max-w-6xl bg-white rounded-3xl shadow-2xl overflow-hidden ring-1 ring-white/70">
         <div className="grid grid-cols-1 lg:grid-cols-2">
-          {/* Left – Signup form */}
           <div className="flex items-center justify-center p-6 sm:p-10">
             <div className="w-full max-w-md">
-              {/* Logo badge */}
               <div className="mx-auto mb-5 h-12 w-12 grid place-items-center rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 shadow-lg">
                 <span className="text-white font-semibold">C</span>
               </div>
@@ -160,7 +171,6 @@ const SignUpPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Right – Marketing panel */}
           <div className="relative hidden lg:block">
             <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600" />
             <div className="absolute inset-0 p-8 sm:p-10 md:p-12 flex flex-col">

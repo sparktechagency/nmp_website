@@ -1,5 +1,4 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { baseApi } from "./api/baseApi";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import authReducer from "../redux/features/auth/authSlice"
@@ -11,8 +10,8 @@ import {
   PURGE,
   REGISTER,
 } from "redux-persist";
+import { baseApi } from "./api/baseApi";
 
-// ✅ Persist config for auth slice
 const persistConfig = {
   key: "auth",
   storage,
@@ -20,7 +19,6 @@ const persistConfig = {
 
 const persistedAuthReducer = persistReducer(persistConfig, authReducer);
 
-// ✅ Configure store
 export const store = configureStore({
   reducer: {
     [baseApi.reducerPath]: baseApi.reducer,
@@ -34,9 +32,7 @@ export const store = configureStore({
     }).concat(baseApi.middleware),
 });
 
-// ✅ Persistor for redux-persist
 export const persistor = persistStore(store);
 
-// ✅ Type helpers for TS
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

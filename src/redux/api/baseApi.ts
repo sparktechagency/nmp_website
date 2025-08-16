@@ -1,13 +1,17 @@
-import { createApi, fetchBaseQuery, FetchArgs, FetchBaseQueryError } from "@reduxjs/toolkit/query/react";
+import {
+  createApi,
+  fetchBaseQuery,
+  FetchArgs,
+  FetchBaseQueryError,
+} from "@reduxjs/toolkit/query/react";
 import type { BaseQueryFn } from "@reduxjs/toolkit/query";
 import { message } from "antd";
 import { BASE_URL } from "@/app/utils/baseUrl";
 import { RootState } from "../store";
 
-// ✅ Base query with token injection
 const baseQuery = fetchBaseQuery({
   baseUrl: `${BASE_URL}`,
-  credentials: "include",
+  // credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const state = getState() as RootState;
     const token = state?.auth?.token || localStorage.getItem("token");
@@ -19,7 +23,6 @@ const baseQuery = fetchBaseQuery({
   },
 });
 
-// ✅ Wrapper to handle errors properly
 const baseQueryWithRefreshToken: BaseQueryFn<
   string | FetchArgs,
   unknown,
@@ -50,7 +53,6 @@ const baseQueryWithRefreshToken: BaseQueryFn<
   return result;
 };
 
-// ✅ RTK Base API
 export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: baseQueryWithRefreshToken,

@@ -1,9 +1,9 @@
 "use client";
 
+import { persistor, store } from "@/redux/store";
 import React, { ReactNode } from "react";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-import { store, persistor } from "@/redux/store";
 
 // ✅ Props type
 interface ProvidersProps {
