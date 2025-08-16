@@ -1,18 +1,25 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useState } from "react";
 import { Form, message } from "antd";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import OtpInput from "react-otp-input";
 import image from "../../../assets/image/cuate.png";
+import { useVerifyOtpMutation } from "@/redux/features/auth/authApi";
 
 interface FormValues {
   otp: string;
 }
 
 const VerifyOtp: React.FC = () => {
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email");
+  console.log(email);
+
+  const [verifyOtp] = useVerifyOtpMutation();
   const router = useRouter();
   const [form] = Form.useForm<FormValues>();
   const [otp, setOtp] = useState<string>("");
@@ -21,19 +28,29 @@ const VerifyOtp: React.FC = () => {
   const onFinish = async () => {
     const clean = otp.replace(/\s/g, "");
     if (clean.length !== 6 || /\D/.test(clean)) {
-      message.error("Enter the 6‑digit code");
+      message.error("Enter the 6-digit code");
+      return;
+    }
+
+    if (!email) {
+      message.error("Email is missing. Please go back and try again.");
       return;
     }
 
     try {
       setSubmitting(true);
-      // TODO: Call your API to verify the OTP here, e.g. await api.auth.verifyOtp({ otp: clean })
-      await new Promise((r) => setTimeout(r, 500));
+      const res = await verifyOtp({
+        email: String(email),
+        otp: clean,
+      }).unwrap();
+
       message.success("OTP verified! You can set a new password.");
       router.push("/new-password");
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      message.error("Failed to verify OTP. Please try again.");
+      message.error(
+        err?.data?.message || "Failed to verify OTP. Please try again."
+      );
     } finally {
       setSubmitting(false);
     }
@@ -41,7 +58,6 @@ const VerifyOtp: React.FC = () => {
 
   const handleResendOtp = async () => {
     try {
-      // TODO: trigger resend OTP via API, e.g. await api.auth.resendOtp()
       await new Promise((r) => setTimeout(r, 400));
       message.success("OTP sent successfully!");
     } catch (err) {
@@ -99,17 +115,15 @@ const VerifyOtp: React.FC = () => {
                   </Form.Item>
 
                   <Form.Item className="mb-0">
-                    <Link href="/new-password">
-                      <div className="text-white">
-                        <button
-                          type="submit"
-                          disabled={submitting}
-                          className="w-full py-3 rounded-xl text-white font-semibold shadow-lg transition focus:outline-none focus:ring-4 focus:ring-indigo-300 disabled:opacity-60 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-700 hover:via-purple-700 hover:to-pink-700"
-                        >
-                          {submitting ? "Verifying..." : "Submit"}
-                        </button>
-                      </div>
-                    </Link>
+                    <div className="text-white">
+                      <button
+                        type="submit"
+                        disabled={submitting}
+                        className="w-full py-3 rounded-xl text-white font-semibold shadow-lg transition focus:outline-none focus:ring-4 focus:ring-indigo-300 disabled:opacity-60 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-700 hover:via-purple-700 hover:to-pink-700"
+                      >
+                        {submitting ? "Verifying..." : "Submit"}
+                      </button>
+                    </div>
                   </Form.Item>
                 </Form>
 

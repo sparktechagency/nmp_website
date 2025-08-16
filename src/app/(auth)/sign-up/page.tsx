@@ -7,6 +7,7 @@ import Image from "next/image";
 import { Form, Input, Checkbox, message } from "antd";
 import image from "../../../assets/image/Rectangle 29 (1).png";
 import { useRegisterMutation } from "@/redux/features/auth/authApi";
+import { useRouter } from "next/navigation";
 
 interface SignUpValues {
   name: string;
@@ -17,6 +18,8 @@ interface SignUpValues {
 }
 
 const SignUpPage: React.FC = () => {
+  const router = useRouter();
+
   const [form] = Form.useForm<SignUpValues>();
   const [register] = useRegisterMutation();
 
@@ -29,8 +32,13 @@ const SignUpPage: React.FC = () => {
         password: values.password,
       };
       const res = await register(data).unwrap();
-      
-      message.success(res?.message);
+      if (res?.success) {
+        message.success(res?.message);
+        router.push({
+          pathname: "/verify-otp",
+          query: { email: values.email },
+        } as any); // quick fix if TS complains
+      }
     } catch (error: any) {
       message.error(error?.data?.message);
     }
