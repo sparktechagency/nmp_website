@@ -97,12 +97,14 @@ const SignIn: React.FC = () => {
                   </div>
 
                   <Form.Item className="mb-0">
-                    <button
-                      type="submit"
-                      className="w-full py-3 rounded-xl text-white font-semibold shadow-lg transition focus:outline-none focus:ring-4 focus:ring-indigo-300 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-700 hover:via-purple-700 hover:to-pink-700"
-                    >
-                      Log In
-                    </button>
+                    <div className="text-white">
+                      <button
+                        type="submit"
+                        className="w-full py-3 rounded-xl  font-semibold shadow-lg transition focus:outline-none focus:ring-4 focus:ring-indigo-300 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-700 hover:via-purple-700 hover:to-pink-700"
+                      >
+                        Log In
+                      </button>
+                    </div>
                   </Form.Item>
                 </Form>
 

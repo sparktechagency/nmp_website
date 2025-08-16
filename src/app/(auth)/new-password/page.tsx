@@ -39,8 +39,13 @@ const NewPassword: React.FC = () => {
                 <span className="text-white font-semibold">🔒</span>
               </div>
 
-              <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 text-center">Set New Password</h2>
-              <p className="mt-1 text-center text-sm text-gray-500">Your new password must be different from previously used passwords.</p>
+              <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 text-center">
+                Set New Password
+              </h2>
+              <p className="mt-1 text-center text-sm text-gray-500">
+                Your new password must be different from previously used
+                passwords.
+              </p>
 
               <div className="mt-6 border-t border-gray-200 pt-6">
                 <Form<NewPasswordValues>
@@ -55,7 +60,10 @@ const NewPassword: React.FC = () => {
                     name="password"
                     label={<span className="text-gray-700">New Password</span>}
                     rules={[
-                      { required: true, message: "Please enter your new password" },
+                      {
+                        required: true,
+                        message: "Please enter your new password",
+                      },
                       { min: 8, message: "Must be at least 8 characters" },
                     ]}
                   >
@@ -68,14 +76,22 @@ const NewPassword: React.FC = () => {
 
                   <Form.Item
                     name="confirmPassword"
-                    label={<span className="text-gray-700">Confirm Password</span>}
+                    label={
+                      <span className="text-gray-700">Confirm Password</span>
+                    }
                     dependencies={["password"]}
                     rules={[
-                      { required: true, message: "Please confirm your password" },
+                      {
+                        required: true,
+                        message: "Please confirm your password",
+                      },
                       ({ getFieldValue }) => ({
                         validator(_, value) {
-                          if (!value || getFieldValue("password") === value) return Promise.resolve();
-                          return Promise.reject(new Error("Passwords do not match"));
+                          if (!value || getFieldValue("password") === value)
+                            return Promise.resolve();
+                          return Promise.reject(
+                            new Error("Passwords do not match")
+                          );
                         },
                       }),
                     ]}
@@ -88,18 +104,27 @@ const NewPassword: React.FC = () => {
                   </Form.Item>
 
                   <Form.Item className="mb-0">
-                    <button
-                      type="submit"
-                      className="w-full py-3 rounded-xl text-white font-semibold shadow-lg transition focus:outline-none focus:ring-4 focus:ring-indigo-300 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-700 hover:via-purple-700 hover:to-pink-700"
-                    >
-                      Reset Password
-                    </button>
+                    <Link href="/">
+                      <div className="text-white">
+                        <button
+                          type="submit"
+                          className="w-full py-3 rounded-xl  font-semibold shadow-lg transition focus:outline-none focus:ring-4 focus:ring-indigo-300 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-700 hover:via-purple-700 hover:to-pink-700"
+                        >
+                          Reset Password
+                        </button>
+                      </div>
+                    </Link>
                   </Form.Item>
                 </Form>
 
                 <p className="mt-4 text-center text-sm text-gray-600">
                   Changed your mind?{" "}
-                  <Link href="/sign-in" className="font-semibold text-indigo-600 hover:text-indigo-700">Back to log in</Link>
+                  <Link
+                    href="/sign-in"
+                    className="font-semibold text-indigo-600 hover:text-indigo-700"
+                  >
+                    Back to log in
+                  </Link>
                 </p>
               </div>
             </div>
@@ -110,14 +135,23 @@ const NewPassword: React.FC = () => {
             <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600" />
             <div className="absolute inset-0 p-8 sm:p-10 md:p-12 flex flex-col">
               <div className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden shadow-2xl border border-white/10">
-                <Image src={image} alt="Password reset illustration" fill className="object-cover" priority />
+                <Image
+                  src={image}
+                  alt="Password reset illustration"
+                  fill
+                  className="object-cover"
+                  priority
+                />
               </div>
 
               <div className="mt-auto text-white/95">
                 <div className="h-1 w-10 bg-white/70 rounded mb-4" />
-                <h3 className="text-3xl font-semibold leading-tight">Secure Account Update</h3>
+                <h3 className="text-3xl font-semibold leading-tight">
+                  Secure Account Update
+                </h3>
                 <p className="mt-3 text-white/80 max-w-md text-sm">
-                  Create a strong password with at least 8 characters. Use a mix of letters, numbers, and symbols for better security.
+                  Create a strong password with at least 8 characters. Use a mix
+                  of letters, numbers, and symbols for better security.
                 </p>
               </div>
             </div>

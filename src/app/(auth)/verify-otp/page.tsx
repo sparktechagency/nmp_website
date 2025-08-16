@@ -100,13 +100,15 @@ const VerifyOtp: React.FC = () => {
 
                   <Form.Item className="mb-0">
                     <Link href="/new-password">
-                      <button
-                        type="submit"
-                        disabled={submitting}
-                        className="w-full py-3 rounded-xl text-white font-semibold shadow-lg transition focus:outline-none focus:ring-4 focus:ring-indigo-300 disabled:opacity-60 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-700 hover:via-purple-700 hover:to-pink-700"
-                      >
-                        {submitting ? "Verifying..." : "Submit"}
-                      </button>
+                      <div className="text-white">
+                        <button
+                          type="submit"
+                          disabled={submitting}
+                          className="w-full py-3 rounded-xl text-white font-semibold shadow-lg transition focus:outline-none focus:ring-4 focus:ring-indigo-300 disabled:opacity-60 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-700 hover:via-purple-700 hover:to-pink-700"
+                        >
+                          {submitting ? "Verifying..." : "Submit"}
+                        </button>
+                      </div>
                     </Link>
                   </Form.Item>
                 </Form>
