@@ -7,7 +7,7 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import Link from "next/link";
 import { IoCartOutline } from "react-icons/io5";
 import { FaRegUser } from "react-icons/fa";
-import { useGetProfileQuery } from "@/redux/features/profileApi/profileApi";
+// import { useGetProfileQuery } from "@/redux/features/profileApi/profileApi";
 
 interface Label {
   name: string;
@@ -17,8 +17,8 @@ interface Label {
 const NavBar = () => {
   const [drawerVisible, setDrawerVisible] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState<boolean>(false);
-  const { data: profileData } = useGetProfileQuery();
-  console.log("profileData", profileData);
+  // const { data: profileData } = useGetProfileQuery();
+  // console.log("profileData", profileData);
   useEffect(() => {
     if (typeof window !== "undefined") {
       setIsMobile(window.innerWidth < 768);
