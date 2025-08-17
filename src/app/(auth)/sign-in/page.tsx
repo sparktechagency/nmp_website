@@ -9,6 +9,7 @@ import { Form, Input, Checkbox, message } from "antd";
 import image from "../../../assets/image/Rectangle 29 (1).png";
 import { useLoginApiMutation } from "@/redux/features/auth/authApi";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 interface LoginFormValues {
   email: string;
@@ -18,6 +19,7 @@ interface LoginFormValues {
 
 const SignIn: React.FC = () => {
   const [form] = Form.useForm<LoginFormValues>();
+  const router = useRouter();
   const [loginApi, { isLoading }] = useLoginApiMutation();
   const onFinish = async (values: LoginFormValues) => {
     const data = {
@@ -28,6 +30,7 @@ const SignIn: React.FC = () => {
     try {
       const res = await loginApi(data).unwrap();
       toast.success(res?.message);
+      router.push("/");
     } catch (error: any) {
       toast.error(error?.data?.message);
     }
