@@ -8,7 +8,10 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import OtpInput from "react-otp-input";
 import image from "../../../assets/image/cuate.png";
-import { useVerifyOtpMutation } from "@/redux/features/auth/authApi";
+import {
+  useResendOtpMutation,
+  useVerifyOtpMutation,
+} from "@/redux/features/auth/authApi";
 import toast from "react-hot-toast";
 
 interface FormValues {
@@ -18,13 +21,13 @@ interface FormValues {
 const VerifyOtp: React.FC = () => {
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
-  console.log(email);
 
   const [verifyOtp] = useVerifyOtpMutation();
   const router = useRouter();
   const [form] = Form.useForm<FormValues>();
   const [otp, setOtp] = useState<string>("");
   const [submitting, setSubmitting] = useState(false);
+  const [resendOtp] = useResendOtpMutation();
 
   const onFinish = async () => {
     const clean = otp.replace(/\s/g, "");
@@ -59,11 +62,15 @@ const VerifyOtp: React.FC = () => {
 
   const handleResendOtp = async () => {
     try {
-      await new Promise((r) => setTimeout(r, 400));
-      message.success("OTP sent successfully!");
-    } catch (err) {
+      const data = {
+        email: email,
+      };
+      console.log(data);
+      const res = await resendOtp(data).unwrap();
+      toast.success(res.message);
+    } catch (err: any) {
       console.error(err);
-      message.error("Could not resend code. Please try again.");
+      toast.error(err?.data.message);
     }
   };
 

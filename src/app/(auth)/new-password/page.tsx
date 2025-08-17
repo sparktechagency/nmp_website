@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React from "react";
@@ -6,6 +7,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import image from "../../../assets/image/Rectangle 29 (1).png";
+import { useNewPasswordMutation } from "@/redux/features/auth/authApi";
+import toast from "react-hot-toast";
 
 interface NewPasswordValues {
   password: string;
@@ -15,15 +18,18 @@ interface NewPasswordValues {
 const NewPassword: React.FC = () => {
   const [form] = Form.useForm<NewPasswordValues>();
   const router = useRouter();
-
-  const onFinish = async () => {
+  const [newPassword] = useNewPasswordMutation();
+  const onFinish = async (values: any) => {
     try {
-      // TODO: Replace with your API call to set new password
-      await new Promise((r) => setTimeout(r, 500));
-      message.success("Password reset successfully!");
+      const data = {
+        currentPassword: values.password,
+        newPassword: values.confirmPassword,
+      };
+      const res = await newPassword(data).unwrap();
+      toast.success(res.message);
       router.push("/sign-in");
-    } catch (e) {
-      message.error("Failed to reset password. Please try again.");
+    } catch (e: any) {
+      toast.error(e?.data?.message);
     }
   };
 

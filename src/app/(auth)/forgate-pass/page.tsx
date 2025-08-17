@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React from "react";
@@ -6,6 +7,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import forgatePass from "../../../assets/image/forgate.png";
+import { useForgotPasswordMutation } from "@/redux/features/auth/authApi";
+import toast from "react-hot-toast";
 
 interface ForgotFormValues {
   email: string;
@@ -14,12 +17,18 @@ interface ForgotFormValues {
 const ForgatePassword: React.FC = () => {
   const [form] = Form.useForm<ForgotFormValues>();
   const router = useRouter();
-
-  const onFinish = (values: ForgotFormValues) => {
-    // TODO: trigger your password-reset request here
-    // e.g., await api.auth.requestPasswordReset(values.email)
-    console.log("Forgot password submitted:", values);
-    router.push("/verify-otp");
+  const [forgotPassword, { isLoading }] = useForgotPasswordMutation();
+  const onFinish = async (values: ForgotFormValues) => {
+    try {
+      const data = {
+        email: values.email,
+      };
+      const res = await forgotPassword(data).unwrap();
+      toast.success(res.message);
+      router.push("/verify-otp");
+    } catch (error: any) {
+      toast.error(error?.data?.message);
+    }
   };
 
   return (
@@ -62,16 +71,16 @@ const ForgatePassword: React.FC = () => {
                   </Form.Item>
 
                   <Form.Item className="mb-0">
-                    <Link href="/verify-otp">
+                
                       <div className="text-white">
                         <button
                           type="submit"
                           className="w-full py-3 rounded-xl  font-semibold shadow-lg transition focus:outline-none focus:ring-4 focus:ring-indigo-300 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-700 hover:via-purple-700 hover:to-pink-700"
                         >
-                          Submit
+                          {isLoading ? "   Submitting..." : "Submit"}
                         </button>
                       </div>
-                    </Link>
+                
                   </Form.Item>
                 </Form>
 

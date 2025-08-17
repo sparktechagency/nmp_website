@@ -1,11 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/no-unescaped-entities */
 "use client";
 
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Form, Input, Checkbox } from "antd";
+import { Form, Input, Checkbox, message } from "antd";
 import image from "../../../assets/image/Rectangle 29 (1).png";
+import { useLoginApiMutation } from "@/redux/features/auth/authApi";
+import toast from "react-hot-toast";
 
 interface LoginFormValues {
   email: string;
@@ -15,21 +18,27 @@ interface LoginFormValues {
 
 const SignIn: React.FC = () => {
   const [form] = Form.useForm<LoginFormValues>();
+  const [loginApi, { isLoading }] = useLoginApiMutation();
+  const onFinish = async (values: LoginFormValues) => {
+    const data = {
+      email: values.email,
+      password: values.password,
+    };
 
-  const onFinish = (values: LoginFormValues) => {
-    // TODO: replace with your auth call
-    console.log("Received values of form:", values);
+    try {
+      const res = await loginApi(data).unwrap();
+      toast.success(res?.message);
+    } catch (error: any) {
+      toast.error(error?.data?.message);
+    }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center p-4">
-      {/* Outer shell mimicking the mock white frame */}
       <div className="w-full max-w-6xl bg-white rounded-3xl shadow-2xl overflow-hidden ring-1 ring-white/70">
         <div className="grid grid-cols-1 lg:grid-cols-2">
-          {/* Left Section - Form */}
           <div className="flex items-center justify-center p-6 sm:p-10">
             <div className="w-full max-w-md">
-              {/* Logo badge */}
               <div className="mx-auto mb-5 h-12 w-12 grid place-items-center rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 shadow-lg">
                 <span className="text-white font-semibold">C</span>
               </div>
@@ -102,7 +111,7 @@ const SignIn: React.FC = () => {
                         type="submit"
                         className="w-full py-3 rounded-xl  font-semibold shadow-lg transition focus:outline-none focus:ring-4 focus:ring-indigo-300 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-700 hover:via-purple-700 hover:to-pink-700"
                       >
-                        Log In
+                        {isLoading ? "Submitting..." : "Submit"}
                       </button>
                     </div>
                   </Form.Item>
