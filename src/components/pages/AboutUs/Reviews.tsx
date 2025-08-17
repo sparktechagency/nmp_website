@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React from "react";
 
@@ -6,6 +7,7 @@ import { FaStar } from "react-icons/fa";
 import Link from "next/link";
 import { MdKeyboardDoubleArrowRight } from "react-icons/md";
 import { useGetAllReviewQuery } from "@/redux/features/reviewApi/reviewApi";
+import defaultImage from "../../../assets/image/Ellipse 1.png";
 
 const Reviews = () => {
   const { data: reviewData } = useGetAllReviewQuery(undefined);
@@ -18,14 +20,14 @@ const Reviews = () => {
       </h1>
 
       <div className="flex flex-col gap-10">
-        {reviews?.map((review) => (
+        {reviews?.map((review: any) => (
           <div
             key={review.id}
             className="w-full flex flex-col md:flex-row items-center gap-5 border-b border-b-neutral-200 pb-5"
           >
             <div className="w-full md:w-[20%] flex justify-center">
               <Image
-                src={review.img}
+                src={review.img ? review.img : defaultImage}
                 alt={review.name}
                 height={100}
                 width={100}
