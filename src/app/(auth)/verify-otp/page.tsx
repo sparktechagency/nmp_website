@@ -9,6 +9,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import OtpInput from "react-otp-input";
 import image from "../../../assets/image/cuate.png";
 import { useVerifyOtpMutation } from "@/redux/features/auth/authApi";
+import toast from "react-hot-toast";
 
 interface FormValues {
   otp: string;
@@ -44,11 +45,11 @@ const VerifyOtp: React.FC = () => {
         otp: clean,
       }).unwrap();
 
-      message.success("OTP verified! You can set a new password.");
+      toast.success(res?.message);
       router.push("/new-password");
     } catch (err: any) {
       console.error(err);
-      message.error(
+      toast.error(
         err?.data?.message || "Failed to verify OTP. Please try again."
       );
     } finally {

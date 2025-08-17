@@ -8,7 +8,7 @@ import { Form, Input, Checkbox, message } from "antd";
 import image from "../../../assets/image/Rectangle 29 (1).png";
 import { useRegisterMutation } from "@/redux/features/auth/authApi";
 import { useRouter } from "next/navigation";
-
+import toast from "react-hot-toast";
 interface SignUpValues {
   name: string;
   email: string;
@@ -24,23 +24,22 @@ const SignUpPage: React.FC = () => {
   const [register] = useRegisterMutation();
 
   const onFinish = async (values: SignUpValues) => {
-    console.log("Form values:", values);
     try {
       const data = {
         fullName: values.name,
         email: values.email,
         password: values.password,
       };
+
       const res = await register(data).unwrap();
-      if (res?.success) {
-        message.success(res?.message);
-        router.push({
-          pathname: "/verify-otp",
-          query: { email: values.email },
-        } as any); // quick fix if TS complains
+      console.log("Register Response:", res);
+
+      if (res?.success || res?.statusCode === 200) {
+        toast.success(res.message || "Registration successful!");
+        router.push(`/verify-otp?email=${values.email}`);
       }
     } catch (error: any) {
-      message.error(error?.data?.message);
+      toast.error(error?.data?.message || "Something went wrong!");
     }
   };
 
