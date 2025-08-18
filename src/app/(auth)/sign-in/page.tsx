@@ -10,7 +10,8 @@ import image from "../../../assets/image/Rectangle 29 (1).png";
 import { useLoginApiMutation } from "@/redux/features/auth/authApi";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-
+import { useDispatch } from "react-redux";
+import { setUser } from "@/redux/features/auth/authSlice";
 interface LoginFormValues {
   email: string;
   password: string;
@@ -20,6 +21,7 @@ interface LoginFormValues {
 const SignIn: React.FC = () => {
   const [form] = Form.useForm<LoginFormValues>();
   const router = useRouter();
+  const dispatch = useDispatch();
   const [loginApi, { isLoading }] = useLoginApiMutation();
   const onFinish = async (values: LoginFormValues) => {
     const data = {
@@ -29,6 +31,13 @@ const SignIn: React.FC = () => {
 
     try {
       const res = await loginApi(data).unwrap();
+      console.log(res);
+      dispatch(
+        setUser({
+          user: res.data.user || { email: values.email }, // if API doesn't return user, fallback
+          token: res.data.accessToken,
+        })
+      );
       toast.success(res?.message);
       router.push("/");
     } catch (error: any) {

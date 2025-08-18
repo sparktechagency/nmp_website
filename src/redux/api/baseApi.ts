@@ -15,10 +15,12 @@ const baseQuery = fetchBaseQuery({
   prepareHeaders: (headers, { getState }) => {
     const state = getState() as RootState;
     const token = state?.auth?.token || localStorage.getItem("token");
+    console.log("token from baseAPI", token);
 
     if (token) {
-      headers.set("authorization", `Bearer ${token}`);
+      headers.set("Authorization", `${token}`);
     }
+
     return headers;
   },
 });

@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { baseApi } from "@/redux/api/baseApi";
 
 interface Profile {
+  data: any;
   id: string;
   name: string;
   email: string;
