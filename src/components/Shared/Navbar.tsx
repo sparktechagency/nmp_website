@@ -64,13 +64,15 @@ const NavBar = () => {
       return (
         <div className="flex items-center gap-2">
           <Tooltip title={profileData.data.fullName || "User"}>
-            <Image
-              src={profileData.data.profile_img}
-              alt="profile"
-              height={40}
-              width={40}
-              className="rounded-full cursor-pointer"
-            />
+            <Link href="/profile">
+              <Image
+                src={profileData.data.profile_img}
+                alt="profile"
+                height={40}
+                width={40}
+                className="rounded-full cursor-pointer"
+              />
+            </Link>
           </Tooltip>
           <button className="px-2 py-1 text-sm " onClick={handleLogout}>
             Logout
