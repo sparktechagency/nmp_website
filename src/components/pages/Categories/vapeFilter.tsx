@@ -1,18 +1,23 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import {
+  useGetBrandDropDownQuery,
+  useGetCatDropDownQuery,
+} from "@/redux/features/categoryApi/categoryApi";
 import React, { useState } from "react";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 
-const categories = [
-  "Disposable Vape",
-  "Pod System",
-  "Vape Mod",
-  "E-Liquid",
-  "Coil",
-  "Battery",
-  "Charger",
-  "Vape Accessories",
-];
+// const categories = [
+//   "Disposable Vape",
+//   "Pod System",
+//   "Vape Mod",
+//   "E-Liquid",
+//   "Coil",
+//   "Battery",
+//   "Charger",
+//   "Vape Accessories",
+// ];
 
 const brands = [
   "SMOK",
@@ -87,7 +92,11 @@ const VapeFilter = () => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [selectedFlavours, setSelectedFlavours] = useState<string[]>([]);
+  const { data: categoryDropdata } = useGetCatDropDownQuery(undefined);
+  const { data: brandData } = useGetBrandDropDownQuery(undefined);
 
+  const categories = categoryDropdata?.data;
+  const brands = brandData?.data;
   return (
     <div className="container mx-auto my-10">
       <div className="w-full ">
@@ -95,14 +104,14 @@ const VapeFilter = () => {
 
         <FilterSection
           title="Category"
-          options={categories}
+          options={categories?.map((cat: any) => cat.name) ?? []}
           selected={selectedCategories}
           setSelected={setSelectedCategories}
         />
 
         <FilterSection
           title="Brand"
-          options={brands}
+          options={brands?.map((brand: any) => brand.name) ?? []}
           selected={selectedBrands}
           setSelected={setSelectedBrands}
         />
