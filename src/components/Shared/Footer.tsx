@@ -1,13 +1,33 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React from "react";
+import { useSentSbuscribeMutation } from "@/redux/features/subscribeApi/subscribeApi";
+import React, { useState } from "react";
 import { FaFacebookF, FaInstagram, FaTwitter } from "react-icons/fa";
 import { FiMail, FiPhone } from "react-icons/fi";
+import toast from "react-hot-toast";
 
 const Footer: React.FC = () => {
+  const [email, setEmail] = useState("");
+  const [sentSbuscribe, { isLoading }] = useSentSbuscribeMutation();
+
+  const handleSubscribe = async () => {
+    if (!email) {
+      toast.error("Please enter your email");
+      return;
+    }
+
+    try {
+      const res = await sentSbuscribe({ email }).unwrap();
+      toast.success(res?.message || "Subscribed successfully!");
+      setEmail("");
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Subscription failed");
+    }
+  };
+
   return (
     <footer className="bg-blue-100 py-10">
-      {/* Newsletter */}
       <div className="text-center mb-8">
         <h2 className="text-lg md:text-3xl font-bold mb-4">
           Subscribe to our newsletters
@@ -16,19 +36,23 @@ const Footer: React.FC = () => {
           <div className="bg-blue-300 flex rounded-md overflow-hidden w-[90%] max-w-md">
             <input
               type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email address"
               className="flex-grow px-4 py-2 outline-none bg-transparent"
             />
-            <button className="bg-white px-4 py-2 text-sm font-medium hover:bg-gray-100">
-              Subscribe
+            <button
+              onClick={handleSubscribe}
+              disabled={isLoading}
+              className="bg-white px-4 py-2 text-sm font-medium hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isLoading ? "Subscribing..." : "Subscribe"}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Footer Links */}
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 text-center md:text-left px-4">
-        {/* Company & Legal */}
         <div>
           <h3 className="font-semibold mb-4">COMPANY & LEGAL</h3>
           <ul className="space-y-2 text-sm text-gray-700">
@@ -38,7 +62,6 @@ const Footer: React.FC = () => {
           </ul>
         </div>
 
-        {/* Customer Service */}
         <div>
           <h3 className="font-semibold mb-4">CUSTOMER SERVICE</h3>
           <ul className="space-y-2 text-sm text-gray-700">
@@ -48,7 +71,6 @@ const Footer: React.FC = () => {
           </ul>
         </div>
 
-        {/* Contact Us */}
         <div>
           <h3 className="font-semibold mb-4">CONTACT US</h3>
           <ul className="space-y-2 text-sm text-gray-700">
@@ -61,7 +83,6 @@ const Footer: React.FC = () => {
           </ul>
         </div>
 
-        {/* Follow Us */}
         <div>
           <h3 className="font-semibold mb-4">FOLLOW US</h3>
           <div className="flex justify-center md:justify-start gap-4 text-xl">
@@ -72,7 +93,6 @@ const Footer: React.FC = () => {
         </div>
       </div>
 
-      {/* Copyright */}
       <div className="text-center text-sm text-gray-500 mt-8">
         © 2025 E-Com | All rights reserved
       </div>
