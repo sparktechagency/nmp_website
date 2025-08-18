@@ -1,101 +1,126 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import image from "../../../assets/image/download (1).jpeg";
+import { Table, Tag, Button } from "antd";
 import SectionTitle from "@/components/Shared/SectionTitle";
+import { useGetOrdersQuery } from "@/redux/features/ordersApi/ordersApi";
 
-interface Order {
-  id: number;
-  date: string;
-  productImage: string;
-  productName: string;
-  quantity: number;
+interface Product {
+  image: string;
+  name: string;
   price: number;
-  total: number;
-  status: string;
-  paymentStatus: string;
+  quantity: number;
+  isReview: boolean;
 }
 
-const orders: Order[] = [
-  {
-    id: 525672,
-    date: "8/10/2025",
-    productImage:
-      "https://upload.wikimedia.org/wikipedia/commons/7/7a/Basketball.png",
-    productName: "Vape 1",
-    quantity: 1,
-    price: 80,
-    total: 80,
-    status: "Processing",
-    paymentStatus: "Paid",
-  },
-  {
-    id: 663501,
-    date: "8/9/2025",
-    productImage:
-      "https://upload.wikimedia.org/wikipedia/commons/3/36/Cricket_bat.jpg",
-    productName: "Vape 2",
-    quantity: 1,
-    price: 50,
-    total: 50,
-    status: "Processing",
-    paymentStatus: "Paid",
-  },
-];
+interface Order {
+  _id: string;
+  createdAt: string;
+  deliveryAt: string;
+  paymentStatus: string;
+  status: string;
+  token: string;
+  totalPrice: number;
+  products: Product[];
+}
 
 const OrderPage = () => {
-  return (
-    <div className="container mx-auto mb-20">
-      <SectionTitle heading="All Orders" />
-      <table className="w-full border-collapse">
-        <thead>
-          <tr className="text-left border-b">
-            <th className="py-2">Order ID</th>
-            <th className="py-2">Date</th>
-            <th className="py-2">Products</th>
-            <th className="py-2">Total</th>
-            <th className="py-2">Status</th>
-            <th className="py-2">Payment Status</th>
-            <th className="py-2">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {orders.map((order) => (
-            <tr key={order.id} className="border-b">
-              <td className="py-3 font-semibold text-blue-700">{order.id}</td>
-              <td>{order.date}</td>
-              <td>
-                <div className="flex items-center gap-3">
-                  <Image
-                    src={image}
-                    alt={order.productName}
-                    width={40}
-                    height={40}
-                    className="rounded"
-                  />
-                  <div>
-                    <p className="font-medium">{order.productName}</p>
-                    <p className="text-sm text-gray-600">
-                      Qty: {order.quantity} | Price: ${order.price.toFixed(2)}
-                    </p>
-                  </div>
-                </div>
-              </td>
-              <td className="font-semibold">${order.total.toFixed(2)}</td>
-              <td className="text-blue-600">{order.status}</td>
-              <td className="text-green-500">{order.paymentStatus}</td>
-              <td>
-                <button
-                  className="px-4 py-1 border border-gray-300 rounded-lg text-gray-500"
-                  disabled
-                >
-                  Review
-                </button>
-              </td>
-            </tr>
+  const { data: orderData, isLoading } = useGetOrdersQuery(undefined);
+
+  const columns = [
+    {
+      title: "Order ID",
+      dataIndex: "token",
+      key: "token",
+      render: (text: string) => (
+        <span className="text-blue-600 font-semibold">{text}</span>
+      ),
+    },
+    {
+      title: "Date",
+      dataIndex: "createdAt",
+      key: "createdAt",
+      render: (date: string) => new Date(date).toLocaleDateString(),
+    },
+    {
+      title: "Products",
+      dataIndex: "products",
+      key: "products",
+      render: (products: Product[]) => (
+        <div className="flex flex-col gap-2">
+          {products.map((product, idx) => (
+            <div key={idx} className="flex items-center gap-3">
+              <Image
+                src={product.image}
+                alt={product.name}
+                width={50}
+                height={50}
+                className="rounded"
+              />
+              <div>
+                <p className="font-medium">{product.name}</p>
+                <p className="text-sm text-gray-500">
+                  Qty: {product.quantity} | ${product.price.toFixed(2)}
+                </p>
+              </div>
+            </div>
           ))}
-        </tbody>
-      </table>
+        </div>
+      ),
+    },
+    {
+      title: "Total",
+      dataIndex: "totalPrice",
+      key: "totalPrice",
+      render: (total: number) => (
+        <span className="font-semibold">${total.toFixed(2)}</span>
+      ),
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      render: (status: string) => (
+        <Tag color={status === "delivered" ? "green" : "gold"}>
+          {status.toUpperCase()}
+        </Tag>
+      ),
+    },
+    {
+      title: "Payment",
+      dataIndex: "paymentStatus",
+      key: "paymentStatus",
+      render: (status: string) => (
+        <Tag color={status === "paid" ? "green" : "red"}>
+          {status.toUpperCase()}
+        </Tag>
+      ),
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (_: any, record: Order) => (
+        <Button
+          type="primary"
+          disabled={!record.products.some((p) => p.isReview)}
+        >
+          Review
+        </Button>
+      ),
+    },
+  ];
+
+  return (
+    <div className="container mx-auto mb-20 px-4">
+      <SectionTitle heading="All Orders" />
+      <Table
+        columns={columns}
+        dataSource={orderData?.data}
+        rowKey="_id"
+        loading={isLoading}
+        pagination={{ pageSize: 5 }}
+        bordered
+      />
     </div>
   );
 };
