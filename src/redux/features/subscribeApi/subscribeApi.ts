@@ -10,7 +10,15 @@ const SubscribeApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Subscribe"],
     }),
+
+    privacyPolicy: builder.query({
+      query: () => ({
+        url: "/policy/get-policy-by-type/terms-condition",
+        method: "GET",
+      }),
+      providesTags: ["PrivacyPolicy"],
+    }),
   }),
 });
 
-export const { useSentSbuscribeMutation } = SubscribeApi;
+export const { useSentSbuscribeMutation, usePrivacyPolicyQuery } = SubscribeApi;

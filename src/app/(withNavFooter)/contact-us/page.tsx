@@ -51,7 +51,7 @@ const ConatctUs = () => {
             }}
           >
             <Form<ContactFormValues>
-              form={form} // attach form instance
+              form={form} 
               name="contact-us"
               onFinish={onFinish}
               layout="vertical"

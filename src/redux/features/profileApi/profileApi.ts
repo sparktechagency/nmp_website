@@ -54,4 +54,5 @@ export const {
   useUpdateProfileMutation,
   useUpdateProfileImageMutation,
   useConatctUsMutation,
+
 } = ProfileApi;

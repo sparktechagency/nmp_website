@@ -1,15 +1,26 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useSentSbuscribeMutation } from "@/redux/features/subscribeApi/subscribeApi";
+import {
+  usePrivacyPolicyQuery,
+  useSentSbuscribeMutation,
+} from "@/redux/features/subscribeApi/subscribeApi";
 import React, { useState } from "react";
 import { FaFacebookF, FaInstagram, FaTwitter } from "react-icons/fa";
 import { FiMail, FiPhone } from "react-icons/fi";
 import toast from "react-hot-toast";
+import { Modal, Spin } from "antd";
 
 const Footer: React.FC = () => {
   const [email, setEmail] = useState("");
   const [sentSbuscribe, { isLoading }] = useSentSbuscribeMutation();
+  const { data: privacyData, isLoading: privacyLoading } =
+    usePrivacyPolicyQuery(undefined);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState<"privacy" | "terms" | null>(
+    null
+  );
 
   const handleSubscribe = async () => {
     if (!email) {
@@ -26,77 +37,127 @@ const Footer: React.FC = () => {
     }
   };
 
+  const handleOpenModal = (type: "privacy" | "terms") => {
+    setModalContent(type);
+    setIsModalOpen(true);
+  };
+
   return (
-    <footer className="bg-blue-100 py-10">
-      <div className="text-center mb-8">
-        <h2 className="text-lg md:text-3xl font-bold mb-4">
-          Subscribe to our newsletters
-        </h2>
-        <div className="flex justify-center">
-          <div className="bg-blue-300 flex rounded-md overflow-hidden w-[90%] max-w-md">
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email address"
-              className="flex-grow px-4 py-2 outline-none bg-transparent"
+    <>
+      {/* Modal for Privacy Policy & Terms */}
+      <Modal
+        open={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+        footer={null}
+        centered
+        className="rounded-2xl"
+      >
+        {privacyLoading ? (
+          <div className="flex justify-center items-center py-10">
+            <Spin size="large" />
+          </div>
+        ) : (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold">
+              {modalContent === "privacy"
+                ? "Privacy Policy"
+                : "Terms & Conditions"}
+            </h2>
+            <div
+              className="text-gray-700 leading-relaxed max-h-[400px] overflow-y-auto"
+              dangerouslySetInnerHTML={{
+                __html:
+                  modalContent === "privacy"
+                    ? privacyData?.data?.content || "No Privacy Policy found."
+                    : privacyData?.data?.content ||
+                      "No Terms & Conditions found.",
+              }}
             />
-            <button
-              onClick={handleSubscribe}
-              disabled={isLoading}
-              className="bg-white px-4 py-2 text-sm font-medium hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isLoading ? "Subscribing..." : "Subscribe"}
-            </button>
+          </div>
+        )}
+      </Modal>
+
+      <footer className="bg-blue-100 py-10">
+        <div className="text-center mb-8">
+          <h2 className="text-lg md:text-3xl font-bold mb-4">
+            Subscribe to our newsletters
+          </h2>
+          <div className="flex justify-center">
+            <div className="bg-blue-300 flex rounded-md overflow-hidden w-[90%] max-w-md">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email address"
+                className="flex-grow px-4 py-2 outline-none bg-transparent"
+              />
+              <button
+                onClick={handleSubscribe}
+                disabled={isLoading}
+                className="bg-white px-4 py-2 text-sm font-medium hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoading ? "Subscribing..." : "Subscribe"}
+              </button>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 text-center md:text-left px-4">
-        <div>
-          <h3 className="font-semibold mb-4">COMPANY & LEGAL</h3>
-          <ul className="space-y-2 text-sm text-gray-700">
-            <li>About Us</li>
-            <li>Privacy Policy</li>
-            <li>Brands</li>
-          </ul>
-        </div>
+        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 text-center md:text-left px-4">
+          <div>
+            <h3 className="font-semibold mb-4">COMPANY & LEGAL</h3>
+            <ul className="space-y-2 text-sm text-gray-700">
+              <li>About Us</li>
+              <li
+                className="cursor-pointer hover:text-blue-600"
+                onClick={() => handleOpenModal("privacy")}
+              >
+                Privacy Policy
+              </li>
+              <li>Brands</li>
+            </ul>
+          </div>
 
-        <div>
-          <h3 className="font-semibold mb-4">CUSTOMER SERVICE</h3>
-          <ul className="space-y-2 text-sm text-gray-700">
-            <li>Delivery Information</li>
-            <li>Terms & Conditions</li>
-            <li>Returns</li>
-          </ul>
-        </div>
+          <div>
+            <h3 className="font-semibold mb-4">CUSTOMER SERVICE</h3>
+            <ul className="space-y-2 text-sm text-gray-700">
+              <li>Delivery Information</li>
+              <li
+                className="cursor-pointer hover:text-blue-600"
+                onClick={() => handleOpenModal("terms")}
+              >
+                Terms & Conditions
+              </li>
+              <li>Returns</li>
+            </ul>
+          </div>
 
-        <div>
-          <h3 className="font-semibold mb-4">CONTACT US</h3>
-          <ul className="space-y-2 text-sm text-gray-700">
-            <li className="flex justify-center md:justify-start items-center gap-2">
-              <FiMail /> Ecommerce@gmail.com
-            </li>
-            <li className="flex justify-center md:justify-start items-center gap-2">
-              <FiPhone /> 1122007
-            </li>
-          </ul>
-        </div>
+          <div>
+            <h3 className="font-semibold mb-4">CONTACT US</h3>
+            <ul className="space-y-2 text-sm text-gray-700">
+              <li className="flex justify-center md:justify-start items-center gap-2">
+                <FiMail /> Ecommerce@gmail.com
+              </li>
+              <li className="flex justify-center md:justify-start items-center gap-2">
+                <FiPhone /> 1122007
+              </li>
+            </ul>
+          </div>
 
-        <div>
-          <h3 className="font-semibold mb-4">FOLLOW US</h3>
-          <div className="flex justify-center md:justify-start gap-4 text-xl">
-            <FaFacebookF className="cursor-pointer hover:text-blue-600" />
-            <FaInstagram className="cursor-pointer hover:text-pink-500" />
-            <FaTwitter className="cursor-pointer hover:text-blue-400" />
+          <div>
+            <h3 className="font-semibold mb-4">FOLLOW US</h3>
+            <div className="flex justify-center md:justify-start gap-4 text-xl">
+              <FaFacebookF className="cursor-pointer hover:text-blue-600" />
+              <FaInstagram className="cursor-pointer hover:text-pink-500" />
+              <FaTwitter className="cursor-pointer hover:text-blue-400" />
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="text-center text-sm text-gray-500 mt-8">
-        © 2025 E-Com | All rights reserved
-      </div>
-    </footer>
+        <div className="text-center text-sm text-gray-500 mt-8">
+          © 2025 E-Com | All rights reserved
+        </div>
+      </footer>
+    </>
   );
 };
 
