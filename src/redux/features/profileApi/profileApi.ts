@@ -37,6 +37,15 @@ const ProfileApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Profile"],
     }),
+
+    conatctUs: builder.mutation({
+      query: (data) => ({
+        url: "/contact/create-contact",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["ContactUs"],
+    }),
   }),
 });
 
@@ -44,4 +53,5 @@ export const {
   useGetProfileQuery,
   useUpdateProfileMutation,
   useUpdateProfileImageMutation,
+  useConatctUsMutation,
 } = ProfileApi;

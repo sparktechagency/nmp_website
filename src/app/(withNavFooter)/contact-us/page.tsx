@@ -1,16 +1,40 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import Image from "next/image";
 import React from "react";
 import image from "../../../assets/image/Rectangle 145.png";
-import { ConfigProvider, Form, Input } from "antd";
-import Link from "next/link";
+import { ConfigProvider, Form, Input, Button } from "antd";
+import { useConatctUsMutation } from "@/redux/features/profileApi/profileApi";
+import toast from "react-hot-toast";
+
 interface ContactFormValues {
   name: string;
   email: string;
   contact: string;
   message?: string;
 }
+
 const ConatctUs = () => {
+  const [form] = Form.useForm();
+  const [conatctUs, { isLoading }] = useConatctUsMutation();
+
+  const onFinish = async (values: ContactFormValues) => {
+    const data = {
+      name: values.name,
+      email: values.email,
+      phone: values.contact,
+      message: values.message,
+    };
+
+    try {
+      const res = await conatctUs(data).unwrap();
+      toast.success(res?.message || "Message sent successfully!");
+      form.resetFields(); 
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Failed to send message");
+    }
+  };
+
   return (
     <div className="container mx-auto my-20">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
@@ -21,19 +45,15 @@ const ConatctUs = () => {
           <ConfigProvider
             theme={{
               components: {
-                Form: {
-                  borderRadius: 0,
-                },
-                Input: {
-                  borderRadius: 5,
-                },
+                Form: { borderRadius: 0 },
+                Input: { borderRadius: 5 },
               },
             }}
           >
             <Form<ContactFormValues>
-              name="checkout"
-              initialValues={{}}
-              // onFinish={onFinish}
+              form={form} // attach form instance
+              name="contact-us"
+              onFinish={onFinish}
               layout="vertical"
               className="py-10 mx-4 md:mx-0 px-6 md:px-10 "
             >
@@ -69,7 +89,7 @@ const ConatctUs = () => {
                 name="contact"
                 label={<p className="text-md">Phone Number</p>}
                 rules={[
-                  { required: true, message: "Please enter your Phone number" },
+                  { required: true, message: "Please enter your phone number" },
                 ]}
               >
                 <Input
@@ -79,28 +99,23 @@ const ConatctUs = () => {
                 />
               </Form.Item>
 
-              <Form.Item
-                name="address"
-                label={<p className="text-md">Address</p>}
-              >
+              <Form.Item name="message" label={<p className="text-md">Message</p>}>
                 <Input.TextArea
-                  placeholder="Your Address"
+                  placeholder="Your Message"
                   rows={3}
                   className="w-full rounded-md"
                 />
               </Form.Item>
 
               <Form.Item className="text-center">
-                <Link href="/order-confirmed">
-                  <div className="text-white">
-                    <button
-                      type="submit"
-                      className="w-full py-3 font-bold text-2xl bg-[#3f67bc]   rounded-md shadow-lg"
-                    >
-                      Send
-                    </button>
-                  </div>
-                </Link>
+                <Button
+                  htmlType="submit"
+                  type="primary"
+                  loading={isLoading}
+                  className="w-full py-3 font-bold text-xl bg-[#3f67bc] rounded-md shadow-lg"
+                >
+                  {isLoading ? "Sending..." : "Send"}
+                </Button>
               </Form.Item>
             </Form>
           </ConfigProvider>
