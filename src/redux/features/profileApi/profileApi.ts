@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { baseApi } from "@/redux/api/baseApi";
+import build from "next/dist/build";
 
 interface Profile {
   data: any;
@@ -25,9 +26,22 @@ const ProfileApi = baseApi.injectEndpoints({
         method: "PATCH",
         body: data,
       }),
-      invalidatesTags:["Profile"]
+      invalidatesTags: ["Profile"],
+    }),
+
+    updateProfileImage: builder.mutation({
+      query: (data) => ({
+        url: "/user/update-profile-img",
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: ["Profile"],
     }),
   }),
 });
 
-export const { useGetProfileQuery , useUpdateProfileMutation} = ProfileApi;
+export const {
+  useGetProfileQuery,
+  useUpdateProfileMutation,
+  useUpdateProfileImageMutation,
+} = ProfileApi;

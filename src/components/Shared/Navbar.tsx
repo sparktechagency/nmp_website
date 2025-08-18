@@ -10,6 +10,8 @@ import { FaRegUser } from "react-icons/fa";
 import { useGetProfileQuery } from "@/redux/features/profileApi/profileApi";
 import Image from "next/image";
 import { Tooltip } from "antd";
+import img from "../../assets/image/image 23.png";
+
 interface Label {
   name: string;
   link: string;
@@ -104,11 +106,13 @@ const NavBar = () => {
         <div className="container mx-auto flex items-center justify-center py-4 px-6 lg:px-8">
           <div className="flex items-center w-full h-full">
             <Link href="/">
-              <h1>Logo</h1>
-              {/* <Image src={AllImages.logo} alt="logo" className="lg:h-11 h-16 w-auto rounded-full" /> */}
+              <Image
+                src={img}
+                alt="logo"
+                className="lg:h-11 h-16 w-auto rounded-full"
+              />
             </Link>
 
-            {/* Mobile Hamburger */}
             <div className="lg:hidden ml-auto">
               <Button
                 icon={<RxHamburgerMenu className="text-white" />}
