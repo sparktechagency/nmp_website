@@ -14,9 +14,20 @@ const CategoryApi = baseApi.injectEndpoints({
         url: "/brand/get-brand-drop-down",
         method: "Get",
       }),
-      providesTags:["Brand"],
+      providesTags: ["Brand"],
+    }),
+    getFlavourDropDown: builder.query({
+      query: () => ({
+        url: "/flavor/get-flavor-drop-down",
+        method: "Get",
+      }),
+      providesTags: ["Flavour"],
     }),
   }),
 });
 
-export const { useGetCatDropDownQuery, useGetBrandDropDownQuery } = CategoryApi;
+export const {
+  useGetCatDropDownQuery,
+  useGetBrandDropDownQuery,
+  useGetFlavourDropDownQuery,
+} = CategoryApi;

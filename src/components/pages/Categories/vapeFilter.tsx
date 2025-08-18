@@ -4,6 +4,7 @@
 import {
   useGetBrandDropDownQuery,
   useGetCatDropDownQuery,
+  useGetFlavourDropDownQuery,
 } from "@/redux/features/categoryApi/categoryApi";
 import React, { useState } from "react";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
@@ -94,9 +95,11 @@ const VapeFilter = () => {
   const [selectedFlavours, setSelectedFlavours] = useState<string[]>([]);
   const { data: categoryDropdata } = useGetCatDropDownQuery(undefined);
   const { data: brandData } = useGetBrandDropDownQuery(undefined);
+  const { data: flavourdata } = useGetFlavourDropDownQuery(undefined);
 
   const categories = categoryDropdata?.data;
   const brands = brandData?.data;
+  const flavours = flavourdata?.data;
   return (
     <div className="container mx-auto my-10">
       <div className="w-full ">
@@ -118,7 +121,7 @@ const VapeFilter = () => {
 
         <FilterSection
           title="Flavour"
-          options={flavours}
+          options={flavours?.map((flavour: any) => flavour.name) ?? []}
           selected={selectedFlavours}
           setSelected={setSelectedFlavours}
         />
