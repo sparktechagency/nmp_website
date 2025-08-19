@@ -13,6 +13,7 @@ import {
   useGetCatDropDownQuery,
   useGetFlavourDropDownQuery,
 } from "@/redux/features/categoryApi/categoryApi";
+import { Pagination, ConfigProvider } from "antd";
 
 // ---------------- Filter Section ----------------
 const FilterSection: React.FC<{
@@ -71,14 +72,25 @@ const ProductsPage = () => {
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [selectedFlavours, setSelectedFlavours] = useState<string[]>([]);
   const [searchText, setSearchText] = useState("");
+  const [pageSize, setPageSize] = useState(6);
+  const [currentPage, setCurrentPage] = useState(1);
 
   // API calls
-  const { data: productsData } = useGetProductsQuery(undefined);
+  const { data: productsData, isLoading } = useGetProductsQuery({
+    page: currentPage,
+    limit: pageSize,
+    searchTerm: searchText,
+  });
+
   const { data: categoryDropdata } = useGetCatDropDownQuery(undefined);
   const { data: brandData } = useGetBrandDropDownQuery(undefined);
   const { data: flavourdata } = useGetFlavourDropDownQuery(undefined);
 
   const products = productsData?.data ?? [];
+  const total = productsData?.meta?.total ?? 0;
+  const handlePageChange = (page: any) => {
+    setCurrentPage(page);
+  };
   const categories = categoryDropdata?.data?.map((c: any) => c.name) ?? [];
   const brands = brandData?.data?.map((b: any) => b.name) ?? [];
   const flavours = flavourdata?.data?.map((f: any) => f.name) ?? [];
@@ -91,8 +103,7 @@ const ProductsPage = () => {
         selectedCategories.includes(product.category);
 
       const matchesBrand =
-        selectedBrands.length === 0 ||
-        selectedBrands.includes(product.brand);
+        selectedBrands.length === 0 || selectedBrands.includes(product.brand);
 
       const matchesFlavour =
         selectedFlavours.length === 0 ||
@@ -104,7 +115,13 @@ const ProductsPage = () => {
 
       return matchesCategory && matchesBrand && matchesFlavour && matchesSearch;
     });
-  }, [products, selectedCategories, selectedBrands, selectedFlavours, searchText]);
+  }, [
+    products,
+    selectedCategories,
+    selectedBrands,
+    selectedFlavours,
+    searchText,
+  ]);
 
   return (
     <div className="container mx-auto my-10">
@@ -150,8 +167,11 @@ const ProductsPage = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
-            {filteredProducts.length > 0 ? (
+          {/* Product Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 justify-center items-center">
+            {isLoading ? (
+              <p className="text-gray-500">Loading...</p>
+            ) : filteredProducts.length > 0 ? (
               filteredProducts.map((product: any) => (
                 <div
                   key={product._id}
@@ -187,18 +207,6 @@ const ProductsPage = () => {
                     <p>Category: {product.category}</p>
                     <p>Brand: {product.brand}</p>
                     <p>Flavour: {product.flavor}</p>
-                    <p>
-                      Stock:{" "}
-                      <span
-                        className={
-                          product.stockStatus === "in_stock"
-                            ? "text-green-600 font-semibold"
-                            : "text-red-500 font-semibold"
-                        }
-                      >
-                        {product.stockStatus}
-                      </span>
-                    </p>
                   </div>
 
                   {/* Price */}
@@ -224,25 +232,33 @@ const ProductsPage = () => {
                       </span>
                     </div>
                   </div>
-
-                  {/* Buttons */}
-                  <div className="mt-4 flex justify-between items-center gap-3">
-                    <Link href="/cart">
-                      <button className="px-4 py-2 border border-blue-500 rounded-md">
-                        Add to Cart
-                      </button>
-                    </Link>
-                    <Link href="/checkout">
-                      <button className="px-4 py-2 border border-blue-500 rounded-md">
-                        Buy Now
-                      </button>
-                    </Link>
-                  </div>
                 </div>
               ))
             ) : (
               <p className="text-gray-500">No products found</p>
             )}
+          </div>
+
+          {/* ---------------- Pagination ---------------- */}
+          <div className="flex justify-center items-center my-6">
+            <ConfigProvider
+              theme={{
+                components: {
+                  Pagination: {
+                    itemActiveBg: "rgb(105,112,77)",
+                    colorPrimary: "rgb(255,255,255)",
+                    colorPrimaryHover: "rgb(255,255,255)",
+                  },
+                },
+              }}
+            >
+              <Pagination
+                current={currentPage}
+                pageSize={pageSize}
+                total={total}
+                onChange={handlePageChange}
+              />
+            </ConfigProvider>
           </div>
         </div>
       </div>
