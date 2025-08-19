@@ -30,7 +30,7 @@ const ProductDetails = () => {
 
           <div className="w-full md:w-[60%] flex flex-col gap-4">
             <div className="h-8 bg-gray-200 rounded w-3/4"></div>{" "}
-            <div className="h-6 bg-gray-200 rounded w-1/4"></div> {/* Price */}
+            <div className="h-6 bg-gray-200 rounded w-1/4"></div> 
             <div className="flex gap-2 mt-2">
               {Array(5)
                 .fill(null)
@@ -62,7 +62,6 @@ const ProductDetails = () => {
   return (
     <div className="container mx-auto my-20">
       <div className="w-full flex flex-col md:flex-row justify-start items-center gap-5">
-        {/* Product Image */}
         <div className="w-full md:w-[40%]">
           <Image
             src={product.image}
@@ -73,7 +72,6 @@ const ProductDetails = () => {
           />
         </div>
 
-        {/* Product Info */}
         <div className="w-full md:w-[60%]">
           <h1 className="text-4xl font-bold">{product.name}</h1>
 
@@ -86,7 +84,6 @@ const ProductDetails = () => {
             )}
           </p>
 
-          {/* Ratings */}
           <div className="flex items-center gap-2 mt-2">
             {Array(5)
               .fill(null)
@@ -103,7 +100,6 @@ const ProductDetails = () => {
             </span>
           </div>
 
-          {/* Product Details */}
           <div className="mt-4">
             <p>
               <strong>Brand:</strong> {product.brand}
@@ -132,7 +128,6 @@ const ProductDetails = () => {
             </p>
           </div>
 
-          {/* Quantity Selector */}
           <div className="mt-4">
             <h2 className="mb-2 font-semibold">Quantity</h2>
             <div className="flex items-center gap-3">
@@ -152,7 +147,6 @@ const ProductDetails = () => {
             </div>
           </div>
 
-          {/* Add to Cart */}
           <div className="mt-10">
             <Link href="/cart">
               <button className="flex justify-center items-center gap-2 bg-blue-100 px-4 py-2 text-blue-600 hover:bg-blue-200 rounded">
@@ -163,7 +157,7 @@ const ProductDetails = () => {
         </div>
       </div>
 
-      {/* Reviews Section */}
+    
       <Reviews />
     </div>
   );

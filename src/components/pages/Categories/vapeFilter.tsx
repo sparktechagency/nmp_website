@@ -9,37 +9,6 @@ import {
 import React, { useState } from "react";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 
-// const categories = [
-//   "Disposable Vape",
-//   "Pod System",
-//   "Vape Mod",
-//   "E-Liquid",
-//   "Coil",
-//   "Battery",
-//   "Charger",
-//   "Vape Accessories",
-// ];
-
-const brands = [
-  "SMOK",
-  "Voopoo",
-  "GeekVape",
-  "Lost Vape",
-  "Aspire",
-  "Uwell",
-  "Vaporesso",
-];
-
-const flavours = [
-  "Mint",
-  "Strawberry",
-  "Mango",
-  "Watermelon",
-  "Grape",
-  "Blueberry Ice",
-  "Lemon Tart",
-];
-
 const FilterSection: React.FC<{
   title: string;
   options: string[];
