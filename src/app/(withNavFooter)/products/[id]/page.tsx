@@ -1,18 +1,22 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { FaStar } from "react-icons/fa";
 import { IoIosCart } from "react-icons/io";
 import Link from "next/link";
 import Reviews from "@/components/pages/AboutUs/Reviews";
 import { useGetSingleProductQuery } from "@/redux/features/productsApi/productsApi";
+import { useAddToCartMutation } from "@/redux/features/cartApi/cartApi";
+import toast from "react-hot-toast";
 
 const ProductDetails = () => {
+  const router = useRouter();
   const params = useParams();
   const id = params?.id;
-
+  const [addToCart] = useAddToCartMutation();
   const { data: singleProduct } = useGetSingleProductQuery(id);
 
   const [quantity, setQuantity] = useState(1);
@@ -30,7 +34,7 @@ const ProductDetails = () => {
 
           <div className="w-full md:w-[60%] flex flex-col gap-4">
             <div className="h-8 bg-gray-200 rounded w-3/4"></div>{" "}
-            <div className="h-6 bg-gray-200 rounded w-1/4"></div> 
+            <div className="h-6 bg-gray-200 rounded w-1/4"></div>
             <div className="flex gap-2 mt-2">
               {Array(5)
                 .fill(null)
@@ -58,6 +62,20 @@ const ProductDetails = () => {
   }
 
   const product = singleProduct.data;
+  const handleAddToCart = async () => {
+    try {
+      const data = {
+        productId: id,
+        quantity: quantity,
+      };
+      const res = await addToCart(data).unwrap();
+      router.push("/cart");
+      toast(res?.message);
+      
+    } catch (error: any) {
+      toast(error?.data?.message);
+    }
+  };
 
   return (
     <div className="container mx-auto my-20">
@@ -148,16 +166,16 @@ const ProductDetails = () => {
           </div>
 
           <div className="mt-10">
-            <Link href="/cart">
-              <button className="flex justify-center items-center gap-2 bg-blue-100 px-4 py-2 text-blue-600 hover:bg-blue-200 rounded">
-                Add to cart <IoIosCart />
-              </button>
-            </Link>
+            <button
+              onClick={handleAddToCart}
+              className="flex justify-center items-center gap-2 bg-blue-100 px-4 py-2 text-blue-600 hover:bg-blue-200 rounded"
+            >
+              Add to cart <IoIosCart />
+            </button>
           </div>
         </div>
       </div>
 
-    
       <Reviews />
     </div>
   );

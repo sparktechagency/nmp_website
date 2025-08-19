@@ -14,6 +14,7 @@ import {
   useGetFlavourDropDownQuery,
 } from "@/redux/features/categoryApi/categoryApi";
 import { Pagination, ConfigProvider } from "antd";
+import { useAddToCartMutation } from "@/redux/features/cartApi/cartApi";
 
 // ---------------- Filter Section ----------------
 const FilterSection: React.FC<{
@@ -85,6 +86,7 @@ const ProductsPage = () => {
   const { data: categoryDropdata } = useGetCatDropDownQuery(undefined);
   const { data: brandData } = useGetBrandDropDownQuery(undefined);
   const { data: flavourdata } = useGetFlavourDropDownQuery(undefined);
+
 
   const products = productsData?.data ?? [];
   const total = productsData?.meta?.total ?? 0;
