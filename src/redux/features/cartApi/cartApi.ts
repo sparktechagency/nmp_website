@@ -26,8 +26,21 @@ const CartApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Cart"],
     }),
+
+    deleteCart: builder.mutation({
+      query: ({ _id, data }) => ({
+        url: `/cart/delete-cart/${_id}`,
+        method: "DELETE",
+        body: data,
+      }),
+      invalidatesTags: ["Cart"],
+    }),
   }),
 });
 
-export const { useAddToCartMutation, useGetCartQuery, useUpdateCartMutation } =
-  CartApi;
+export const {
+  useAddToCartMutation,
+  useGetCartQuery,
+  useUpdateCartMutation,
+  useDeleteCartMutation,
+} = CartApi;

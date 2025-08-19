@@ -5,15 +5,47 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
+  useDeleteCartMutation,
   useGetCartQuery,
   useUpdateCartMutation,
 } from "@/redux/features/cartApi/cartApi";
 import toast from "react-hot-toast";
+import { FaTrash } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 const CartPage = () => {
   const { data: cartData, isLoading } = useGetCartQuery(undefined);
-  const cartItems = cartData?.data || []; // API response items
+  const cartItems = cartData?.data || [];
   const [updateCart] = useUpdateCartMutation();
+  const [deleteCart] = useDeleteCartMutation();
+
+  const handleDelete = async (id: string) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const res = await deleteCart({ _id: id }).unwrap();
+          toast.success(res?.message || "Item removed from cart");
+
+          Swal.fire({
+            title: "Deleted!",
+            text: "The item has been removed from your cart.",
+            icon: "success",
+          });
+        } catch (error: any) {
+          console.error("Failed to delete cart item:", error);
+          toast.error(error?.data?.message || "Failed to remove item");
+        }
+      }
+    });
+  };
 
   if (isLoading) {
     return (
@@ -56,17 +88,18 @@ const CartPage = () => {
       </div>
 
       {/* Header Row */}
-      <div className="grid grid-cols-3 md:grid-cols-4 text-gray-400 font-medium border-b border-b-gray-400 pb-2 mb-3">
+      <div className="grid grid-cols-3 md:grid-cols-5 text-gray-400 font-medium border-b border-b-gray-400 pb-2 mb-3">
         <p>Products</p>
         <p className="text-center">Quantity</p>
         <p className="hidden md:block text-right col-span-2">Price</p>
+        <p className="text-center">Action</p>
       </div>
 
       {/* Cart Items */}
       {cartItems.map((item: any) => (
         <div
           key={item._id}
-          className="md:grid grid-cols-3 md:grid-cols-4 md:items-center gap-4 border-b border-b-gray-400 py-4"
+          className="md:grid grid-cols-3 md:grid-cols-5 md:items-center gap-4 border-b border-b-gray-400 py-4"
         >
           {/* Product Info */}
           <div className="flex items-center gap-3">
@@ -111,6 +144,16 @@ const CartPage = () => {
           {/* Price */}
           <div className="hidden md:block col-span-2 text-right font-medium">
             ${item.total}
+          </div>
+
+          {/* Delete Button */}
+          <div className="flex justify-center">
+            <button
+              onClick={() => handleDelete(item._id)}
+              className="text-red-500 hover:text-red-700"
+            >
+              <FaTrash />
+            </button>
           </div>
         </div>
       ))}
