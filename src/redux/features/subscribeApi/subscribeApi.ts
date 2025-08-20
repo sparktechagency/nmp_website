@@ -26,7 +26,19 @@ const SubscribeApi = baseApi.injectEndpoints({
       }),
       providesTags: ["AboutUs"],
     }),
+    getDelivaryInformation: builder.query({
+      query: () => ({
+        url: "/information/get-information",
+        method: "GET",
+      }),
+      providesTags: ["delivaryInformation"],
+    }),
   }),
 });
 
-export const { useSentSbuscribeMutation, usePrivacyPolicyQuery, useAboutUsQuery } = SubscribeApi;
+export const {
+  useSentSbuscribeMutation,
+  usePrivacyPolicyQuery,
+  useAboutUsQuery,
+  useGetDelivaryInformationQuery,
+} = SubscribeApi;

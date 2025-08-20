@@ -71,6 +71,7 @@ export const baseApi = createApi({
     "PrivacyPolicy",
     "Cart",
     "AboutUs",
+    "delivaryInformation",
   ],
   endpoints: () => ({}),
 });

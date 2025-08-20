@@ -2,11 +2,12 @@
 "use client";
 
 import {
+  useGetDelivaryInformationQuery,
   usePrivacyPolicyQuery,
   useSentSbuscribeMutation,
 } from "@/redux/features/subscribeApi/subscribeApi";
 import React, { useState } from "react";
-import { FaFacebookF, FaInstagram, FaTwitter } from "react-icons/fa";
+import { FaFacebookF, FaInstagram } from "react-icons/fa";
 import { FiMail, FiPhone } from "react-icons/fi";
 import toast from "react-hot-toast";
 import { Modal, Spin } from "antd";
@@ -18,10 +19,13 @@ const Footer: React.FC = () => {
   const { data: privacyData, isLoading: privacyLoading } =
     usePrivacyPolicyQuery(undefined);
 
+  const { data: delivaryData, isLoading: deliveryLoading } =
+    useGetDelivaryInformationQuery(undefined);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalContent, setModalContent] = useState<"privacy" | "terms" | null>(
-    null
-  );
+  const [modalContent, setModalContent] = useState<
+    "privacy" | "terms" | "delivery" | null
+  >(null);
 
   const handleSubscribe = async () => {
     if (!email) {
@@ -38,14 +42,14 @@ const Footer: React.FC = () => {
     }
   };
 
-  const handleOpenModal = (type: "privacy" | "terms") => {
+  const handleOpenModal = (type: "privacy" | "terms" | "delivery") => {
     setModalContent(type);
     setIsModalOpen(true);
   };
 
   return (
     <>
-      {/* Modal for Privacy Policy & Terms */}
+      {/* Modal */}
       <Modal
         open={isModalOpen}
         onCancel={() => setIsModalOpen(false)}
@@ -53,31 +57,69 @@ const Footer: React.FC = () => {
         centered
         className="rounded-2xl"
       >
-        {privacyLoading ? (
-          <div className="flex justify-center items-center py-10">
-            <Spin size="large" />
-          </div>
-        ) : (
-          <div className="space-y-4">
-            <h2 className="text-xl font-semibold">
-              {modalContent === "privacy"
-                ? "Privacy Policy"
-                : "Terms & Conditions"}
-            </h2>
-            <div
-              className="text-gray-700 leading-relaxed max-h-[400px] overflow-y-auto"
-              dangerouslySetInnerHTML={{
-                __html:
-                  modalContent === "privacy"
-                    ? privacyData?.data?.content || "No Privacy Policy found."
-                    : privacyData?.data?.content ||
-                      "No Terms & Conditions found.",
-              }}
-            />
-          </div>
-        )}
+        {modalContent === "privacy" || modalContent === "terms" ? (
+          privacyLoading ? (
+            <div className="flex justify-center items-center py-10">
+              <Spin size="large" />
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <h2 className="text-xl font-semibold">
+                {modalContent === "privacy"
+                  ? "Privacy Policy"
+                  : "Terms & Conditions"}
+              </h2>
+              <div
+                className="text-gray-700 leading-relaxed max-h-[400px] overflow-y-auto"
+                dangerouslySetInnerHTML={{
+                  __html:
+                    privacyData?.data?.content ||
+                    "No information found.",
+                }}
+              />
+            </div>
+          )
+        ) : modalContent === "delivery" ? (
+          deliveryLoading ? (
+            <div className="flex justify-center items-center py-10">
+              <Spin size="large" />
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <h2 className="text-xl font-semibold">Delivery Information</h2>
+              <div className="text-gray-700 leading-relaxed space-y-2">
+                <p><strong>Address:</strong> {delivaryData?.data?.address}</p>
+                <p><strong>Email:</strong> {delivaryData?.data?.email}</p>
+                <p><strong>Phone:</strong> {delivaryData?.data?.phone}</p>
+                <p>
+                  <strong>Instagram:</strong>{" "}
+                  <a
+                    href={delivaryData?.data?.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 underline"
+                  >
+                    {delivaryData?.data?.instagram}
+                  </a>
+                </p>
+                <p>
+                  <strong>Telegram:</strong>{" "}
+                  <a
+                    href={delivaryData?.data?.telegram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 underline"
+                  >
+                    {delivaryData?.data?.telegram}
+                  </a>
+                </p>
+              </div>
+            </div>
+          )
+        ) : null}
       </Modal>
 
+      {/* Footer */}
       <footer className="bg-blue-100 py-10">
         <div className="text-center mb-8">
           <h2 className="text-lg md:text-3xl font-bold mb-4">
@@ -125,14 +167,18 @@ const Footer: React.FC = () => {
           <div>
             <h3 className="font-semibold mb-4">CUSTOMER SERVICE</h3>
             <ul className="space-y-2 text-sm text-gray-700">
-              {/* <li>Delivery Information</li> */}
+              <li
+                className="cursor-pointer hover:text-blue-600"
+                onClick={() => handleOpenModal("delivery")}
+              >
+                Delivery Information
+              </li>
               <li
                 className="cursor-pointer hover:text-blue-600"
                 onClick={() => handleOpenModal("terms")}
               >
                 Terms & Conditions
               </li>
-              {/* <li>Returns</li> */}
             </ul>
           </div>
 
@@ -153,7 +199,6 @@ const Footer: React.FC = () => {
             <div className="flex justify-center md:justify-start gap-4 text-xl">
               <FaFacebookF className="cursor-pointer hover:text-blue-600" />
               <FaInstagram className="cursor-pointer hover:text-pink-500" />
-              {/* <FaTwitter className="cursor-pointer hover:text-blue-400" /> */}
             </div>
           </div>
         </div>
