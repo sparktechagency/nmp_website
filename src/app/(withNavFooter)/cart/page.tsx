@@ -4,6 +4,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   useDeleteCartMutation,
   useGetCartQuery,
@@ -18,6 +19,17 @@ const CartPage = () => {
   const cartItems = cartData?.data || [];
   const [updateCart] = useUpdateCartMutation();
   const [deleteCart] = useDeleteCartMutation();
+  const router = useRouter();
+
+  // Calculate totals
+  const totalQuantity = cartItems.reduce(
+    (sum: number, item: any) => sum + item.quantity,
+    0
+  );
+  const totalPrice = cartItems.reduce(
+    (sum: number, item: any) => sum + item.total,
+    0
+  );
 
   const handleDelete = async (id: string) => {
     Swal.fire({
@@ -33,27 +45,13 @@ const CartPage = () => {
         try {
           const res = await deleteCart({ _id: id }).unwrap();
           toast.success(res?.message || "Item removed from cart");
-
-          Swal.fire({
-            title: "Deleted!",
-            text: "The item has been removed from your cart.",
-            icon: "success",
-          });
+          Swal.fire("Deleted!", "The item has been removed.", "success");
         } catch (error: any) {
-          console.error("Failed to delete cart item:", error);
           toast.error(error?.data?.message || "Failed to remove item");
         }
       }
     });
   };
-
-  if (isLoading) {
-    return (
-      <div className="container mx-auto p-5 text-center">
-        <p>Loading your cart...</p>
-      </div>
-    );
-  }
 
   const updateQuantity = async (
     id: string,
@@ -68,17 +66,26 @@ const CartPage = () => {
     }
 
     try {
-      const data = {
-        quantity: newQty,
-      };
-
+      const data = { quantity: newQty };
       await updateCart({ _id: id, data }).unwrap();
       toast.success("Cart updated successfully");
     } catch (error) {
-      console.error("Failed to update cart:", error);
       toast.error("Failed to update cart");
     }
   };
+
+  const handleCheckout = () => {
+    // send total + quantity + price to checkout page
+    router.push(`/checkout?total=${totalPrice}&quantity=${totalQuantity}`);
+  };
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto p-5 text-center">
+        <p>Loading your cart...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto p-5">
@@ -165,11 +172,13 @@ const CartPage = () => {
             ← Continue shopping
           </button>
         </Link>
-        <Link href="/checkout">
-          <button className="bg-[#3f67bc] px-6 py-2 rounded-lg text-white">
-            Checkout
-          </button>
-        </Link>
+
+        <button
+          onClick={handleCheckout}
+          className="bg-[#3f67bc] px-6 py-2 rounded-lg text-white"
+        >
+          Checkout
+        </button>
       </div>
     </div>
   );

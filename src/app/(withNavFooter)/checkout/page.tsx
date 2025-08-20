@@ -1,19 +1,46 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React from "react";
 import { ConfigProvider, Form, Input } from "antd";
 import type { FormProps } from "antd";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useCreateOrderMutation } from "@/redux/features/ordersApi/ordersApi";
+import toast from "react-hot-toast";
 
 interface ContactFormValues {
-  name: string;
-  email: string;
-  contact: string;
-  message?: string;
+  streetAddress: string;
+  city: string;
+  state: string;
+  zipCode: string;
 }
 
 const CheckoutPage: React.FC = () => {
-  const onFinish: FormProps<ContactFormValues>["onFinish"] = (values) => {
+  const searchParams = useSearchParams();
+  const total = searchParams.get("total");
+  const quantity = searchParams.get("quantity");
+  const router = useRouter();
+  console.log(total, quantity);
+
+  const [createOrder] = useCreateOrderMutation();
+
+  const onFinish: FormProps<ContactFormValues>["onFinish"] = async (values) => {
     console.log("Form Submitted:", values);
+
+    try {
+      const data = {
+        streetAddress: values.streetAddress,
+        city: values?.city,
+        state: values.state,
+        zipCode: values.zipCode,
+      };
+
+      const res = await createOrder(data).unwrap();
+      toast.success(res?.message);
+      router.push("/order-confirmed")
+    } catch (error: any) {
+      toast.error(error?.data?.message);
+    }
   };
 
   return (
@@ -24,16 +51,16 @@ const CheckoutPage: React.FC = () => {
           <div className="border-b-2 border-b-neutral-300 pb-5">
             <div className="text-neutral-400 flex justify-between items-center gap-5">
               <h1 className="">SUBTOTAL</h1>
-              <p>$190</p>
+              <p>${total}</p>
             </div>
-            <div className="text-neutral-400 flex justify-between items-center gap-5">
+            {/* <div className="text-neutral-400 flex justify-between items-center gap-5">
               <h1>SHIPPING</h1>
               <p>$80</p>
-            </div>
+            </div> */}
           </div>
           <div className="text-neutral-400 flex justify-between items-center gap-5 mt-5">
             <h1>TOTAL</h1>
-            <p>$200</p>
+            <p>{total}</p>
           </div>
         </div>
         <ConfigProvider
@@ -65,60 +92,53 @@ const CheckoutPage: React.FC = () => {
             </div>
 
             <Form.Item
-              name="name"
-              label={<p className="text-md">Full Name</p>}
-              rules={[{ required: true, message: "Please enter your name" }]}
-            >
-              <Input placeholder="Your Name" style={{ padding: "6px" }} />
-            </Form.Item>
-
-            <Form.Item
-              name="email"
-              label={<p className="text-md">Email</p>}
+              name="streetAddress"
+              label={<p className="text-md">Street Address</p>}
               rules={[
-                { required: true, message: "Please enter your email" },
-                { type: "email", message: "Please enter a valid email" },
-              ]}
-            >
-              <Input placeholder="Your Email" style={{ padding: "6px" }} />
-            </Form.Item>
-
-            <Form.Item
-              name="contact"
-              label={<p className="text-md">Phone Number</p>}
-              rules={[
-                { required: true, message: "Please enter your Phone number" },
+                { required: true, message: "Please enter your Street Address" },
               ]}
             >
               <Input
-                type="tel"
-                placeholder="Phone Number"
+                placeholder="Your Street Address"
                 style={{ padding: "6px" }}
               />
             </Form.Item>
 
             <Form.Item
-              name="address"
-              label={<p className="text-md">Address</p>}
+              name="city"
+              label={<p className="text-md">City</p>}
+              rules={[{ required: true, message: "Please enter your city" }]}
             >
-              <Input.TextArea
-                placeholder="Your Address"
-                rows={3}
-                className="w-full rounded-md"
-              />
+              <Input placeholder="Your city" style={{ padding: "6px" }} />
+            </Form.Item>
+
+            <Form.Item
+              name="state"
+              label={<p className="text-md">state</p>}
+              rules={[{ required: true, message: "Please enter your state" }]}
+            >
+              <Input placeholder="State" style={{ padding: "6px" }} />
+            </Form.Item>
+
+            <Form.Item
+              name="zipCode"
+              label={<p className="text-md">Zip Code</p>}
+              rules={[{ required: true, message: "Please enter your state" }]}
+            >
+              <Input placeholder="zipCode" className="w-full rounded-md" />
             </Form.Item>
 
             <Form.Item className="text-center">
+              {/* <Link href="/order-confirmed"> */}
               <div className="text-white">
-                <Link href="/order-confirmed">
-                  <button
-                    type="submit"
-                    className="w-full py-3 font-bold text-2xl bg-[#3f67bc]   rounded-md shadow-lg"
-                  >
-                    Pay with stipes
-                  </button>
-                </Link>
+                <button
+                  type="submit"
+                  className="w-full py-3 font-bold text-2xl bg-[#3f67bc]   rounded-md shadow-lg"
+                >
+                  Pay with stipes
+                </button>
               </div>
+              {/* </Link> */}
             </Form.Item>
           </Form>
         </ConfigProvider>
