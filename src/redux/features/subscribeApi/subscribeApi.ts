@@ -13,6 +13,13 @@ const SubscribeApi = baseApi.injectEndpoints({
 
     privacyPolicy: builder.query({
       query: () => ({
+        url: "/policy/get-policy-by-type/privacy-policy",
+        method: "GET",
+      }),
+      providesTags: ["PrivacyPolicy"],
+    }),
+    termsAndCondition: builder.query({
+      query: () => ({
         url: "/policy/get-policy-by-type/terms-condition",
         method: "GET",
       }),
@@ -41,4 +48,5 @@ export const {
   usePrivacyPolicyQuery,
   useAboutUsQuery,
   useGetDelivaryInformationQuery,
+  useTermsAndConditionQuery,
 } = SubscribeApi;

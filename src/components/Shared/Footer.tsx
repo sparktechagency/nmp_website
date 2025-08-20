@@ -5,6 +5,7 @@ import {
   useGetDelivaryInformationQuery,
   usePrivacyPolicyQuery,
   useSentSbuscribeMutation,
+  useTermsAndConditionQuery,
 } from "@/redux/features/subscribeApi/subscribeApi";
 import React, { useState } from "react";
 import { FaFacebookF, FaInstagram } from "react-icons/fa";
@@ -16,16 +17,20 @@ import Link from "next/link";
 const Footer: React.FC = () => {
   const [email, setEmail] = useState("");
   const [sentSbuscribe, { isLoading }] = useSentSbuscribeMutation();
+
   const { data: privacyData, isLoading: privacyLoading } =
     usePrivacyPolicyQuery(undefined);
-
+  const { data: termsData, isLoading: termsLoading } =
+    useTermsAndConditionQuery(undefined);
   const { data: delivaryData, isLoading: deliveryLoading } =
     useGetDelivaryInformationQuery(undefined);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalContent, setModalContent] = useState<
-    "privacy" | "terms" | "delivery" | null
-  >(null);
+  console.log(privacyData?.data?.content);
+
+  // Separate modal states
+  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
+  const [isTermsOpen, setIsTermsOpen] = useState(false);
+  const [isDeliveryOpen, setIsDeliveryOpen] = useState(false);
 
   const handleSubscribe = async () => {
     if (!email) {
@@ -42,81 +47,108 @@ const Footer: React.FC = () => {
     }
   };
 
-  const handleOpenModal = (type: "privacy" | "terms" | "delivery") => {
-    setModalContent(type);
-    setIsModalOpen(true);
-  };
-
   return (
     <>
-      {/* Modal */}
+      {/* Privacy Modal */}
       <Modal
-        open={isModalOpen}
-        onCancel={() => setIsModalOpen(false)}
+        open={isPrivacyOpen}
+        onCancel={() => setIsPrivacyOpen(false)}
         footer={null}
         centered
         className="rounded-2xl"
       >
-        {modalContent === "privacy" || modalContent === "terms" ? (
-          privacyLoading ? (
-            <div className="flex justify-center items-center py-10">
-              <Spin size="large" />
+        {privacyLoading ? (
+          <div className="flex justify-center items-center py-10">
+            <Spin size="large" />
+          </div>
+        ) : (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold">Privacy Policy</h2>
+            <div
+              className="text-gray-700 leading-relaxed max-h-[400px] overflow-y-auto"
+              dangerouslySetInnerHTML={{
+                __html: privacyData?.data?.content || "No information found.",
+              }}
+            />
+          </div>
+        )}
+      </Modal>
+
+      {/* Terms Modal */}
+      <Modal
+        open={isTermsOpen}
+        onCancel={() => setIsTermsOpen(false)}
+        footer={null}
+        centered
+        className="rounded-2xl"
+      >
+        {termsLoading ? (
+          <div className="flex justify-center items-center py-10">
+            <Spin size="large" />
+          </div>
+        ) : (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold">Terms & Conditions</h2>
+            <div
+              className="text-gray-700 leading-relaxed max-h-[400px] overflow-y-auto"
+              dangerouslySetInnerHTML={{
+                __html: termsData?.data?.content || "No information found.",
+              }}
+            />
+          </div>
+        )}
+      </Modal>
+
+      {/* Delivery Modal */}
+      <Modal
+        open={isDeliveryOpen}
+        onCancel={() => setIsDeliveryOpen(false)}
+        footer={null}
+        centered
+        className="rounded-2xl"
+      >
+        {deliveryLoading ? (
+          <div className="flex justify-center items-center py-10">
+            <Spin size="large" />
+          </div>
+        ) : (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold">Delivery Information</h2>
+            <div className="text-gray-700 leading-relaxed space-y-2">
+              <p>
+                <strong>Address:</strong> {delivaryData?.data?.address}
+              </p>
+              <p>
+                <strong>Email:</strong> {delivaryData?.data?.email}
+              </p>
+              <p>
+                <strong>Phone:</strong> {delivaryData?.data?.phone}
+              </p>
+              <p>
+                <strong>Instagram:</strong>{" "}
+                <a
+                  href={delivaryData?.data?.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 underline"
+                >
+                  {delivaryData?.data?.instagram}
+                </a>
+              </p>
+              <p>
+                <strong>Telegram:</strong>{" "}
+                <a
+                  href={delivaryData?.data?.telegram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 underline"
+                >
+                  {delivaryData?.data?.telegram}
+                </a>
+              </p>
             </div>
-          ) : (
-            <div className="space-y-4">
-              <h2 className="text-xl font-semibold">
-                {modalContent === "privacy"
-                  ? "Privacy Policy"
-                  : "Terms & Conditions"}
-              </h2>
-              <div
-                className="text-gray-700 leading-relaxed max-h-[400px] overflow-y-auto"
-                dangerouslySetInnerHTML={{
-                  __html:
-                    privacyData?.data?.content ||
-                    "No information found.",
-                }}
-              />
-            </div>
-          )
-        ) : modalContent === "delivery" ? (
-          deliveryLoading ? (
-            <div className="flex justify-center items-center py-10">
-              <Spin size="large" />
-            </div>
-          ) : (
-            <div className="space-y-4">
-              <h2 className="text-xl font-semibold">Delivery Information</h2>
-              <div className="text-gray-700 leading-relaxed space-y-2">
-                <p><strong>Address:</strong> {delivaryData?.data?.address}</p>
-                <p><strong>Email:</strong> {delivaryData?.data?.email}</p>
-                <p><strong>Phone:</strong> {delivaryData?.data?.phone}</p>
-                <p>
-                  <strong>Instagram:</strong>{" "}
-                  <a
-                    href={delivaryData?.data?.instagram}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 underline"
-                  >
-                    {delivaryData?.data?.instagram}
-                  </a>
-                </p>
-                <p>
-                  <strong>Telegram:</strong>{" "}
-                  <a
-                    href={delivaryData?.data?.telegram}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 underline"
-                  >
-                    {delivaryData?.data?.telegram}
-                  </a>
-                </p>
-              </div>
-            </div>
-          )
-        ) : null}
+          </div>
+        )}
       </Modal>
 
       {/* Footer */}
@@ -154,7 +186,7 @@ const Footer: React.FC = () => {
               </Link>
               <li
                 className="cursor-pointer hover:text-blue-600"
-                onClick={() => handleOpenModal("privacy")}
+                onClick={() => setIsPrivacyOpen(true)}
               >
                 Privacy Policy
               </li>
@@ -169,13 +201,13 @@ const Footer: React.FC = () => {
             <ul className="space-y-2 text-sm text-gray-700">
               <li
                 className="cursor-pointer hover:text-blue-600"
-                onClick={() => handleOpenModal("delivery")}
+                onClick={() => setIsDeliveryOpen(true)}
               >
                 Delivery Information
               </li>
               <li
                 className="cursor-pointer hover:text-blue-600"
-                onClick={() => handleOpenModal("terms")}
+                onClick={() => setIsTermsOpen(true)}
               >
                 Terms & Conditions
               </li>
