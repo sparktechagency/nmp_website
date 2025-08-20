@@ -49,7 +49,6 @@ const Footer: React.FC = () => {
 
   return (
     <>
-      {/* Privacy Modal */}
       <Modal
         open={isPrivacyOpen}
         onCancel={() => setIsPrivacyOpen(false)}
@@ -74,7 +73,6 @@ const Footer: React.FC = () => {
         )}
       </Modal>
 
-      {/* Terms Modal */}
       <Modal
         open={isTermsOpen}
         onCancel={() => setIsTermsOpen(false)}
@@ -99,7 +97,6 @@ const Footer: React.FC = () => {
         )}
       </Modal>
 
-      {/* Delivery Modal */}
       <Modal
         open={isDeliveryOpen}
         onCancel={() => setIsDeliveryOpen(false)}
@@ -151,7 +148,6 @@ const Footer: React.FC = () => {
         )}
       </Modal>
 
-      {/* Footer */}
       <footer className="bg-blue-100 py-10">
         <div className="text-center mb-8">
           <h2 className="text-lg md:text-3xl font-bold mb-4">
