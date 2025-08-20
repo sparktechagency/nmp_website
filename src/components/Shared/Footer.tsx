@@ -10,6 +10,7 @@ import { FaFacebookF, FaInstagram, FaTwitter } from "react-icons/fa";
 import { FiMail, FiPhone } from "react-icons/fi";
 import toast from "react-hot-toast";
 import { Modal, Spin } from "antd";
+import Link from "next/link";
 
 const Footer: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -106,14 +107,18 @@ const Footer: React.FC = () => {
           <div>
             <h3 className="font-semibold mb-4">COMPANY & LEGAL</h3>
             <ul className="space-y-2 text-sm text-gray-700">
-              <li>About Us</li>
+              <Link href="/about-us">
+                <li>About Us</li>
+              </Link>
               <li
                 className="cursor-pointer hover:text-blue-600"
                 onClick={() => handleOpenModal("privacy")}
               >
                 Privacy Policy
               </li>
-              <li>Brands</li>
+              <Link href="/products">
+                <li>Brands</li>
+              </Link>
             </ul>
           </div>
 
