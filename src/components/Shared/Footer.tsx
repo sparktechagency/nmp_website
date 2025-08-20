@@ -120,14 +120,14 @@ const Footer: React.FC = () => {
           <div>
             <h3 className="font-semibold mb-4">CUSTOMER SERVICE</h3>
             <ul className="space-y-2 text-sm text-gray-700">
-              <li>Delivery Information</li>
+              {/* <li>Delivery Information</li> */}
               <li
                 className="cursor-pointer hover:text-blue-600"
                 onClick={() => handleOpenModal("terms")}
               >
                 Terms & Conditions
               </li>
-              <li>Returns</li>
+              {/* <li>Returns</li> */}
             </ul>
           </div>
 
@@ -148,7 +148,7 @@ const Footer: React.FC = () => {
             <div className="flex justify-center md:justify-start gap-4 text-xl">
               <FaFacebookF className="cursor-pointer hover:text-blue-600" />
               <FaInstagram className="cursor-pointer hover:text-pink-500" />
-              <FaTwitter className="cursor-pointer hover:text-blue-400" />
+              {/* <FaTwitter className="cursor-pointer hover:text-blue-400" /> */}
             </div>
           </div>
         </div>
