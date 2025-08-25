@@ -10,6 +10,14 @@ const productsApi = baseApi.injectEndpoints({
       providesTags: ["Products"],
     }),
 
+    getFeatureProducts: builder.query({
+      query: () => ({
+        url: "/product/get-feature-products",
+        method: "GET",
+      }),
+      providesTags: ["Products"],
+    }),
+
     getSingleProduct: builder.query({
       query: (_id) => ({
         url: `/product/get-single-product/${_id}`,
@@ -20,4 +28,8 @@ const productsApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetProductsQuery, useGetSingleProductQuery } = productsApi;
+export const {
+  useGetProductsQuery,
+  useGetSingleProductQuery,
+  useGetFeatureProductsQuery,
+} = productsApi;

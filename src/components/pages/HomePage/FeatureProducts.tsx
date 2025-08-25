@@ -7,9 +7,9 @@ import React from "react";
 import { FaStar } from "react-icons/fa";
 import { MdKeyboardDoubleArrowRight } from "react-icons/md";
 import Link from "next/link";
-import { useGetProductsQuery } from "@/redux/features/productsApi/productsApi";
+import { useGetFeatureProductsQuery } from "@/redux/features/productsApi/productsApi";
 const FeatureProducts = () => {
-  const { data: productsData } = useGetProductsQuery(undefined);
+  const { data: productsData } = useGetFeatureProductsQuery(undefined);
   console.log("productsData:", productsData?.data);
   const products = productsData?.data;
 
@@ -68,11 +68,11 @@ const FeatureProducts = () => {
                   Add to Cart
                 </button>
               </Link>
-              <Link href="/cart">
+              {/* <Link href="/cart">
                 <button className="px-4 py-2 border border-blue-500 rounded-md ">
                   Buy Now
                 </button>
-              </Link>
+              </Link> */}
             </div>
           </div>
         ))}
