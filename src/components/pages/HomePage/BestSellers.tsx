@@ -7,6 +7,9 @@ import { FaStar } from "react-icons/fa";
 import { MdKeyboardDoubleArrowRight } from "react-icons/md";
 import Link from "next/link";
 import { useGetBestSellerProductQuery } from "@/redux/features/productsApi/productsApi";
+import { useAddToCartMutation } from "@/redux/features/cartApi/cartApi";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const BestSellers = () => {
   const { data: bestSellerData } = useGetBestSellerProductQuery(undefined);
@@ -14,6 +17,22 @@ const BestSellers = () => {
 
   const [showAll, setShowAll] = useState(false);
   const displayedProducts = showAll ? products : products.slice(0, 6);
+  const [addToCart] = useAddToCartMutation();
+  const router = useRouter();
+
+  const handleAddToCart = async (productId: string) => {
+    try {
+      const payload = {
+        productId,
+        quantity: 1,
+      };
+      const res = await addToCart(payload).unwrap();
+      toast.success(res?.message || "Added to cart!");
+      router.push("/cart");
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Failed to add to cart");
+    }
+  };
 
   return (
     <div className="container mx-auto">
@@ -54,7 +73,9 @@ const BestSellers = () => {
                 {product.brand} • {product.category}
               </p>
               {product.flavor && (
-                <p className="text-sm text-gray-400">Flavor: {product.flavor}</p>
+                <p className="text-sm text-gray-400">
+                  Flavor: {product.flavor}
+                </p>
               )}
             </div>
 
@@ -74,7 +95,9 @@ const BestSellers = () => {
                 {[...Array(5)].map((_, i) => (
                   <FaStar
                     key={i}
-                    className={i < product.ratings ? "fill-current" : "opacity-30"}
+                    className={
+                      i < product.ratings ? "fill-current" : "opacity-30"
+                    }
                   />
                 ))}
                 <span className="text-xs text-gray-500 ml-1">
@@ -102,13 +125,16 @@ const BestSellers = () => {
 
             {/* Action Buttons */}
             <div className="mt-5 flex justify-between gap-3">
-              <Link href="/cart">
-                <button className="w-full px-4 py-2 border border-blue-500 text-white rounded-md  transition">
-                  Add to Cart
-                </button>
-              </Link>
+              <button
+                onClick={() => handleAddToCart(product._id)}
+                disabled={product.stockStatus !== "in_stock"}
+                className=" px-4 py-2 border border-blue-500 text-white rounded-md  transition"
+              >
+                Add to Cart
+              </button>
+
               <Link href={`/products/${product._id}`}>
-                <button  className="w-full px-4 py-2 border border-blue-500 rounded-md hover:bg-gray-100 transition">
+                <button className=" px-4 py-2 border border-blue-500 rounded-md hover:bg-gray-100 transition">
                   Details
                 </button>
               </Link>

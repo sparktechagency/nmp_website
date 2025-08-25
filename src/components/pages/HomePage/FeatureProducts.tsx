@@ -8,16 +8,36 @@ import { FaStar } from "react-icons/fa";
 import { MdKeyboardDoubleArrowRight } from "react-icons/md";
 import Link from "next/link";
 import { useGetFeatureProductsQuery } from "@/redux/features/productsApi/productsApi";
+import { useAddToCartMutation } from "@/redux/features/cartApi/cartApi";
+import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
 
 const FeatureProducts = () => {
   const { data: productsData } = useGetFeatureProductsQuery(undefined);
-  const products = productsData?.data;
+  const products = productsData?.data || [];
+  const [addToCart] = useAddToCartMutation();
+  const router = useRouter();
+
+  const handleAddToCart = async (productId: string) => {
+    try {
+      const payload = {
+        productId,
+        quantity: 1,
+      };
+      const res = await addToCart(payload).unwrap();
+      toast.success(res?.message || "Added to cart!");
+      router.push("/cart");
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Failed to add to cart");
+    }
+  };
 
   return (
     <div className="container mx-auto">
       <SectionTitle heading={"Featured Products"} />
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 p-6">
-        {products?.map((product: any) => (
+        {products.map((product: any) => (
           <div
             key={product._id}
             className="group relative bg-white shadow-lg rounded-2xl p-5 hover:shadow-2xl transition-all duration-300 border border-gray-100"
@@ -51,9 +71,7 @@ const FeatureProducts = () => {
                 {product.brand} • {product.category}
               </p>
               {product.flavor && (
-                <p className="text-sm text-gray-400">
-                  Flavor: {product.flavor}
-                </p>
+                <p className="text-sm text-gray-400">Flavor: {product.flavor}</p>
               )}
             </div>
 
@@ -97,11 +115,13 @@ const FeatureProducts = () => {
 
             {/* Action Buttons */}
             <div className="mt-5 flex justify-between gap-3 text-blue-500">
-              <Link href="/cart">
-                <button className="w-full px-4 py-2 border border-blue-500 text-white rounded-md  transition">
-                  Add to Cart
-                </button>
-              </Link>
+              <button
+                onClick={() => handleAddToCart(product._id)}
+                disabled={product.stockStatus !== "in_stock"}
+                className=" px-4 py-2 border border-blue-500 text-white rounded-md transition disabled:opacity-50"
+              >
+                Add to Cart
+              </button>
               <Link href={`/products/${product._id}`}>
                 <button className="w-full px-4 py-2 border border-blue-500 rounded-md hover:bg-gray-100 transition">
                   Details
