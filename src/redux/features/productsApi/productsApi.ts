@@ -17,6 +17,7 @@ const productsApi = baseApi.injectEndpoints({
       }),
       providesTags: ["Products"],
     }),
+    
     getBestSellerProduct: builder.query({
       query: () => ({
         url: "/product/get-best-seller-products",
