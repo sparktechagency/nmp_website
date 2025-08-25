@@ -8,80 +8,115 @@ import { FaStar } from "react-icons/fa";
 import { MdKeyboardDoubleArrowRight } from "react-icons/md";
 import Link from "next/link";
 import { useGetFeatureProductsQuery } from "@/redux/features/productsApi/productsApi";
+
 const FeatureProducts = () => {
   const { data: productsData } = useGetFeatureProductsQuery(undefined);
-  console.log("productsData:", productsData?.data);
   const products = productsData?.data;
-
-  console.log(products);
 
   return (
     <div className="container mx-auto">
-      <SectionTitle heading={"Feature Products"} />
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
+      <SectionTitle heading={"Featured Products"} />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 p-6">
         {products?.map((product: any) => (
           <div
             key={product._id}
-            className="relative bg-white shadow-lg rounded-lg p-4 text-blue-500"
+            className="group relative bg-white shadow-lg rounded-2xl p-5 hover:shadow-2xl transition-all duration-300 border border-gray-100"
           >
+            {/* Discount Badge */}
             {product?.discount > 0 && (
-              <span className="absolute top-2 left-2 bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-full z-10 shadow-md">
-                {product.discount}%
+              <span className="absolute top-3 left-3 bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-full z-10 shadow-md">
+                -{product.discount}%
               </span>
             )}
 
+            {/* Product Image */}
             <Link href={`/products/${product._id}`}>
-              <div className="flex justify-center my-3">
+              <div className="flex justify-center my-4">
                 <Image
                   src={product.image}
-                  height={200}
-                  width={200}
+                  height={220}
+                  width={220}
                   alt={product.name}
-                  className="rounded-md"
+                  className="rounded-lg group-hover:scale-105 transition-transform duration-300"
                 />
               </div>
             </Link>
-            <h1 className="font-bold mt-4 text-blue-500 text-center text-xl my-2">
-              {product.name}
-            </h1>
-            <p className="text-gray-600 text-sm text-center">
-              {product.description}
-            </p>
-            <div className="flex justify-between items-center gap-5 mt-2">
-              <div className="flex justify-start items-center gap-3">
-                <p className="text-md font-semibold">${product.currentPrice}</p>
-                <p className="text-gray-500 line-through text-sm">
-                  ${product.originalPrice}
-                </p>
-              </div>
 
-              <div className="flex items-center gap-1 text-yellow-500">
-                {[...Array(product.rating)].map((_, i) => (
-                  <FaStar key={i} />
+            {/* Product Info */}
+            <div className="text-center">
+              <h2 className="font-bold text-lg text-gray-800 group-hover:text-blue-600 transition">
+                {product.name}
+              </h2>
+              <p className="text-sm text-gray-500 mt-1">
+                {product.brand} • {product.category}
+              </p>
+              {product.flavor && (
+                <p className="text-sm text-gray-400">
+                  Flavor: {product.flavor}
+                </p>
+              )}
+            </div>
+
+            {/* Price + Ratings */}
+            <div className="flex justify-between items-center mt-4">
+              <div className="flex items-center gap-2">
+                <p className="text-lg font-bold text-blue-600">
+                  ${product.currentPrice}
+                </p>
+                {product.originalPrice > 0 && (
+                  <p className="text-gray-400 line-through text-sm">
+                    ${product.originalPrice}
+                  </p>
+                )}
+              </div>
+              <div className="flex items-center gap-1 text-yellow-400">
+                {[...Array(5)].map((_, i) => (
+                  <FaStar
+                    key={i}
+                    className={
+                      i < product.ratings ? "fill-current" : "opacity-30"
+                    }
+                  />
                 ))}
+                <span className="text-xs text-gray-500 ml-1">
+                  ({product.totalReview})
+                </span>
               </div>
             </div>
 
-            <div className="mt-4 flex justify-between items-center gap-3">
+            {/* Stock Status */}
+            <p
+              className={`mt-2 text-xs font-semibold ${
+                product.stockStatus === "in_stock"
+                  ? "text-green-500"
+                  : "text-red-500"
+              }`}
+            >
+              {product.stockStatus === "in_stock" ? "In Stock" : "Out of Stock"}
+            </p>
+
+            {/* Action Buttons */}
+            <div className="mt-5 flex justify-between gap-3 text-blue-500">
               <Link href="/cart">
-                <button className="px-4 py-2 border border-blue-500 rounded-md ">
+                <button className="w-full px-4 py-2 border border-blue-500 text-white rounded-md  transition">
                   Add to Cart
                 </button>
               </Link>
-              {/* <Link href="/cart">
-                <button className="px-4 py-2 border border-blue-500 rounded-md ">
-                  Buy Now
+              <Link href={`/products/${product._id}`}>
+                <button className="w-full px-4 py-2 border border-blue-500 rounded-md hover:bg-gray-100 transition">
+                  Details
                 </button>
-              </Link> */}
+              </Link>
             </div>
           </div>
         ))}
       </div>
-      <div className="flex justify-center items-center my-20 text-white">
+
+      <div className="flex justify-center items-center my-16 text-white ">
         <Link href="/products">
-          <button className="flex justify-center items-center gap-2 px-4 py-2  bg-orange-400  rounded-md  cursor-pointer">
+          <button className="flex items-center gap-2 px-4 py-2 bg-[#ff8904] rounded-md hover:bg-orange-600 transition shadow-md">
             See More
-            <MdKeyboardDoubleArrowRight className="" />
+            <MdKeyboardDoubleArrowRight className="text-xl" />
           </button>
         </Link>
       </div>
