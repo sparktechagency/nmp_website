@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import React from "react";
-import { ConfigProvider, Form, Input } from "antd";
+import React, { useState } from "react";
+import { ConfigProvider, Form, Input, Spin } from "antd";
 import type { FormProps } from "antd";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -23,11 +23,12 @@ const CheckoutPage: React.FC = () => {
   console.log(total, quantity);
 
   const [createOrder] = useCreateOrderMutation();
-
+  const [loading, setLoading] = useState(false);
   const onFinish: FormProps<ContactFormValues>["onFinish"] = async (values) => {
     console.log("Form Submitted:", values);
 
     try {
+      setLoading(true); // show loader
       const data = {
         streetAddress: values.streetAddress,
         city: values?.city,
@@ -36,10 +37,17 @@ const CheckoutPage: React.FC = () => {
       };
 
       const res = await createOrder(data).unwrap();
-      toast.success(res?.message);
-      router.push("/order-confirmed")
+
+      if (res?.success && res?.data?.url) {
+        toast.success(res?.message);
+        window.location.href = res.data.url; // redirect to Stripe
+      } else {
+        toast.error("Payment link not found!");
+      }
     } catch (error: any) {
-      toast.error(error?.data?.message);
+      toast.error(error?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false); // hide loader if error
     }
   };
 
@@ -135,7 +143,7 @@ const CheckoutPage: React.FC = () => {
                   type="submit"
                   className="w-full py-3 font-bold text-2xl bg-[#3f67bc]   rounded-md shadow-lg"
                 >
-                  Pay with stipes
+                  {loading ? <Spin size="small" /> : "Pay with Stripe"}
                 </button>
               </div>
               {/* </Link> */}

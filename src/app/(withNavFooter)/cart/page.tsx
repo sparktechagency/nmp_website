@@ -172,13 +172,14 @@ const CartPage = () => {
             ← Continue shopping
           </button>
         </Link>
-
-        <button
-          onClick={handleCheckout}
-          className="bg-[#3f67bc] px-6 py-2 rounded-lg text-white"
-        >
-          Checkout
-        </button>
+        <div className="text-white">
+          <button
+            onClick={handleCheckout}
+            className="bg-[#3f67bc] px-6 py-2 rounded-lg "
+          >
+            Checkout
+          </button>
+        </div>
       </div>
     </div>
   );
