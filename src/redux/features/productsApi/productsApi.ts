@@ -17,6 +17,13 @@ const productsApi = baseApi.injectEndpoints({
       }),
       providesTags: ["Products"],
     }),
+    getBestSellerProduct: builder.query({
+      query: () => ({
+        url: "/product/get-best-seller-products",
+        method: "GET",
+      }),
+      providesTags:["Products"]
+    }),
 
     getSingleProduct: builder.query({
       query: (_id) => ({
@@ -32,4 +39,5 @@ export const {
   useGetProductsQuery,
   useGetSingleProductQuery,
   useGetFeatureProductsQuery,
+  useGetBestSellerProductQuery
 } = productsApi;

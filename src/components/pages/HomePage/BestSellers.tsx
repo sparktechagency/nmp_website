@@ -1,146 +1,133 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
 import SectionTitle from "@/components/Shared/SectionTitle";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import { FaStar } from "react-icons/fa";
-import product from "../../../assets/image/banner.png";
 import { MdKeyboardDoubleArrowRight } from "react-icons/md";
 import Link from "next/link";
+import { useGetBestSellerProductQuery } from "@/redux/features/productsApi/productsApi";
+
 const BestSellers = () => {
-  const products = [
-    {
-      id: 1,
-      name: "GeekVape",
-      description:
-        "Sleek design, powerful performance, and unmatched flavor delivery — perfect for everyday vaping.",
-      price: 190,
-      originalPrice: 255,
-      discount: "50% OFF",
-      rating: 5,
-      image: product,
-    },
-    {
-      id: 2,
-      name: "VapeMaster Pro",
-      description:
-        "Advanced chipset with adjustable airflow, providing a smooth and customizable vaping experience.",
-      price: 220,
-      originalPrice: 300,
-      discount: "27% OFF",
-      rating: 4,
-      image: product,
-    },
-    {
-      id: 3,
-      name: "CloudChaser X",
-      description:
-        "Designed for cloud enthusiasts, delivering massive vapor output with a sleek ergonomic body.",
-      price: 180,
-      originalPrice: 250,
-      discount: "28% OFF",
-      rating: 4,
-      image: product,
-    },
-    {
-      id: 4,
-      name: "NanoVape",
-      description:
-        "Compact and portable, perfect for on-the-go vaping without sacrificing power or flavor.",
-      price: 150,
-      originalPrice: 200,
-      discount: "25% OFF",
-      rating: 3,
-      image: product,
-    },
-    {
-      id: 5,
-      name: "VaporKing Elite",
-      description:
-        "Premium build quality with a powerful battery and advanced temperature control features.",
-      price: 300,
-      originalPrice: 375,
-      discount: "20% OFF",
-      rating: 5,
-      image: product,
-    },
-    {
-      id: 6,
-      name: "VaporKing Elite",
-      description:
-        "Premium build quality with a powerful battery and advanced temperature control features.",
-      price: 300,
-      originalPrice: 375,
-      discount: "20% OFF",
-      rating: 5,
-      image: product,
-    },
-  ];
+  const { data: bestSellerData } = useGetBestSellerProductQuery(undefined);
+  const products = bestSellerData?.data || [];
+
+  const [showAll, setShowAll] = useState(false);
+  const displayedProducts = showAll ? products : products.slice(0, 6);
 
   return (
     <div className="container mx-auto">
       <SectionTitle heading={"Best Seller Products"} />
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
-        {products.map((product) => (
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 p-6">
+        {displayedProducts.map((product: any) => (
           <div
-            key={product.id}
-            className="relative bg-white shadow-lg rounded-lg p-4 text-blue-500"
+            key={product._id}
+            className="group relative bg-white shadow-lg rounded-2xl p-5 hover:shadow-2xl transition-all duration-300 border border-gray-100"
           >
-            {/* <span className="absolute top-2 left-2 bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-full z-10 shadow-md">
-              {product.discount}
-            </span> */}
+            {/* Discount Badge */}
+            {product?.discount && (
+              <span className="absolute top-3 left-3 bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-full z-10 shadow-md">
+                -{product.discount}%
+              </span>
+            )}
 
-            <div className="flex justify-center my-3">
-              <Image
-                src={product.image}
-                height={200}
-                width={200}
-                alt={product.name}
-                className="rounded-md"
-              />
+            {/* Product Image */}
+            <Link href={`/products/${product._id}`}>
+              <div className="flex justify-center my-4">
+                <Image
+                  src={product.image}
+                  height={220}
+                  width={220}
+                  alt={product.name}
+                  className="rounded-lg group-hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+            </Link>
+
+            {/* Product Info */}
+            <div className="text-center">
+              <h2 className="font-bold text-lg text-gray-800 group-hover:text-blue-600 transition">
+                {product.name}
+              </h2>
+              <p className="text-sm text-gray-500 mt-1">
+                {product.brand} • {product.category}
+              </p>
+              {product.flavor && (
+                <p className="text-sm text-gray-400">Flavor: {product.flavor}</p>
+              )}
             </div>
 
-            <h1 className="font-bold mt-4 text-blue-500 text-center text-xl my-2">
-              {product.name}
-            </h1>
-            <p className="text-gray-600 text-sm text-center">
-              {product.description}
-            </p>
-            <div className="flex justify-between items-center gap-5 mt-2">
-              <div className="flex justify-start items-center gap-3">
-                <p className="text-md font-semibold">${product.price}</p>
-                <p className="text-gray-500 line-through text-sm">
-                  ${product.originalPrice}
+            {/* Price + Ratings */}
+            <div className="flex justify-between items-center mt-4">
+              <div className="flex items-center gap-2">
+                <p className="text-lg font-bold text-blue-600">
+                  ${product.currentPrice}
                 </p>
+                {product.originalPrice > 0 && (
+                  <p className="text-gray-400 line-through text-sm">
+                    ${product.originalPrice}
+                  </p>
+                )}
               </div>
-
-              <div className="flex items-center gap-1 text-yellow-500">
-                {[...Array(product.rating)].map((_, i) => (
-                  <FaStar key={i} />
+              <div className="flex items-center gap-1 text-yellow-400">
+                {[...Array(5)].map((_, i) => (
+                  <FaStar
+                    key={i}
+                    className={i < product.ratings ? "fill-current" : "opacity-30"}
+                  />
                 ))}
+                <span className="text-xs text-gray-500 ml-1">
+                  ({product.totalReview})
+                </span>
               </div>
             </div>
 
-            <div className="mt-4 flex justify-between items-center gap-3">
-             <Link href="/cart">
-                    <button className="px-4 py-2 border border-blue-500 rounded-md ">
-                      Add to Cart
-                    </button>
-                  </Link>
-                  <Link href="/cart">
-                    <button className="px-4 py-2 border border-blue-500 rounded-md ">
-                      Buy Now
-                    </button>
-                  </Link>
+            {/* Stock Status */}
+            <p
+              className={`mt-2 text-xs font-semibold ${
+                product.stockStatus === "in_stock"
+                  ? "text-green-500"
+                  : product.stockStatus === "up_coming"
+                  ? "text-orange-500"
+                  : "text-red-500"
+              }`}
+            >
+              {product.stockStatus === "in_stock"
+                ? "In Stock"
+                : product.stockStatus === "up_coming"
+                ? "Coming Soon"
+                : "Out of Stock"}
+            </p>
+
+            {/* Action Buttons */}
+            <div className="mt-5 flex justify-between gap-3">
+              <Link href="/cart">
+                <button className="w-full px-4 py-2 border border-blue-500 text-white rounded-md  transition">
+                  Add to Cart
+                </button>
+              </Link>
+              <Link href={`/products/${product._id}`}>
+                <button  className="w-full px-4 py-2 border border-blue-500 rounded-md hover:bg-gray-100 transition">
+                  Details
+                </button>
+              </Link>
             </div>
           </div>
         ))}
       </div>
-      <div className="flex justify-center items-center my-20 text-white">
-         <Link href="/products">
-        <button className="flex justify-center items-center gap-2 px-4 py-2  bg-orange-400  rounded-md cursor-pointerF ">
-          See More
-          <MdKeyboardDoubleArrowRight className="" />
-        </button>
-        </Link>
+
+      {/* Show More / See More Button */}
+      <div className="flex justify-center items-center my-16 text-white">
+        {products.length > 6 && (
+          <button
+            onClick={() => setShowAll(!showAll)}
+            className="flex items-center gap-2 px-4 py-2 bg-[#ff8904]  rounded-md  transition shadow-md"
+          >
+            {showAll ? "Show Less" : "Show More"}
+            <MdKeyboardDoubleArrowRight className="text-xl" />
+          </button>
+        )}
       </div>
     </div>
   );
