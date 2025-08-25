@@ -1,8 +1,46 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
+
+import { useSearchParams } from "next/navigation";
+import { useVerifySessionQuery } from "@/redux/features/ordersApi/ordersApi";
 import Link from "next/link";
 import React from "react";
 import { FaRegCheckCircle } from "react-icons/fa";
 
 const OrderConfirmedPage = () => {
+  // Get session_id from the URL
+  const searchParams = useSearchParams();
+  const sessionId = searchParams.get("session_id");
+
+  // Call API with session id
+  const { data: sessionData, isLoading } = useVerifySessionQuery(
+    { session: sessionId },
+    { skip: !sessionId } // skip if no sessionId
+  );
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  // If verification failed
+  if (!sessionData?.success) {
+    return (
+      <div className="flex flex-col justify-center items-center h-screen text-red-500">
+        <h1 className="text-2xl font-bold">Payment Verification Failed!</h1>
+        <Link href="/">
+          <button className="mt-5 px-6 py-3 bg-gray-700 text-white rounded-md">
+            Back to Homepage
+          </button>
+        </Link>
+      </div>
+    );
+  }
+
+  // If verification successful
   return (
     <div className="container mx-auto my-20">
       <div className="flex md:flex-col justify-center items-center gap-3">
@@ -14,7 +52,7 @@ const OrderConfirmedPage = () => {
         <div className="flex justify-between items-center gap-5 ">
           <div className="text-white">
             <Link href="/">
-              <button className="px-6 py-3 font-bold text-2xl bg-[#3f67bc]   rounded-md">
+              <button className="px-6 py-3 font-bold text-2xl bg-[#3f67bc] rounded-md">
                 Go to Homepage
               </button>
             </Link>

@@ -17,6 +17,17 @@ const OrdersApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Orders"],
     }),
+    verifySession: builder.query({
+      query: ({ session }) => ({
+        url: `/order/verify-session?sessionId=${session}`,
+        method: "GET",
+      }),
+      providesTags: ["Orders"],
+    }),
   }),
 });
-export const { useGetOrdersQuery, useCreateOrderMutation } = OrdersApi;
+export const {
+  useGetOrdersQuery,
+  useCreateOrderMutation,
+  useVerifySessionQuery,
+} = OrdersApi;
