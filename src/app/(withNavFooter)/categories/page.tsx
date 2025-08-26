@@ -116,9 +116,12 @@ const CategoryPage = () => {
                     )}
                   </div>
                   <div className="flex items-center gap-1 text-yellow-500">
-                    {[...Array(product.ratings)].map((_, i) => (
-                      <FaStar key={i} />
-                    ))}
+                    {[...Array(Math.floor(product?.ratings ?? 0))].map(
+                      (_, i) => (
+                        <FaStar key={i} />
+                      )
+                    )}
+
                     <span className="text-gray-500 text-sm ml-1">
                       ({product.totalReview})
                     </span>

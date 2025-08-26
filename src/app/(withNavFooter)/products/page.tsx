@@ -87,7 +87,6 @@ const ProductsPage = () => {
   const { data: brandData } = useGetBrandDropDownQuery(undefined);
   const { data: flavourdata } = useGetFlavourDropDownQuery(undefined);
 
-
   const products = productsData?.data ?? [];
   const total = productsData?.meta?.total ?? 0;
   const handlePageChange = (page: any) => {
@@ -226,9 +225,12 @@ const ProductsPage = () => {
 
                     {/* Rating */}
                     <div className="flex items-center gap-1 text-yellow-500">
-                      {[...Array(product.ratings)].map((_, i) => (
-                        <FaStar key={i} />
-                      ))}
+                      {[...Array(Math.floor(product?.ratings ?? 0))].map(
+                        (_, i) => (
+                          <FaStar key={i} />
+                        )
+                      )}
+
                       <span className="text-gray-500 text-xs ml-1">
                         ({product.totalReview} reviews)
                       </span>
