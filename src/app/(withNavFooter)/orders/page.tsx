@@ -39,6 +39,7 @@ interface Order {
 
 const OrderPage = () => {
   const { data: orderData, isLoading } = useGetOrdersQuery(undefined);
+  console.log("orderData:", orderData);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState<string | null>(
@@ -48,7 +49,6 @@ const OrderPage = () => {
   const [rating, setRating] = useState(0);
   const [orderId, setOrderId] = useState<string>("");
 
-  // Use createReview hook from reviewApi
   const [createReview, { isLoading: isReviewLoading }] =
     useCreateReviewMutation();
 
@@ -67,7 +67,6 @@ const OrderPage = () => {
   };
 
   const handleReviewSubmit = async (values: any) => {
-    // Check if required data is available
     if (!selectedProductId || !values.comment || values.star === 0) {
       notification.error({
         message: "Review Error",
@@ -130,17 +129,16 @@ const OrderPage = () => {
                 <p className="text-sm text-gray-500">
                   Qty: {product.quantity} | ${product.price.toFixed(2)}
                 </p>
-                {product.isReview && (
-                  <Button
-                    onClick={() =>
-                      handleModalOpen(product.productId, products[0]._id)
-                    }
-                    type="primary"
-                    disabled={false}
-                  >
-                    Review
-                  </Button>
-                )}
+                {/* Disable the Review Button if already reviewed */}
+                <Button
+                  onClick={() =>
+                    handleModalOpen(product.productId, product._id)
+                  }
+                  type="primary"
+                  disabled={product.isReview} // Disable if already reviewed
+                >
+                  {product.isReview ? "Already Reviewed" : "Review"}
+                </Button>
               </div>
             </div>
           ))}
@@ -175,21 +173,7 @@ const OrderPage = () => {
         </Tag>
       ),
     },
-    {
-      title: "Action",
-      key: "action",
-      render: (_: any, record: Order) => (
-        <Button
-          onClick={() =>
-            handleModalOpen(record.products[0].productId, record._id)
-          }
-          type="primary"
-          disabled={record.paymentStatus !== "paid"}
-        >
-          Review
-        </Button>
-      ),
-    },
+   
   ];
 
   return (

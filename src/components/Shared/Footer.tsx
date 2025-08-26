@@ -225,8 +225,12 @@ const Footer: React.FC = () => {
           <div>
             <h3 className="font-semibold mb-4">FOLLOW US</h3>
             <div className="flex justify-center md:justify-start gap-4 text-xl">
-              <FaFacebookF className="cursor-pointer hover:text-blue-600" />
-              <FaInstagram className="cursor-pointer hover:text-pink-500" />
+              <Link href="https://www.facebook.com/">
+                <FaFacebookF className="cursor-pointer hover:text-blue-600" />
+              </Link>
+              <Link href="https://www.instagram.com">
+                <FaInstagram className="cursor-pointer hover:text-pink-500" />
+              </Link>
             </div>
           </div>
         </div>
