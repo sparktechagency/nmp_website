@@ -1,10 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
-import { Table, Tag, Button } from "antd";
+import {
+  Table,
+  Tag,
+  Button,
+  Modal,
+  Input,
+  Rate,
+  notification,
+  Form,
+} from "antd";
 import SectionTitle from "@/components/Shared/SectionTitle";
 import { useGetOrdersQuery } from "@/redux/features/ordersApi/ordersApi";
+import { useCreateReviewMutation } from "@/redux/features/reviewApi/reviewApi";
+import toast from "react-hot-toast";
 
 interface Product {
   image: string;
@@ -12,6 +23,7 @@ interface Product {
   price: number;
   quantity: number;
   isReview: boolean;
+  productId: string;
 }
 
 interface Order {
@@ -27,6 +39,61 @@ interface Order {
 
 const OrderPage = () => {
   const { data: orderData, isLoading } = useGetOrdersQuery(undefined);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(
+    null
+  );
+  const [review, setReview] = useState("");
+  const [rating, setRating] = useState(0);
+  const [orderId, setOrderId] = useState<string>("");
+
+  // Use createReview hook from reviewApi
+  const [createReview, { isLoading: isReviewLoading }] =
+    useCreateReviewMutation();
+
+  const handleModalOpen = (productId: string, orderId: string) => {
+    setSelectedProductId(productId);
+    setOrderId(orderId);
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    setSelectedProductId(null);
+    setOrderId("");
+    setReview("");
+    setRating(0);
+  };
+
+  const handleReviewSubmit = async (values: any) => {
+    // Check if required data is available
+    if (!selectedProductId || !values.comment || values.star === 0) {
+      notification.error({
+        message: "Review Error",
+        description:
+          "Please provide both a rating and a comment for the review.",
+      });
+      return;
+    }
+
+    const reviewData = {
+      orderId,
+      productId: selectedProductId,
+      star: values.star,
+      comment: values.comment,
+    };
+
+    try {
+      const res = await createReview(reviewData).unwrap();
+      console.log("Review response:", res);
+
+      toast.success(res.message);
+      handleModalClose();
+    } catch (error: any) {
+      toast.error(error?.data?.message);
+    }
+  };
 
   const columns = [
     {
@@ -63,6 +130,17 @@ const OrderPage = () => {
                 <p className="text-sm text-gray-500">
                   Qty: {product.quantity} | ${product.price.toFixed(2)}
                 </p>
+                {product.isReview && (
+                  <Button
+                    onClick={() =>
+                      handleModalOpen(product.productId, products[0]._id)
+                    }
+                    type="primary"
+                    disabled={false}
+                  >
+                    Review
+                  </Button>
+                )}
               </div>
             </div>
           ))}
@@ -102,8 +180,11 @@ const OrderPage = () => {
       key: "action",
       render: (_: any, record: Order) => (
         <Button
+          onClick={() =>
+            handleModalOpen(record.products[0].productId, record._id)
+          }
           type="primary"
-          disabled={!record.products.some((p) => p.isReview)}
+          disabled={record.paymentStatus !== "paid"}
         >
           Review
         </Button>
@@ -122,6 +203,42 @@ const OrderPage = () => {
         pagination={{ pageSize: 5 }}
         bordered
       />
+      <Modal
+        title="Leave a Review"
+        open={isModalOpen}
+        onCancel={handleModalClose}
+        footer={null}
+      >
+        <Form onFinish={handleReviewSubmit}>
+          <div className="mb-4">
+            <Form.Item
+              name="comment"
+              rules={[{ required: true, message: "Please write a review!" }]}
+            >
+              <Input.TextArea
+                rows={4}
+                value={review}
+                onChange={(e) => setReview(e.target.value)}
+                placeholder="Write your review here..."
+              />
+            </Form.Item>
+          </div>
+          <div className="flex items-center">
+            <span className="mr-2">Rating:</span>
+            <Form.Item
+              name="star"
+              rules={[{ required: true, message: "Please select a rating!" }]}
+            >
+              <Rate value={rating} onChange={setRating} />
+            </Form.Item>
+          </div>
+          <Form.Item>
+            <Button type="primary" htmlType="submit" loading={isReviewLoading}>
+              Submit Review
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   );
 };
