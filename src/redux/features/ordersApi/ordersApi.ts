@@ -3,8 +3,8 @@ import { baseApi } from "@/redux/api/baseApi";
 const OrdersApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getOrders: builder.query({
-      query: () => ({
-        url: "/order/get-user-orders",
+      query: ({ page, limit }) => ({
+        url: `/order/get-user-orders?page=${page}&limit=${limit}`,
         method: "GET",
       }),
       providesTags: ["Orders"],

@@ -19,7 +19,7 @@ const ProductDetails = () => {
   const id = params?.id;
   const [addToCart] = useAddToCartMutation();
   const { data: singleProduct } = useGetSingleProductQuery(id);
-  const { data: reviewData } = useGetAllReviewQuery(id);
+  const { data: reviewData } = useGetAllReviewQuery(id as string);
 
   const [quantity, setQuantity] = useState(1);
 

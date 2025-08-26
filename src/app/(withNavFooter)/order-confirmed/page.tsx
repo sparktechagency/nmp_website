@@ -8,14 +8,12 @@ import React from "react";
 import { FaRegCheckCircle } from "react-icons/fa";
 
 const OrderConfirmedPage = () => {
-  // Get session_id from the URL
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
 
-  // Call API with session id
   const { data: sessionData, isLoading } = useVerifySessionQuery(
     { session: sessionId },
-    { skip: !sessionId } // skip if no sessionId
+    { skip: !sessionId }
   );
 
   if (isLoading) {
@@ -26,7 +24,6 @@ const OrderConfirmedPage = () => {
     );
   }
 
-  // If verification failed
   if (!sessionData?.success) {
     return (
       <div className="flex flex-col justify-center items-center h-screen text-red-500">
@@ -40,7 +37,6 @@ const OrderConfirmedPage = () => {
     );
   }
 
-  // If verification successful
   return (
     <div className="container mx-auto my-20">
       <div className="flex md:flex-col justify-center items-center gap-3">

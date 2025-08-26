@@ -11,6 +11,8 @@ import {
   Rate,
   notification,
   Form,
+  Pagination,
+  ConfigProvider,
 } from "antd";
 import SectionTitle from "@/components/Shared/SectionTitle";
 import { useGetOrdersQuery } from "@/redux/features/ordersApi/ordersApi";
@@ -38,7 +40,16 @@ interface Order {
 }
 
 const OrderPage = () => {
-  const { data: orderData, isLoading } = useGetOrdersQuery(undefined);
+  const [pageSize, setPageSize] = useState(5);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const handlePageChange = (page: any) => {
+    setCurrentPage(page);
+  };
+  const { data: orderData, isLoading } = useGetOrdersQuery({
+    page: currentPage,
+    limit: pageSize,
+  });
   console.log("orderData:", orderData);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -54,7 +65,7 @@ const OrderPage = () => {
 
   const handleModalOpen = (productId: string, orderId: string) => {
     setSelectedProductId(productId);
-    localStorage.setItem("productId",productId);
+    localStorage.setItem("productId", productId);
     setOrderId(orderId);
     setIsModalOpen(true);
   };
@@ -174,7 +185,6 @@ const OrderPage = () => {
         </Tag>
       ),
     },
-   
   ];
 
   return (
@@ -185,9 +195,29 @@ const OrderPage = () => {
         dataSource={orderData?.data}
         rowKey="_id"
         loading={isLoading}
-        pagination={{ pageSize: 5 }}
+        pagination={false}
         bordered
       />
+      <ConfigProvider
+        theme={{
+          components: {
+            // Pagination: {
+            //   itemActiveBg: "#4096ff",
+            //   itemBg: "rgba(0,0,0,0)",
+            //   colorText: "black",
+            // },
+          },
+        }}
+      >
+        <div className=" mt-14">
+          <Pagination
+            defaultCurrent={1}
+            onChange={handlePageChange}
+            total={30}
+          />
+        </div>
+      </ConfigProvider>
+
       <Modal
         title="Leave a Review"
         open={isModalOpen}
