@@ -42,7 +42,6 @@ interface Order {
 const OrderPage = () => {
   const [pageSize, setPageSize] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
-
   const handlePageChange = (page: any) => {
     setCurrentPage(page);
   };
@@ -50,7 +49,6 @@ const OrderPage = () => {
     page: currentPage,
     limit: pageSize,
   });
-  console.log("orderData:", orderData);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState<string | null>(
@@ -59,6 +57,7 @@ const OrderPage = () => {
   const [review, setReview] = useState("");
   const [rating, setRating] = useState(0);
   const [orderId, setOrderId] = useState<string>("");
+  console.log("orderData", orderData?.data);
 
   const [createReview, { isLoading: isReviewLoading }] =
     useCreateReviewMutation();
@@ -79,26 +78,32 @@ const OrderPage = () => {
   };
 
   const handleReviewSubmit = async (values: any) => {
-    if (!selectedProductId || !values.comment || values.star === 0) {
+    if (
+      !selectedProductId ||
+      !orderId ||
+      !values.comment ||
+      values.star === 0
+    ) {
       notification.error({
         message: "Review Error",
         description:
-          "Please provide both a rating and a comment for the review.",
+          "Please provide both a rating, a comment, and make sure orderId exists.",
       });
       return;
     }
 
     const reviewData = {
-      orderId,
+      orderId, // now coming from state
       productId: selectedProductId,
       star: values.star,
       comment: values.comment,
     };
 
+    console.log("reviewData", reviewData);
+
     try {
       const res = await createReview(reviewData).unwrap();
       console.log("Review response:", res);
-
       toast.success(res.message);
       handleModalClose();
     } catch (error: any) {
@@ -125,7 +130,7 @@ const OrderPage = () => {
       title: "Products",
       dataIndex: "products",
       key: "products",
-      render: (products: Product[]) => (
+      render: (products: Product[], record: Order) => (
         <div className="flex flex-col gap-2">
           {products.map((product, idx) => (
             <div key={idx} className="flex items-center gap-3">
@@ -141,13 +146,10 @@ const OrderPage = () => {
                 <p className="text-sm text-gray-500">
                   Qty: {product.quantity} | ${product.price.toFixed(2)}
                 </p>
-                {/* Disable the Review Button if already reviewed */}
                 <Button
-                  onClick={() =>
-                    handleModalOpen(product.productId, product._id)
-                  }
+                  onClick={() => handleModalOpen(product.productId, record._id)}
                   type="primary"
-                  disabled={product.isReview} // Disable if already reviewed
+                  disabled={product.isReview}
                 >
                   {product.isReview ? "Already Reviewed" : "Review"}
                 </Button>
@@ -157,6 +159,7 @@ const OrderPage = () => {
         </div>
       ),
     },
+
     {
       title: "Total",
       dataIndex: "totalPrice",
