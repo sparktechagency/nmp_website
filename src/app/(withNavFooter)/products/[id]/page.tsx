@@ -80,7 +80,7 @@ const ProductDetails = () => {
 
   const reviews = reviewData?.data ?? [];
   return (
-    <div className="container mx-auto my-20">
+    <div className="container mx-auto my-20 px-2 md:px-0">
       <div className="w-full flex flex-col md:flex-row justify-start items-center gap-5">
         <div className="w-full md:w-[40%]">
           <Image

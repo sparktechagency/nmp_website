@@ -5,7 +5,6 @@ import React from "react";
 import { FaLeaf, FaCloud, FaRegSmile } from "react-icons/fa";
 import image from "../../../assets/image/image 19.png";
 import Facts from "@/components/pages/AboutUs/Facts";
-import Reviews from "@/components/pages/AboutUs/Reviews";
 import { useAboutUsQuery } from "@/redux/features/subscribeApi/subscribeApi";
 
 const AboutUs = () => {
@@ -15,9 +14,8 @@ const AboutUs = () => {
   // console.log(plainText);
 
   return (
-    <div className="container mx-auto my-20 px-4">
+    <div className="container mx-auto my-20">
       <div className="grid md:grid-cols-2 gap-10 items-center">
-        {/* Left: Image */}
         <div className="flex justify-center">
           <Image
             src={image}
@@ -65,7 +63,7 @@ const AboutUs = () => {
         </div>
       </div>
       <Facts></Facts>
-      <Reviews />
+      {/* <Reviews /> */}
     </div>
   );
 };

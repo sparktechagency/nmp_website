@@ -126,7 +126,7 @@ const ProductsPage = () => {
 
   return (
     <div className="container mx-auto my-10">
-      <div className="w-full flex justify-start items-start gap-10">
+      <div className="w-full flex-col md:flex-row justify-start items-start gap-10 px-2 md:px-0 ">
         {/* ---------------- Filters ---------------- */}
         <div className="w-full md:w-[30%]">
           <h1 className="text-lg font-semibold mb-2">Filter By</h1>
@@ -155,7 +155,7 @@ const ProductsPage = () => {
 
         {/* ---------------- Products ---------------- */}
         <div className="w-full md:w-[70%]">
-          <div className="flex justify-between items-center gap-5">
+          <div className="flex-col md:flex-row justify-between items-center gap-5">
             <h1 className="text-2xl font-bold">All Products</h1>
             <div className="mt-4 md:mt-0">
               <Search

@@ -88,7 +88,7 @@ const CartPage = () => {
   }
 
   return (
-    <div className="container mx-auto p-5">
+    <div className="container mx-auto md:h-[60vh] p-5">
       <div className="flex justify-between items-center my-5">
         <h1 className="text-lg font-bold">Your Cart</h1>
         <p className="text-gray-600 font-bold">{cartItems.length} Items</p>
@@ -154,7 +154,7 @@ const CartPage = () => {
           </div>
 
           {/* Delete Button */}
-          <div className="flex justify-center">
+          <div className="flex mt-2 md:mt-0 justify-center">
             <button
               onClick={() => handleDelete(item._id)}
               className="text-red-500 hover:text-red-700"

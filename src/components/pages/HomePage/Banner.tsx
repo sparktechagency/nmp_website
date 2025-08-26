@@ -14,8 +14,8 @@ const Banner = () => {
         priority
       />
 
-      <div className="container mx-auto h-full relative">
-        <div className="absolute top-1/2 left-0 md:left-0 lg:left-32 -translate-y-1/2 max-w-2xl text-white drop-shadow-lg">
+      <div className="container mx-auto h-full relative ">
+        <div className="absolute top-1/2 left-0 md:left-0  -translate-y-1/2 max-w-2xl text-white drop-shadow-lg px-2 md:px-0">
           <h1 className="text-3xl md:text-5xl font-extrabold leading-tight mb-6 tracking-wide uppercase">
             Transform Every Puff into <br />
             <span className="text-indigo-400">Pure Satisfaction</span>

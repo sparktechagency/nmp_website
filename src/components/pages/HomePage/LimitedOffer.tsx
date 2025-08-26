@@ -44,10 +44,10 @@ const LimitedOffer: React.FC = () => {
   return (
     <div className="container mx-auto">
       <div className="flex flex-col md:flex-row items-center justify-between bg-gray-50 p-8 rounded-lg shadow-lg">
-        <div className="mb-6 md:mb-0">
+        <div className="mb-6 md:mb-0 ">
           <h1 className="text-4xl font-bold mb-6">Offer Ends Soon</h1>
 
-          <div className="flex gap-4 my-16">
+          <div className="flex-col md:flex-row gap-4 my-16">
             {Object.entries(timeLeft).map(([label, value]) => (
               <div
                 key={label}
