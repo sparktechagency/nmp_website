@@ -7,10 +7,11 @@ import Image from "next/image";
 import { FaStar } from "react-icons/fa";
 import { IoIosCart } from "react-icons/io";
 import Link from "next/link";
-import Reviews from "@/components/pages/AboutUs/Reviews";
 import { useGetSingleProductQuery } from "@/redux/features/productsApi/productsApi";
 import { useAddToCartMutation } from "@/redux/features/cartApi/cartApi";
 import toast from "react-hot-toast";
+import { MdKeyboardDoubleArrowRight } from "react-icons/md";
+import { useGetAllReviewQuery } from "@/redux/features/reviewApi/reviewApi";
 
 const ProductDetails = () => {
   const router = useRouter();
@@ -18,6 +19,7 @@ const ProductDetails = () => {
   const id = params?.id;
   const [addToCart] = useAddToCartMutation();
   const { data: singleProduct } = useGetSingleProductQuery(id);
+  const { data: reviewData } = useGetAllReviewQuery(id);
 
   const [quantity, setQuantity] = useState(1);
 
@@ -71,12 +73,12 @@ const ProductDetails = () => {
       const res = await addToCart(data).unwrap();
       router.push("/cart");
       toast(res?.message);
-      
     } catch (error: any) {
       toast(error?.data?.message);
     }
   };
 
+  const reviews = reviewData?.data ?? [];
   return (
     <div className="container mx-auto my-20">
       <div className="w-full flex flex-col md:flex-row justify-start items-center gap-5">
@@ -175,8 +177,56 @@ const ProductDetails = () => {
           </div>
         </div>
       </div>
+      <div className="container mx-auto my-20">
+        <h1 className="text-3xl font-bold text-center pb-20">
+          Ratings & Reviews
+        </h1>
 
-      <Reviews />
+        {reviews.length > 0 ? (
+          <div className="flex flex-col gap-10">
+            {reviews.map((review: any) => (
+              <div
+                key={review._id}
+                className="w-full flex flex-col md:flex-row items-center gap-5 border-b border-b-neutral-200 pb-5"
+              >
+                <div className="w-full md:w-[20%] flex justify-center">
+                  <Image
+                    src={review.profile_img}
+                    alt={review.fullName || "Reviewer"}
+                    height={100}
+                    width={100}
+                    className="rounded-full"
+                  />
+                </div>
+
+                <div className="w-full md:w-[80%]">
+                  <div className="flex items-center gap-1 text-yellow-500 mb-2">
+                    {[...Array(review.star)].map((_, i) => (
+                      <FaStar key={i} />
+                    ))}
+                  </div>
+                  <h2 className="text-lg font-semibold">{review.fullName}</h2>
+                  <h3 className="text-sm text-gray-500">{review.email}</h3>
+                  <p className="text-gray-600">{review.comment}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-center text-gray-500">
+            No reviews for this product yet.
+          </p>
+        )}
+
+        <div className="flex justify-center items-center my-20 text-white">
+          <Link href="/products">
+            <button className="flex justify-center items-center gap-2 px-4 py-2 bg-orange-400 rounded-md cursor-pointer">
+              See More
+              <MdKeyboardDoubleArrowRight />
+            </button>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 };

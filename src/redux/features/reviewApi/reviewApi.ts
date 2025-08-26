@@ -3,8 +3,8 @@ import { baseApi } from "@/redux/api/baseApi";
 const ReviewApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAllReview: builder.query({
-      query: () => ({
-        url: "/review/get-user-product-reviews/689b1c4e596f00690cdebb2d",
+      query: (id: string) => ({
+        url: `/review/get-user-product-reviews/${id}`,
         method: "GET",
       }),
       providesTags: ["Review"],

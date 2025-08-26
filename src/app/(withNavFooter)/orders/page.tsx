@@ -54,6 +54,7 @@ const OrderPage = () => {
 
   const handleModalOpen = (productId: string, orderId: string) => {
     setSelectedProductId(productId);
+    localStorage.setItem("productId",productId);
     setOrderId(orderId);
     setIsModalOpen(true);
   };
