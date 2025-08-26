@@ -31,10 +31,10 @@ const SignIn: React.FC = () => {
 
     try {
       const res = await loginApi(data).unwrap();
-      console.log(res);
+      // console.log(res);
       dispatch(
         setUser({
-          user: res.data.user || { email: values.email }, // if API doesn't return user, fallback
+          user: res.data.user || { email: values.email }, 
           token: res.data.accessToken,
         })
       );

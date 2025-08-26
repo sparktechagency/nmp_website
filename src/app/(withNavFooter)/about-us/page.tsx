@@ -12,7 +12,7 @@ const AboutUs = () => {
   const { data: aboutUsData } = useAboutUsQuery(undefined);
   const rawHtml = aboutUsData?.data?.content || "";
   const plainText = rawHtml.replace(/<[^>]*>/g, "");
-  console.log(plainText);
+  // console.log(plainText);
 
   return (
     <div className="container mx-auto my-20 px-4">

@@ -12,7 +12,7 @@ import { useParams } from "next/navigation";
 const Reviews = () => {
   const { productId } = useParams();
 
-  console.log("productId from URL:", productId); 
+  // console.log("productId from URL:", productId); 
 
   const {
     data: reviewData,

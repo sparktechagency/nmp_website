@@ -25,7 +25,7 @@ const Footer: React.FC = () => {
   const { data: delivaryData, isLoading: deliveryLoading } =
     useGetDelivaryInformationQuery(undefined);
 
-  console.log(privacyData?.data?.content);
+  // console.log(privacyData?.data?.content);
 
   // Separate modal states
   const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);

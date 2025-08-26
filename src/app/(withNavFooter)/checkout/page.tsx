@@ -20,12 +20,12 @@ const CheckoutPage: React.FC = () => {
   const total = searchParams.get("total");
   const quantity = searchParams.get("quantity");
   const router = useRouter();
-  console.log(total, quantity);
+  // console.log(total, quantity);
 
   const [createOrder] = useCreateOrderMutation();
   const [loading, setLoading] = useState(false);
   const onFinish: FormProps<ContactFormValues>["onFinish"] = async (values) => {
-    console.log("Form Submitted:", values);
+    // console.log("Form Submitted:", values);
 
     try {
       setLoading(true); // show loader

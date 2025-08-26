@@ -57,7 +57,7 @@ const OrderPage = () => {
   const [review, setReview] = useState("");
   const [rating, setRating] = useState(0);
   const [orderId, setOrderId] = useState<string>("");
-  console.log("orderData", orderData?.data);
+  // console.log("orderData", orderData?.data);
 
   const [createReview, { isLoading: isReviewLoading }] =
     useCreateReviewMutation();
@@ -99,11 +99,11 @@ const OrderPage = () => {
       comment: values.comment,
     };
 
-    console.log("reviewData", reviewData);
+    // console.log("reviewData", reviewData);
 
     try {
       const res = await createReview(reviewData).unwrap();
-      console.log("Review response:", res);
+      // console.log("Review response:", res);
       toast.success(res.message);
       handleModalClose();
     } catch (error: any) {
@@ -193,6 +193,7 @@ const OrderPage = () => {
   return (
     <div className="container mx-auto mb-20 px-4">
       <SectionTitle heading="All Orders" />
+
       <Table
         columns={columns}
         dataSource={orderData?.data}

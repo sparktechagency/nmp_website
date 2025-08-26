@@ -11,6 +11,7 @@ import { useGetProfileQuery } from "@/redux/features/profileApi/profileApi";
 import Image from "next/image";
 import { Tooltip } from "antd";
 import img from "../../assets/image/image 23.png";
+import { useGetCartQuery } from "@/redux/features/cartApi/cartApi";
 
 interface Label {
   name: string;
@@ -21,6 +22,10 @@ const NavBar = () => {
   const [drawerVisible, setDrawerVisible] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const { data: profileData } = useGetProfileQuery(undefined);
+  const { data: cartData } = useGetCartQuery(undefined);
+  const cartItems = cartData?.data || [];
+
+  console.log("cartItems", cartItems?.length);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -53,11 +58,9 @@ const NavBar = () => {
   };
 
   const handleLogout = () => {
-    // Clear token or profile data
-    localStorage.removeItem("token"); // or however you store auth
-    // Optionally reset Redux state
-    // dispatch(resetProfile());
-    // Redirect to sign-in
+ 
+    localStorage.removeItem("token"); 
+    
     window.location.href = "/sign-in";
   };
 
@@ -76,7 +79,10 @@ const NavBar = () => {
               />
             </Link>
           </Tooltip>
-          <button className="px-2 py-1 text-sm " onClick={handleLogout}>
+          <button
+            className="px-2 py-1 text-sm cursor-pointer"
+            onClick={handleLogout}
+          >
             Logout
           </button>
         </div>
@@ -120,19 +126,24 @@ const NavBar = () => {
               />
             </div>
 
-            {/* Desktop Menu */}
             <div className="hidden lg:flex items-center ml-auto space-x-4 mb-0">
               {labels.map((item, index) => (
                 <Link href={item.link} key={index}>
-                  <button className="px-4 font-medium text-lg">
+                  <button className="px-4 font-medium text-lg cursor-pointer">
                     {item.name}
                   </button>
                 </Link>
               ))}
 
               <div className="flex justify-between items-center gap-3">
-                <Link href="/cart">
-                  <IoCartOutline className="text-2xl" />
+                <Link href="/cart" className="relative flex items-center">
+                  <IoCartOutline className="text-3xl text-gray-700 hover:text-blue-600 transition" />
+
+                  {cartItems?.length > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-md">
+                      {cartItems.length}
+                    </span>
+                  )}
                 </Link>
                 {renderUserSection()}
               </div>
@@ -140,7 +151,6 @@ const NavBar = () => {
           </div>
         </div>
 
-        {/* Mobile Drawer */}
         <Drawer
           title=""
           placement="left"

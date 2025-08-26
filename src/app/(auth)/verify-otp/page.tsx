@@ -65,7 +65,7 @@ const VerifyOtp: React.FC = () => {
       const data = {
         email: email,
       };
-      console.log(data);
+      // console.log(data);
       const res = await resendOtp(data).unwrap();
       toast.success(res.message);
     } catch (err: any) {

@@ -32,7 +32,7 @@ const SignUpPage: React.FC = () => {
       };
 
       const res = await register(data).unwrap();
-      console.log("Register Response:", res);
+      // console.log("Register Response:", res);
 
       if (res?.success || res?.statusCode === 200) {
         toast.success(res.message || "Registration successful!");
