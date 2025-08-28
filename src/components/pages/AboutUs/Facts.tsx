@@ -11,19 +11,19 @@ const Facts = () => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-5 pb-40">
         <div className="flex flex-col justify-center items-center">
           <Image src={img1} alt="img" height={200} width={200}></Image>
-          <p className=" font-bold">Free Delivery</p>
+          <p className=" font-bold pt-5">Free Delivery</p>
         </div>
         <div className="flex flex-col justify-center items-center">
           <Image src={img2} alt="img" height={200} width={200}></Image>
-          <p className=" font-bold">Easy Return</p>
+          <p className=" font-bold pt-5">Easy Return</p>
         </div>
         <div className="flex flex-col justify-center items-center">
           <Image src={img3} alt="img" height={200} width={200}></Image>
-          <p className=" font-bold">Secure Payment</p>
+          <p className=" font-bold pt-5">Secure Payment</p>
         </div>
         <div className="flex flex-col justify-center items-center">
           <Image src={img4} alt="img" height={200} width={200}></Image>
-          <p className=" font-bold">Brunches</p>
+          <p className=" font-bold pt-5">Brunches</p>
         </div>
       </div>
     </div>

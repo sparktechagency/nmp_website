@@ -10,31 +10,64 @@ import { useAboutUsQuery } from "@/redux/features/subscribeApi/subscribeApi";
 const AboutUs = () => {
   const { data: aboutUsData } = useAboutUsQuery(undefined);
   const rawHtml = aboutUsData?.data?.content || "";
-  const plainText = rawHtml.replace(/<[^>]*>/g, "");
-  // console.log(plainText);
+
+  // ✅ Remove tags but keep structure
+  const cleanText = rawHtml.replace(/<[^>]*>/g, "");
+
+  // ✅ Split into sentences/paragraphs
+  const paragraphs = cleanText
+    .split(
+      /(?=\b[A-Z][a-z]+\s(?:Overview|Collection|Methods|Purposes|Sharing|Cookies|Tracking|Rights|Retention|Measures|Privacy|Contact))/
+    )
+    .filter((p: string) => p.trim() !== "");
 
   return (
-    <div className="container mx-auto my-20">
-      <div className="grid md:grid-cols-2 gap-10 items-center">
-        <div className="flex justify-center">
+    <div className="container mx-auto my-20 ">
+      <div className="grid md:grid-cols-2 gap-28 justify-between ">
+        {/* Left: Text */}
+        <div>
+          <h1 className="text-4xl font-bold mb-6 text-gray-900">About Us</h1>
+
+          <div className="space-y-4 text-gray-700 leading-relaxed">
+            {paragraphs.map(
+              (para: string, idx: React.Key | null | undefined) => {
+                // ✅ Bold the first phrase before the first question mark/colon
+                const match = para.match(/^([^?:(]+[:?])/);
+                let boldPart = "";
+                let rest = para;
+
+                if (match) {
+                  boldPart = match[0];
+                  rest = para.replace(match[0], "");
+                }
+
+                return (
+                  <p key={idx} className="text-base md:text-lg">
+                    {boldPart && (
+                      <strong className="font-semibold">{boldPart}</strong>
+                    )}
+                    {rest}
+                  </p>
+                );
+              }
+            )}
+          </div>
+
+          {/* Features Section */}
+        </div>
+
+        {/* Right: Image */}
+        <div className="">
           <Image
             src={image}
             alt="About Vape"
-            height={500}
-            width={500}
-            className="rounded-xl"
+            height={0}
+            width={0}
+            className="rounded-xl shadow-lg h-auto w-full items-end"
           />
-        </div>
-
-        {/* Right: Text + Icons */}
-        <div>
-          <h1 className="text-4xl font-bold mb-6 text-gray-800">About Us</h1>
-          <p className="text-gray-600 mb-6 leading-relaxed">{plainText}</p>
-
-          {/* Features */}
-          <div className="space-y-4">
+          <div className="mt-10 space-y-4">
             <div className="flex items-center gap-4">
-              <div className="bg-red-100 p-3 rounded-full text-red-500">
+              <div className="bg-red-100 p-3 rounded-full text-red-500 shadow-sm">
                 <FaLeaf size={20} />
               </div>
               <p className="text-gray-700">
@@ -43,7 +76,7 @@ const AboutUs = () => {
             </div>
 
             <div className="flex items-center gap-4">
-              <div className="bg-blue-100 p-3 rounded-full text-blue-500">
+              <div className="bg-blue-100 p-3 rounded-full text-blue-500 shadow-sm">
                 <FaCloud size={20} />
               </div>
               <p className="text-gray-700">
@@ -52,7 +85,7 @@ const AboutUs = () => {
             </div>
 
             <div className="flex items-center gap-4">
-              <div className="bg-green-100 p-3 rounded-full text-green-500">
+              <div className="bg-green-100 p-3 rounded-full text-green-500 shadow-sm">
                 <FaRegSmile size={20} />
               </div>
               <p className="text-gray-700">
@@ -62,8 +95,11 @@ const AboutUs = () => {
           </div>
         </div>
       </div>
-      <Facts></Facts>
-      {/* <Reviews /> */}
+
+      {/* Facts Section */}
+      <div className="mt-16">
+        <Facts />
+      </div>
     </div>
   );
 };
