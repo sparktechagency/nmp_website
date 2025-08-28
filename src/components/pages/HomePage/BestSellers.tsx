@@ -128,7 +128,7 @@ const BestSellers = () => {
               <button
                 onClick={() => handleAddToCart(product._id)}
                 disabled={product.stockStatus !== "in_stock"}
-                className=" px-4 py-2 border border-blue-500 text-white rounded-md  transition"
+                className="cur px-4 py-2 border border-blue-500 text-white rounded-md  transition"
               >
                 Add to Cart
               </button>

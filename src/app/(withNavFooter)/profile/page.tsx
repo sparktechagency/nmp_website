@@ -122,7 +122,7 @@ const ProfilePage: React.FC = () => {
               <h2 className="text-xl font-semibold">{profile.fullName}</h2>
               <p className="text-gray-500">{profile.email}</p>
             </div>
-            <FaEdit className="text-gray-400 ml-2 cursor-pointer hover:text-gray-600" />
+            {/* <FaEdit className="text-gray-400 ml-2 cursor-pointer hover:text-gray-600" /> */}
           </div>
           <div className="flex gap-2">
             <Link href="/orders">

@@ -118,12 +118,12 @@ const FeatureProducts = () => {
               <button
                 onClick={() => handleAddToCart(product._id)}
                 disabled={product.stockStatus !== "in_stock"}
-                className=" px-4 py-2 border border-blue-500 text-white rounded-md transition disabled:opacity-50"
+                className="cursor-pointer px-4 py-2 border border-blue-500 text-white rounded-md transition disabled:opacity-50"
               >
                 Add to Cart
               </button>
               <Link href={`/products/${product._id}`}>
-                <button className="w-full px-4 py-2 border border-blue-500 rounded-md hover:bg-gray-100 transition">
+                <button className="cursor-pointer w-full px-4 py-2 border border-blue-500 rounded-md hover:bg-gray-100 transition">
                   Details
                 </button>
               </Link>

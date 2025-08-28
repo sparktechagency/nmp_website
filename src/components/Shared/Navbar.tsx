@@ -12,6 +12,7 @@ import Image from "next/image";
 import { Tooltip } from "antd";
 import img from "../../assets/image/image 23.png";
 import { useGetCartQuery } from "@/redux/features/cartApi/cartApi";
+import { LuLogOut } from "react-icons/lu";
 
 interface Label {
   name: string;
@@ -58,9 +59,8 @@ const NavBar = () => {
   };
 
   const handleLogout = () => {
- 
-    localStorage.removeItem("token"); 
-    
+    localStorage.removeItem("token");
+
     window.location.href = "/sign-in";
   };
 
@@ -83,7 +83,7 @@ const NavBar = () => {
             className="px-2 py-1 text-sm cursor-pointer"
             onClick={handleLogout}
           >
-            Logout
+            <LuLogOut className="h-6 w-6" />
           </button>
         </div>
       );
@@ -136,15 +136,16 @@ const NavBar = () => {
               ))}
 
               <div className="flex justify-between items-center gap-3">
-                <Link href="/cart" className="relative flex items-center">
-                  <IoCartOutline className="text-3xl text-gray-700 hover:text-blue-600 transition" />
-
-                  {cartItems?.length > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-md">
-                      {cartItems.length}
-                    </span>
-                  )}
-                </Link>
+                {profileData?.data && (
+                  <Link href="/cart" className="relative flex items-center">
+                    <IoCartOutline className="text-3xl hover:text-blue-600 transition" />
+                    {cartItems?.length > 0 && (
+                      <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-md">
+                        {cartItems.length}
+                      </span>
+                    )}
+                  </Link>
+                )}
                 {renderUserSection()}
               </div>
             </div>
@@ -169,9 +170,16 @@ const NavBar = () => {
               </Link>
             ))}
             <div className="flex justify-between items-center gap-3 mt-4">
-              <Link href="/cart">
-                <IoCartOutline className="text-2xl" />
-              </Link>
+              {profileData?.data && (
+                <Link href="/cart" className="relative flex items-center">
+                  <IoCartOutline className="text-2xl" />
+                  {cartItems?.length > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-md">
+                      {cartItems.length}
+                    </span>
+                  )}
+                </Link>
+              )}
               {renderUserSection()}
             </div>
           </div>

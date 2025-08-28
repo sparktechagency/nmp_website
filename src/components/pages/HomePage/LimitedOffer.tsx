@@ -47,7 +47,7 @@ const LimitedOffer: React.FC = () => {
         <div className="mb-6 md:mb-0 ">
           <h1 className="text-4xl font-bold mb-6">Offer Ends Soon</h1>
 
-          <div className="flex-col md:flex-row gap-4 my-16">
+          <div className="flex flex-col md:flex-row gap-4 my-16">
             {Object.entries(timeLeft).map(([label, value]) => (
               <div
                 key={label}

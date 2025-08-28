@@ -115,7 +115,7 @@ const VerifyOtp: React.FC = () => {
                             {...props}
                             inputMode="numeric"
                             pattern="[0-9]*"
-                            className="w-11 h-12 sm:w-12 sm:h-12 bg-transparent border border-indigo-300 rounded-md text-lg sm:text-xl text-center mx-1 sm:mx-1.5 focus:outline-none focus:border-indigo-500 focus:shadow-[0_0_0_3px_rgba(99,102,241,0.2)]"
+                            className="h-14 w-24 bg-transparent border border-indigo-300 rounded-md text-lg sm:text-xl text-center mx-1 sm:mx-1.5 focus:outline-none focus:border-indigo-500 focus:shadow-[0_0_0_3px_rgba(99,102,241,0.2)]"
                           />
                         )}
                       />
