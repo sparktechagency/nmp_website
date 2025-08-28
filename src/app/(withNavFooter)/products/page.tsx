@@ -211,7 +211,7 @@ const ProductsPage = () => {
                   </div>
 
                   {/* Price */}
-                  <div className="flex justify-between items-center gap-5 mt-2">
+                  <div className="flex justify-between items-center gap-5 mt-3">
                     <div className="flex justify-start items-center gap-3">
                       <p className="text-md font-semibold">
                         ${product.currentPrice}
