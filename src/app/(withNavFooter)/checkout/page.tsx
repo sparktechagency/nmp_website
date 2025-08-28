@@ -68,7 +68,7 @@ const CheckoutPage: React.FC = () => {
           </div>
           <div className="text-neutral-400 flex justify-between items-center gap-5 mt-5">
             <h1>TOTAL</h1>
-            <p>{total}</p>
+            <p>${total}</p>
           </div>
         </div>
         <ConfigProvider

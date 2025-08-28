@@ -44,7 +44,7 @@ const CartPage = () => {
       if (result.isConfirmed) {
         try {
           const res = await deleteCart({ _id: id }).unwrap();
-          toast.success(res?.message || "Item removed from cart");
+          // toast.success(res?.message || "Item removed from cart");
           Swal.fire("Deleted!", "The item has been removed.", "success");
         } catch (error: any) {
           toast.error(error?.data?.message || "Failed to remove item");

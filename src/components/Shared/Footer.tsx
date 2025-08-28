@@ -148,12 +148,12 @@ const Footer: React.FC = () => {
         )}
       </Modal>
 
-      <footer className="bg-blue-100 py-10">
+      <div className="bg-blue-100 py-10 ">
         <div className="text-center mb-8">
           <h2 className="text-lg md:text-3xl font-bold mb-4">
             Subscribe to our newsletters
           </h2>
-          <div className="flex justify-center">
+          <div className="flex justify-center ">
             <div className="bg-blue-300 flex rounded-md overflow-hidden w-[90%] max-w-md">
               <input
                 type="email"
@@ -173,7 +173,7 @@ const Footer: React.FC = () => {
           </div>
         </div>
 
-        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 text-center md:text-left px-4">
+        <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 text-center md:text-left px-4">
           <div>
             <h3 className="font-semibold mb-4">COMPANY & LEGAL</h3>
             <ul className="space-y-2 text-sm text-gray-700">
@@ -181,14 +181,14 @@ const Footer: React.FC = () => {
                 <li>About Us</li>
               </Link>
               <li
-                className="cursor-pointer hover:text-blue-600"
+                className="cursor-pointer hover:text-blue-600 mt-2"
                 onClick={() => setIsPrivacyOpen(true)}
               >
                 Privacy Policy
               </li>
-              <Link href="/products">
+              {/* <Link href="/products">
                 <li>Brands</li>
-              </Link>
+              </Link> */}
             </ul>
           </div>
 
@@ -238,7 +238,7 @@ const Footer: React.FC = () => {
         <div className="text-center text-sm text-gray-500 mt-8">
           © 2025 E-Com | All rights reserved
         </div>
-      </footer>
+      </div>
     </>
   );
 };

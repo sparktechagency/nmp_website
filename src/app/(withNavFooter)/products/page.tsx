@@ -181,7 +181,7 @@ const ProductsPage = () => {
                   {/* Discount */}
                   {product?.discount && product.discount !== "" && (
                     <span className="absolute top-2 left-2 bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-full z-10 shadow-md">
-                      {product.discount}%
+                      {product.discount}
                     </span>
                   )}
 
