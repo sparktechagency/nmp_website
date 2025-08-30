@@ -138,7 +138,7 @@ const NavBar = () => {
               <div className="flex justify-between items-center gap-3">
                 {profileData?.data && (
                   <Link href="/cart" className="relative flex items-center">
-                    <IoCartOutline className="text-3xl hover:text-blue-600 transition" />
+                    <IoCartOutline className="text-3xl  transition" />
                     {cartItems?.length > 0 && (
                       <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-md">
                         {cartItems.length}
