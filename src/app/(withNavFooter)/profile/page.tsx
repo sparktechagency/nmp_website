@@ -106,10 +106,10 @@ const ProfilePage: React.FC = () => {
   };
 
   return (
-    <div className="bg-gray-100 flex justify-center py-12 px-4 h-[70vh]">
+    <div className="bg-gray-100 flex justify-center py-12 px-4 md:h-[70vh]">
       <div className="w-full max-w-3xl bg-white rounded-xl shadow-md p-8">
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-4">
+        <div className="flex flex-col md:flex-row items-center justify-between mb-8">
+          <div className="flex  items-center gap-4">
             <div className="relative w-16 h-16">
               <Image
                 src={previewImage || profile.profile_img}

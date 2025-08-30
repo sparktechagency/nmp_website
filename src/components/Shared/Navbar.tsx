@@ -59,11 +59,14 @@ const NavBar = () => {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
+ const handleLogout = () => {
+  localStorage.removeItem("token");
 
-    window.location.href = "/sign-in";
-  };
+  sessionStorage.clear();
+
+  window.location.replace("/sign-in");
+};
+
 
   const renderUserSection = () => {
     if (profileData?.data) {

@@ -36,7 +36,7 @@ const ConatctUs = () => {
   };
 
   return (
-    <div className="container mx-auto my-20">
+    <div className="container mx-auto my-20 p-2 md:p-0">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
         <div>
           <Image src={image} alt="img" height={500} width={500}></Image>

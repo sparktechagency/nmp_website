@@ -6,6 +6,9 @@ type LayoutProps = {
   children: ReactNode;
 };
 const layout = ({ children }: LayoutProps) => {
+
+
+  
   return (
     <div>
       <Navbar />

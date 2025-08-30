@@ -27,11 +27,21 @@ const authSlice = createSlice({
       state.user = user;
       state.token = token;
       // console.log("Action from Auth Slice:", action);
+      if (typeof window !== "undefined") {
+        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("token", token);
+      }
     },
+
     logout: (state) => {
       state.user = null;
       state.token = null;
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
+      }
     },
+
     getUser: (state, action: PayloadAction<User>) => {
       state.user = action.payload;
     },

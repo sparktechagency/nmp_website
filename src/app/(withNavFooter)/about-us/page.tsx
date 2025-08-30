@@ -23,7 +23,7 @@ const AboutUs = () => {
 
   return (
     <div className="container mx-auto my-20 ">
-      <div className="grid md:grid-cols-2 gap-28 justify-between ">
+      <div className="grid md:grid-cols-2 gap-28 justify-between p-2 md:p-0">
         {/* Left: Text */}
         <div>
           <h1 className="text-4xl font-bold mb-6 text-gray-900">About Us</h1>
