@@ -10,7 +10,7 @@ import OtpInput from "react-otp-input";
 import image from "../../../assets/image/cuate.png";
 import {
   useResendOtpMutation,
-  useVerifyOtpMutation,
+  useVerifyOtpForgotMutation,
 } from "@/redux/features/auth/authApi";
 import toast from "react-hot-toast";
 
@@ -18,13 +18,12 @@ interface FormValues {
   otp: string;
 }
 
-const VerifyOtp: React.FC = () => {
+const VerifyOtpForForgotPass: React.FC = () => {
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
-console.log("Email:", email)
+  console.log("Email:", email);
 
-
-  const [verifyOtp] = useVerifyOtpMutation();
+  const [verifyOtpForgot] = useVerifyOtpForgotMutation();
   const router = useRouter();
   const [form] = Form.useForm<FormValues>();
   const [otp, setOtp] = useState<string>("");
@@ -45,34 +44,42 @@ console.log("Email:", email)
 
     try {
       setSubmitting(true);
-      const res = await verifyOtp({
-        email: String(email),
+      const res = await verifyOtpForgot({
+        email,
         otp: clean,
       }).unwrap();
 
       toast.success(res?.message);
-      router.push("/sign-in");
-    } catch (err: any) {
+      router.push("/new-password");
+    } catch (err: unknown) {
       console.error(err);
-      toast.error(
-        err?.data?.message || "Failed to verify OTP. Please try again."
-      );
+      if (typeof err === "object" && err && "data" in err) {
+        const errorData = (err as any).data;
+        toast.error(errorData?.message || "Failed to verify OTP. Please try again.");
+      } else {
+        toast.error("Something went wrong. Please try again.");
+      }
     } finally {
       setSubmitting(false);
     }
   };
 
   const handleResendOtp = async () => {
+    if (!email) {
+      toast.error("Email is missing. Please go back and try again.");
+      return;
+    }
+
     try {
-      const data = {
-        email: email,
-      };
-      console.log("data:", data);
-      const res = await resendOtp(data).unwrap();
+      const res = await resendOtp({ email }).unwrap();
       toast.success(res.message);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
-      toast.error(err?.data.message);
+      if (typeof err === "object" && err && "data" in err) {
+        toast.error((err as any).data?.message || "Failed to resend OTP.");
+      } else {
+        toast.error("Something went wrong.");
+      }
     }
   };
 
@@ -92,7 +99,7 @@ console.log("Email:", email)
                 Verify OTP
               </h2>
               <p className="mt-1 text-center text-sm text-gray-500">
-                Enter the 6‑digit code we sent to your email.
+                Enter the 6-digit code we sent to your email.
               </p>
 
               <div className="mt-6 border-t border-gray-200 pt-6">
@@ -180,8 +187,8 @@ console.log("Email:", email)
                   Secure Verification
                 </h3>
                 <p className="mt-3 text-white/80 max-w-md text-sm">
-                  Enter the one‑time code to continue. Your code expires
-                  shortly; you can request a new one if needed.
+                  Enter the one-time code to continue. Your code expires shortly;
+                  you can request a new one if needed.
                 </p>
               </div>
             </div>
@@ -193,4 +200,4 @@ console.log("Email:", email)
   );
 };
 
-export default VerifyOtp;
+export default VerifyOtpForForgotPass;

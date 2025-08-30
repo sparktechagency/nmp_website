@@ -17,6 +17,14 @@ const AuthApi = baseApi.injectEndpoints({
         body: data,
       }),
     }),
+    
+    verifyOtpForgot: builder.mutation({
+      query: (data) => ({
+        url: "/auth/forgot-pass-verify-otp",
+        method: "POST",
+        body: data,
+      }),
+    }),
 
     resendOtp: builder.mutation({
       query: (data) => ({
@@ -59,4 +67,5 @@ export const {
   useNewPasswordMutation,
   useLoginApiMutation,
   useForgotPasswordMutation,
+  useVerifyOtpForgotMutation
 } = AuthApi;

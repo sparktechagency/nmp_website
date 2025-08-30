@@ -23,9 +23,11 @@ const ForgatePassword: React.FC = () => {
       const data = {
         email: values.email,
       };
+      console.log("data:", data);
       const res = await forgotPassword(data).unwrap();
       toast.success(res.message);
-      router.push("/verify-otp");
+      // router.push("/verify-otp");
+      router.push(`/verifyOtpForForgotPass?email=${values.email}`);
     } catch (error: any) {
       toast.error(error?.data?.message);
     }
@@ -71,16 +73,14 @@ const ForgatePassword: React.FC = () => {
                   </Form.Item>
 
                   <Form.Item className="mb-0">
-                
-                      <div className="text-white">
-                        <button
-                          type="submit"
-                          className="w-full py-3 rounded-xl  font-semibold shadow-lg transition focus:outline-none focus:ring-4 focus:ring-indigo-300 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-700 hover:via-purple-700 hover:to-pink-700"
-                        >
-                          {isLoading ? "   Submitting..." : "Submit"}
-                        </button>
-                      </div>
-                
+                    <div className="text-white">
+                      <button
+                        type="submit"
+                        className="w-full py-3 rounded-xl  font-semibold shadow-lg transition focus:outline-none focus:ring-4 focus:ring-indigo-300 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-700 hover:via-purple-700 hover:to-pink-700"
+                      >
+                        {isLoading ? "   Submitting..." : "Submit"}
+                      </button>
+                    </div>
                   </Form.Item>
                 </Form>
 
