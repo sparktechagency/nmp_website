@@ -167,7 +167,7 @@ const CartPage = () => {
 
       {/* Footer */}
       <div className="flex justify-between items-center mt-5">
-        <Link href="/categories">
+        <Link href="/products">
           <button className="text-[#3f67bc] font-bold">
             ← Continue shopping
           </button>

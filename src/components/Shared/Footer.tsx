@@ -149,7 +149,7 @@ const Footer: React.FC = () => {
       </Modal>
 
       <div className="bg-blue-100 py-10 ">
-        <div className="text-center mb-8">
+        {/* <div className="text-center mb-8">
           <h2 className="text-lg md:text-3xl font-bold mb-4">
             Subscribe to our newsletters
           </h2>
@@ -171,7 +171,7 @@ const Footer: React.FC = () => {
               </button>
             </div>
           </div>
-        </div>
+        </div> */}
 
         <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 text-center md:text-left px-4">
           <div>
