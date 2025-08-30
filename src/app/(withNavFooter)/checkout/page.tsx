@@ -103,7 +103,7 @@ const CheckoutPage: React.FC = () => {
               name="streetAddress"
               label={<p className="text-md">Street Address</p>}
               rules={[
-                { required: true, message: "Please enter your Street Address" },
+                { message: "Please enter your Street Address" },
               ]}
             >
               <Input
@@ -115,7 +115,7 @@ const CheckoutPage: React.FC = () => {
             <Form.Item
               name="city"
               label={<p className="text-md">City</p>}
-              rules={[{ required: true, message: "Please enter your city" }]}
+              rules={[{ message: "Please enter your city" }]}
             >
               <Input placeholder="Your city" style={{ padding: "6px" }} />
             </Form.Item>
@@ -123,7 +123,7 @@ const CheckoutPage: React.FC = () => {
             <Form.Item
               name="state"
               label={<p className="text-md">state</p>}
-              rules={[{ required: true, message: "Please enter your state" }]}
+              rules={[{ message: "Please enter your state" }]}
             >
               <Input placeholder="State" style={{ padding: "6px" }} />
             </Form.Item>
@@ -131,7 +131,7 @@ const CheckoutPage: React.FC = () => {
             <Form.Item
               name="zipCode"
               label={<p className="text-md">Zip Code</p>}
-              rules={[{ required: true, message: "Please enter your state" }]}
+              rules={[{ message: "Please enter your state" }]}
             >
               <Input placeholder="zipCode" className="w-full rounded-md" />
             </Form.Item>

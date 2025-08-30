@@ -242,14 +242,18 @@ const OrderPage = () => {
               />
             </Form.Item>
           </div>
-          <div className="flex items-center">
+          <div className="">
             <span className="mr-2">Rating:</span>
+
+            
             <Form.Item
               name="star"
               rules={[{ required: true, message: "Please select a rating!" }]}
             >
               <Rate value={rating} onChange={setRating} />
             </Form.Item>
+
+
           </div>
           <Form.Item>
             <Button type="primary" htmlType="submit" loading={isReviewLoading}>
