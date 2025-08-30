@@ -180,12 +180,11 @@ const Footer: React.FC = () => {
               <Link href="/about-us">
                 <li>About Us</li>
               </Link>
-              <li
-                className="cursor-pointer hover:text-blue-600 mt-2"
-                onClick={() => setIsPrivacyOpen(true)}
-              >
-                Privacy Policy
-              </li>
+              <Link href="/privacy-policy">
+                <li className="cursor-pointer hover:text-blue-600 mt-2">
+                  Privacy Policy
+                </li>
+              </Link>
               {/* <Link href="/products">
                 <li>Brands</li>
               </Link> */}
