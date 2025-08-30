@@ -106,7 +106,7 @@ const ProfilePage: React.FC = () => {
   };
 
   return (
-    <div className="bg-gray-100 flex justify-center py-12 px-4">
+    <div className="bg-gray-100 flex justify-center py-12 px-4 h-[70vh]">
       <div className="w-full max-w-3xl bg-white rounded-xl shadow-md p-8">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
