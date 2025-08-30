@@ -49,7 +49,7 @@ const VerifyOtp: React.FC = () => {
       }).unwrap();
 
       toast.success(res?.message);
-      router.push("/new-password");
+      router.push("/sign-in");
     } catch (err: any) {
       console.error(err);
       toast.error(

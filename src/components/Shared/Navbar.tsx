@@ -13,6 +13,7 @@ import { Tooltip } from "antd";
 import img from "../../assets/image/image 23.png";
 import { useGetCartQuery } from "@/redux/features/cartApi/cartApi";
 import { LuLogOut } from "react-icons/lu";
+import user from "../../assets/image/user.jpeg";
 
 interface Label {
   name: string;
@@ -70,13 +71,21 @@ const NavBar = () => {
         <div className="flex items-center gap-2">
           <Tooltip title={profileData.data.fullName || "User"}>
             <Link href="/profile">
-              <Image
-                src={profileData.data.profile_img}
-                alt="profile"
-                height={40}
-                width={40}
-                className="rounded-full cursor-pointer"
-              />
+              {profileData?.data?.profile_img ? (
+                <Image
+                  src={profileData.data.profile_img}
+                  alt="profile"
+                  height={40}
+                  width={40}
+                  className="rounded-full cursor-pointer"
+                />
+              ) : (
+                <Image
+                  src={user}
+                  className="h-10 w-10 rounded-full"
+                  alt=" user"
+                ></Image>
+              )}
             </Link>
           </Tooltip>
           <button
