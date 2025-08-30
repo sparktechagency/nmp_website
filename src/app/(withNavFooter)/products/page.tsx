@@ -66,9 +66,7 @@ const FilterSection: React.FC<{
   );
 };
 
-// ---------------- Main Products Page ----------------
 const ProductsPage = () => {
-  // filters
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [selectedFlavours, setSelectedFlavours] = useState<string[]>([]);
@@ -76,7 +74,6 @@ const ProductsPage = () => {
   const [pageSize, setPageSize] = useState(6);
   const [currentPage, setCurrentPage] = useState(1);
 
-  // API calls
   const { data: productsData, isLoading } = useGetProductsQuery({
     page: currentPage,
     limit: pageSize,
@@ -96,7 +93,7 @@ const ProductsPage = () => {
   const brands = brandData?.data?.map((b: any) => b.name) ?? [];
   const flavours = flavourdata?.data?.map((f: any) => f.name) ?? [];
 
-  // ---------------- Filtering Logic ----------------
+ 
   const filteredProducts = useMemo(() => {
     return products.filter((product: any) => {
       const matchesCategory =
@@ -127,7 +124,6 @@ const ProductsPage = () => {
   return (
     <div className="container mx-auto my-10">
       <div className="w-full flex flex-col md:flex-row justify-start items-start gap-10 px-2 md:px-0 ">
-        {/* ---------------- Filters ---------------- */}
         <div className="w-full md:w-[30%]">
           <h1 className="text-lg font-semibold mb-2">Filter By</h1>
 
@@ -153,7 +149,6 @@ const ProductsPage = () => {
           />
         </div>
 
-        {/* ---------------- Products ---------------- */}
         <div className="w-full md:w-[70%]">
           <div className="flex flex-col md:flex-row justify-between items-center gap-5">
             <h1 className="text-2xl font-bold">All Products</h1>
@@ -168,7 +163,6 @@ const ProductsPage = () => {
             </div>
           </div>
 
-          {/* Product Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 justify-center items-center">
             {isLoading ? (
               <p className="text-gray-500">Loading...</p>
@@ -178,14 +172,12 @@ const ProductsPage = () => {
                   key={product._id}
                   className="relative bg-white shadow-lg rounded-lg p-4 text-blue-500"
                 >
-                  {/* Discount */}
                   {product?.discount && product.discount !== "" && (
                     <span className="absolute top-2 left-2 bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-full z-10 shadow-md">
                       {product.discount}
                     </span>
                   )}
 
-                  {/* Image */}
                   <Link href={`/products/${product._id}`}>
                     <div className="flex justify-center my-3">
                       <Image
@@ -198,12 +190,10 @@ const ProductsPage = () => {
                     </div>
                   </Link>
 
-                  {/* Title */}
                   <h1 className="font-bold mt-4 text-blue-500 text-center text-xl my-2">
                     {product.name}
                   </h1>
 
-                  {/* Extra info */}
                   <div className="text-gray-600 text-sm text-center space-y-1 h-20">
                     <p>Category: {product.category}</p>
                     <p>Brand: {product.brand}</p>
@@ -211,7 +201,6 @@ const ProductsPage = () => {
                   </div>
 
                   <div className=" flex justify-between items-baseline p-2 mt-5">
-                    {/* Price Section */}
                     <div className=" flex gap-3 items-baseline">
                       <p className="text-lg font-semibold">
                         ${product.currentPrice}
@@ -223,7 +212,6 @@ const ProductsPage = () => {
                       )}
                     </div>
 
-                    {/* Rating Section */}
                     <div className=" flex items-baseline gap-1 text-yellow-500">
                       {[...Array(Math.floor(product?.ratings ?? 0))].map(
                         (_, i) => (
@@ -242,7 +230,6 @@ const ProductsPage = () => {
             )}
           </div>
 
-          {/* ---------------- Pagination ---------------- */}
           <div className="flex justify-center items-center my-6">
             <ConfigProvider
               theme={{

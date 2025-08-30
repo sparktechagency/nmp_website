@@ -165,22 +165,34 @@ const CartPage = () => {
         </div>
       ))}
 
-      {/* Footer */}
-      <div className="flex justify-between items-center mt-5">
-        <Link href="/products">
-          <button className="text-[#3f67bc] font-bold">
-            ← Continue shopping
-          </button>
-        </Link>
-        <div className="text-white">
-          <button
-            onClick={handleCheckout}
-            className="bg-[#3f67bc] px-6 py-2 rounded-lg "
-          >
-            Checkout
-          </button>
+      {cartItems.length > 0 ? (
+        <div className="flex justify-between items-center mt-5">
+          <Link href="/products">
+            <button className="text-[#3f67bc] font-bold">
+              ← Continue shopping
+            </button>
+          </Link>
+          <div className="text-white">
+            <button
+              onClick={handleCheckout}
+              className="bg-[#3f67bc] px-6 py-2 rounded-lg "
+            >
+              Checkout
+            </button>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="text-center mt-10">
+          <p className="text-gray-600 font-semibold text-lg">
+            🛒 No items in your cart
+          </p>
+          <Link href="/products" className="text-white">
+            <button className="mt-4 bg-[#3f67bc]  px-6 py-2 rounded-lg">
+              Browse Products
+            </button>
+          </Link>
+        </div>
+      )}
     </div>
   );
 };
