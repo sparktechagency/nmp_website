@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/Providers/Providers";
 import { Toaster } from "react-hot-toast";
+import PrivateRoute from "@/components/Shared/PrivateRoute/PrivateRoute";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -29,7 +30,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>
-          {children}
+          <PrivateRoute>{children}</PrivateRoute>
           <Toaster position="top-center" />
         </Providers>
       </body>
