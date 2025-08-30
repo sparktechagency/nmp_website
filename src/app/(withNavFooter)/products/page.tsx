@@ -32,9 +32,9 @@ const FilterSection: React.FC<{
   };
 
   return (
-    <div className="bg-gray-50 rounded-lg shadow-sm border mb-4">
+    <div className="bg-gray-50 rounded-lg shadow-sm border border-neutral-200 mb-4">
       <div
-        className="flex justify-between items-center cursor-pointer mb-3 border-b px-4 py-2"
+        className="flex justify-between items-center cursor-pointer mb-3 border-b border-neutral-200 px-4 py-2"
         onClick={() => setIsOpen((prev) => !prev)}
       >
         <h2 className="text-gray-800 font-bold">{title}</h2>
@@ -204,16 +204,16 @@ const ProductsPage = () => {
                   </h1>
 
                   {/* Extra info */}
-                  <div className="text-gray-600 text-sm text-center space-y-1">
+                  <div className="text-gray-600 text-sm text-center space-y-1 h-20">
                     <p>Category: {product.category}</p>
                     <p>Brand: {product.brand}</p>
                     <p>Flavour: {product.flavor}</p>
                   </div>
 
-                  {/* Price */}
-                  <div className="flex justify-between items-center gap-5 mt-3">
-                    <div className="flex justify-start items-center gap-3">
-                      <p className="text-md font-semibold">
+                  <div className=" flex justify-between items-baseline p-2 mt-5">
+                    {/* Price Section */}
+                    <div className=" flex gap-3 items-baseline">
+                      <p className="text-lg font-semibold">
                         ${product.currentPrice}
                       </p>
                       {product.originalPrice > 0 && (
@@ -223,15 +223,14 @@ const ProductsPage = () => {
                       )}
                     </div>
 
-                    {/* Rating */}
-                    <div className="flex items-center gap-1 text-yellow-500">
+                    {/* Rating Section */}
+                    <div className=" flex items-baseline gap-1 text-yellow-500">
                       {[...Array(Math.floor(product?.ratings ?? 0))].map(
                         (_, i) => (
                           <FaStar key={i} />
                         )
                       )}
-
-                      <span className="text-gray-500 text-xs ml-1">
+                      <span className="text-gray-500 text-sm ml-1">
                         ({product.totalReview} reviews)
                       </span>
                     </div>
