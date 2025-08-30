@@ -172,7 +172,7 @@ const ProductsPage = () => {
                   className="relative bg-white shadow-lg rounded-lg p-4 text-blue-500"
                 >
                   {product?.discount && product.discount !== "" && (
-                    <span className="absolute top-2 left-2 bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-full z-10 shadow-md">
+                    <span className="absolute top-5 left-10 bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-full z-10 shadow-md">
                       {product.discount}
                     </span>
                   )}
