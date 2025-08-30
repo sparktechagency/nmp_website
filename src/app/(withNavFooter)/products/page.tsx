@@ -14,7 +14,6 @@ import {
   useGetFlavourDropDownQuery,
 } from "@/redux/features/categoryApi/categoryApi";
 import { Pagination, ConfigProvider } from "antd";
-import { useAddToCartMutation } from "@/redux/features/cartApi/cartApi";
 
 // ---------------- Filter Section ----------------
 const FilterSection: React.FC<{
@@ -124,7 +123,7 @@ const ProductsPage = () => {
   return (
     <div className="container mx-auto my-10">
       <div className="w-full flex flex-col md:flex-row justify-start items-start gap-10 px-2 md:px-0 ">
-        <div className="w-full md:w-[30%]">
+        <div className="w-full md:w-[20%]">
           <h1 className="text-lg font-semibold mb-2">Filter By</h1>
 
           <FilterSection
@@ -149,7 +148,7 @@ const ProductsPage = () => {
           />
         </div>
 
-        <div className="w-full md:w-[70%]">
+        <div className="w-full md:w-[80%]">
           <div className="flex flex-col md:flex-row justify-between items-center gap-5">
             <h1 className="text-2xl font-bold">All Products</h1>
             <div className="mt-4 md:mt-0">
@@ -163,7 +162,7 @@ const ProductsPage = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 justify-center items-center">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 py-6 justify-center items-center">
             {isLoading ? (
               <p className="text-gray-500">Loading...</p>
             ) : filteredProducts.length > 0 ? (
