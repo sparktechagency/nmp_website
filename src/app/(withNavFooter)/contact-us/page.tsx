@@ -69,7 +69,7 @@ const ConatctUs = () => {
               <Form.Item
                 name="name"
                 label={<p className="text-md">Full Name</p>}
-                rules={[{ required: true, message: "Please enter your name" }]}
+                rules={[{  message: "Please enter your name" }]}
               >
                 <Input placeholder="Your Name" style={{ padding: "6px" }} />
               </Form.Item>
@@ -78,7 +78,7 @@ const ConatctUs = () => {
                 name="email"
                 label={<p className="text-md">Email</p>}
                 rules={[
-                  { required: true, message: "Please enter your email" },
+                  {  message: "Please enter your email" },
                   { type: "email", message: "Please enter a valid email" },
                 ]}
               >
@@ -89,7 +89,7 @@ const ConatctUs = () => {
                 name="contact"
                 label={<p className="text-md">Phone Number</p>}
                 rules={[
-                  { required: true, message: "Please enter your phone number" },
+                  {  message: "Please enter your phone number" },
                 ]}
               >
                 <Input
