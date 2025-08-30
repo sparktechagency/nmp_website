@@ -217,7 +217,7 @@ const OrderPage = () => {
           <Pagination
             defaultCurrent={1}
             onChange={handlePageChange}
-            total={30}
+            total={orderData?.meta?.total}
           />
         </div>
       </ConfigProvider>
