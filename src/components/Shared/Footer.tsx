@@ -99,7 +99,7 @@ const Footer: React.FC = () => {
 
       <Modal
         open={isDeliveryOpen}
-        onCancel={() => setIsDeliveryOpen(false)}
+        // onCancel={() => setIsDeliveryOpen(false)}
         footer={null}
         centered
         className="rounded-2xl"
@@ -194,18 +194,22 @@ const Footer: React.FC = () => {
           <div>
             <h3 className="font-semibold mb-4">CUSTOMER SERVICE</h3>
             <ul className="space-y-2 text-sm text-gray-700">
-              <li
-                className="cursor-pointer hover:text-blue-600"
-                onClick={() => setIsDeliveryOpen(true)}
-              >
-                Delivery Information
-              </li>
-              <li
-                className="cursor-pointer hover:text-blue-600"
-                onClick={() => setIsTermsOpen(true)}
-              >
-                Terms & Conditions
-              </li>
+              <Link href="/delivary-information">
+                <li
+                  className="cursor-pointer hover:text-blue-600"
+                  // onClick={() => setIsDeliveryOpen(true)}
+                >
+                  Delivery Information
+                </li>
+              </Link>
+              <Link href="/terms-condition">
+                <li
+                  className="cursor-pointer hover:text-blue-600"
+                  // onClick={() => setIsTermsOpen(true)}
+                >
+                  Terms & Conditions
+                </li>
+              </Link>
             </ul>
           </div>
 
