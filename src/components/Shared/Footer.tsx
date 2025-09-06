@@ -204,7 +204,7 @@ const Footer: React.FC = () => {
               </Link>
               <Link href="/terms-condition">
                 <li
-                  className="cursor-pointer hover:text-blue-600"
+                  className="cursor-pointer hover:text-blue-600 mt-2"
                   // onClick={() => setIsTermsOpen(true)}
                 >
                   Terms & Conditions
@@ -219,7 +219,7 @@ const Footer: React.FC = () => {
               <li className="flex justify-center md:justify-start items-center gap-2">
                 <FiMail /> Ecommerce@gmail.com
               </li>
-              <li className="flex justify-center md:justify-start items-center gap-2">
+              <li className="flex justify-center md:justify-start items-center gap-2 mt-2">
                 <FiPhone /> 1122007
               </li>
             </ul>

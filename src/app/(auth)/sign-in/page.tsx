@@ -101,7 +101,7 @@ const SignIn: React.FC = () => {
                     />
                   </Form.Item>
 
-                  <div className="flex items-center justify-between -mt-2 mb-4">
+                  <div className="flex items-center justify-between -mt-2 mb-4 ">
                     <Form.Item
                       name="remember"
                       valuePropName="checked"
@@ -111,7 +111,7 @@ const SignIn: React.FC = () => {
                     </Form.Item>
                     <Link
                       href="/forgate-pass"
-                      className="text-sm font-medium text-indigo-600 hover:text-indigo-700"
+                      className="text-sm font-medium text-indigo-600 hover:text-indigo-700 -mt-5"
                     >
                       Forgot password?
                     </Link>
