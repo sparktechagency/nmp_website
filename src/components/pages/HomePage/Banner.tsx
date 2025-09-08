@@ -25,7 +25,7 @@ const Banner = () => {
             <br />
             Unmatched Quality and Flavor.
           </p>
-          <Link href="/products">
+          <Link href="/product-type">
             <button className="cursor-pointer bg-indigo-600 hover:bg-indigo-700 transition-all duration-300 ease-in-out text-white font-bold text-lg md:text-xl px-8 py-3 rounded-xl shadow-lg shadow-indigo-500/50 hover:shadow-indigo-600/70 uppercase tracking-wide">
               Shop Now
             </button>

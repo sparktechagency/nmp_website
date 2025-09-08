@@ -17,18 +17,26 @@ const productsApi = baseApi.injectEndpoints({
       }),
       providesTags: ["Products"],
     }),
-    
+
     getBestSellerProduct: builder.query({
       query: () => ({
         url: "/product/get-best-seller-products",
         method: "GET",
       }),
-      providesTags:["Products"]
+      providesTags: ["Products"],
     }),
 
     getSingleProduct: builder.query({
       query: (_id) => ({
         url: `/product/get-single-product/${_id}`,
+        method: "GET",
+      }),
+      providesTags: ["Products"],
+    }),
+
+    getProductType: builder.query({
+      query: () => ({
+        url: "/type/get-type-drop-down",
         method: "GET",
       }),
       providesTags: ["Products"],
@@ -40,5 +48,6 @@ export const {
   useGetProductsQuery,
   useGetSingleProductQuery,
   useGetFeatureProductsQuery,
-  useGetBestSellerProductQuery
+  useGetBestSellerProductQuery,
+  useGetProductTypeQuery
 } = productsApi;

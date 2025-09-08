@@ -5,7 +5,6 @@ import React, { ReactNode } from "react";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 
-// ✅ Props type
 interface ProvidersProps {
   children: ReactNode;
 }
