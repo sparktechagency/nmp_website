@@ -73,15 +73,16 @@ const SelectedType = () => {
   const [pageSize, setPageSize] = useState(6);
   const [currentPage, setCurrentPage] = useState(1);
 
+  const params = useParams();
+  const id = params.id;
+  console.log("id from selected type", id);
+
   const { data: productsData, isLoading } = useGetProductsQuery({
     page: currentPage,
     limit: pageSize,
     searchTerm: searchText,
+    id: id,
   });
-
-  const params = useParams();
-  const id = params.id;
-  console.log("id from selected type", id);
 
   const { data: categoryDropdata } = useGetCatDropDownQuery(undefined);
 
@@ -126,8 +127,6 @@ const SelectedType = () => {
       <div className="w-full flex flex-col md:flex-row justify-start items-start gap-10 px-2 md:px-0 ">
         <div className="w-full md:w-[20%]">
           <h1 className="text-lg font-semibold mb-2">Filter By</h1>
-
-        
 
           {filterData?.data?.categoryDropDown?.length > 0 && (
             <FilterSection
