@@ -48,7 +48,7 @@ const NavBar = () => {
 
   const labels: Label[] = [
     { name: "Home", link: "/" },
-    { name: "Products", link: "/products" },
+    { name: "Products", link: "/product-type" },
     { name: "About Us", link: "/about-us" },
     { name: "Contact Us", link: "/contact-us" },
   ];

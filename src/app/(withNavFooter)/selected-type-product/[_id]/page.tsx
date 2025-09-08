@@ -65,7 +65,7 @@ const FilterSection: React.FC<{
   );
 };
 
-const ProductsPage = () => {
+const SelectedType = () => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [selectedFlavours, setSelectedFlavours] = useState<string[]>([]);
@@ -121,7 +121,7 @@ const ProductsPage = () => {
   ]);
 
   return (
-    <div className="container mx-auto my-10 min-h-screen">
+    <div className="container mx-auto my-10">
       <div className="w-full flex flex-col md:flex-row justify-start items-start gap-10 px-2 md:px-0 ">
         <div className="w-full md:w-[20%]">
           <h1 className="text-lg font-semibold mb-2">Filter By</h1>
@@ -150,7 +150,7 @@ const ProductsPage = () => {
 
         <div className="w-full md:w-[80%]">
           <div className="flex flex-col md:flex-row justify-between items-center gap-5">
-            <h1 className="text-2xl font-bold">All Products</h1>
+            <h1 className="text-2xl font-bold">Selected product</h1>
             <div className="mt-4 md:mt-0">
               <Search
                 allowClear
@@ -255,4 +255,4 @@ const ProductsPage = () => {
   );
 };
 
-export default ProductsPage;
+export default SelectedType;
