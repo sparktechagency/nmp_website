@@ -9,11 +9,11 @@ import Link from "next/link";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { useGetProductsQuery } from "@/redux/features/productsApi/productsApi";
 import {
-  useGetBrandDropDownQuery,
   useGetCatDropDownQuery,
-  useGetFlavourDropDownQuery,
+  useGetFilterDropdownByIdQuery,
 } from "@/redux/features/categoryApi/categoryApi";
 import { Pagination, ConfigProvider } from "antd";
+import { useParams } from "next/navigation";
 
 // ---------------- Filter Section ----------------
 const FilterSection: React.FC<{
@@ -79,18 +79,20 @@ const SelectedType = () => {
     searchTerm: searchText,
   });
 
-  const { data: categoryDropdata } = useGetCatDropDownQuery(undefined);
-  const { data: brandData } = useGetBrandDropDownQuery(undefined);
-  const { data: flavourdata } = useGetFlavourDropDownQuery(undefined);
+  const params = useParams();
+  const id = params.id;
+  console.log("id from selected type", id);
 
+  const { data: categoryDropdata } = useGetCatDropDownQuery(undefined);
+
+  const { data: filterData } = useGetFilterDropdownByIdQuery(id);
+  console.log("filterData from selected type", filterData?.data);
   const products = productsData?.data ?? [];
   const total = productsData?.meta?.total ?? 0;
   const handlePageChange = (page: any) => {
     setCurrentPage(page);
   };
   const categories = categoryDropdata?.data?.map((c: any) => c.name) ?? [];
-  const brands = brandData?.data?.map((b: any) => b.name) ?? [];
-  const flavours = flavourdata?.data?.map((f: any) => f.name) ?? [];
 
   const filteredProducts = useMemo(() => {
     return products.filter((product: any) => {
@@ -125,26 +127,33 @@ const SelectedType = () => {
         <div className="w-full md:w-[20%]">
           <h1 className="text-lg font-semibold mb-2">Filter By</h1>
 
-          <FilterSection
-            title="Category"
-            options={categories}
-            selected={selectedCategories}
-            setSelected={setSelectedCategories}
-          />
+        
 
-          <FilterSection
-            title="Brand"
-            options={brands}
-            selected={selectedBrands}
-            setSelected={setSelectedBrands}
-          />
+          {filterData?.data?.categoryDropDown?.length > 0 && (
+            <FilterSection
+              title="Category"
+              options={filterData.data.categoryDropDown.map((b: any) => b.name)}
+              selected={selectedBrands}
+              setSelected={setSelectedBrands}
+            />
+          )}
+          {filterData?.data?.brandDropDown?.length > 0 && (
+            <FilterSection
+              title="Brand"
+              options={filterData.data.brandDropDown.map((b: any) => b.name)}
+              selected={selectedBrands}
+              setSelected={setSelectedBrands}
+            />
+          )}
 
-          <FilterSection
-            title="Flavour"
-            options={flavours}
-            selected={selectedFlavours}
-            setSelected={setSelectedFlavours}
-          />
+          {filterData?.data?.flavorDropDown?.length > 0 && (
+            <FilterSection
+              title="Flavour"
+              options={filterData.data.flavorDropDown.map((f: any) => f.name)}
+              selected={selectedFlavours}
+              setSelected={setSelectedFlavours}
+            />
+          )}
         </div>
 
         <div className="w-full md:w-[80%]">

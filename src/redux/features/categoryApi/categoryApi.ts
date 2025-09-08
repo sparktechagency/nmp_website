@@ -23,6 +23,13 @@ const CategoryApi = baseApi.injectEndpoints({
       }),
       providesTags: ["Flavour"],
     }),
+    getFilterDropdownById: builder.query({
+      query: (_id) => ({
+        url: `/type/get-filter-options/${_id}`,
+        method: "Get",
+      }),
+      providesTags: ["Categories"],
+    }),
   }),
 });
 
@@ -30,4 +37,5 @@ export const {
   useGetCatDropDownQuery,
   useGetBrandDropDownQuery,
   useGetFlavourDropDownQuery,
+  useGetFilterDropdownByIdQuery,
 } = CategoryApi;
