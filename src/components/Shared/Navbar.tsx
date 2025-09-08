@@ -14,7 +14,9 @@ import img from "../../assets/image/image 23.png";
 import { useGetCartQuery } from "@/redux/features/cartApi/cartApi";
 import { LuLogOut } from "react-icons/lu";
 import user from "../../assets/image/user.jpeg";
-
+import { useDispatch } from "react-redux";
+import { logout } from "@/redux/features/auth/authSlice";
+import { persistor } from "@/redux/store";
 interface Label {
   name: string;
   link: string;
@@ -26,6 +28,8 @@ const NavBar = () => {
   const { data: profileData } = useGetProfileQuery(undefined);
   const { data: cartData } = useGetCartQuery(undefined);
   const cartItems = cartData?.data || [];
+
+  const dispatch = useDispatch();
 
   console.log("cartItems", cartItems?.length);
 
@@ -59,14 +63,18 @@ const NavBar = () => {
     }
   };
 
- const handleLogout = () => {
-  localStorage.removeItem("token");
+  const handleLogout = () => {
+    // Remove the user from localStorage and sessionStorage
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    sessionStorage.clear();
 
-  sessionStorage.clear();
-
-  window.location.replace("/sign-in");
-};
-
+    // Optionally dispatch a logout action if you have a global state like Redux
+    dispatch(logout()); // Assuming logout() is imported from your auth slice
+  persistor.purge(); 
+    // Redirect to login page
+    window.location.replace("/sign-in");
+  };
 
   const renderUserSection = () => {
     if (profileData?.data) {

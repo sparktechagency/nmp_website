@@ -165,7 +165,7 @@ const VerifyOtpForForgotPass: React.FC = () => {
                 </p>
               </div>
             </div>
-          </div>
+          </div> 
 
           {/* Right – Illustration panel */}
           <div className="relative hidden lg:block">
