@@ -92,7 +92,6 @@ const SelectedType = () => {
   const brands = brandData?.data?.map((b: any) => b.name) ?? [];
   const flavours = flavourdata?.data?.map((f: any) => f.name) ?? [];
 
- 
   const filteredProducts = useMemo(() => {
     return products.filter((product: any) => {
       const matchesCategory =
@@ -121,7 +120,7 @@ const SelectedType = () => {
   ]);
 
   return (
-    <div className="container mx-auto my-10">
+    <div className="container mx-auto my-10 min-h-screen">
       <div className="w-full flex flex-col md:flex-row justify-start items-start gap-10 px-2 md:px-0 ">
         <div className="w-full md:w-[20%]">
           <h1 className="text-lg font-semibold mb-2">Filter By</h1>
