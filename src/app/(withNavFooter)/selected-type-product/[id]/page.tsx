@@ -157,7 +157,7 @@ const SelectedType = () => {
 
         <div className="w-full md:w-[80%]">
           <div className="flex flex-col md:flex-row justify-between items-center gap-5">
-            <h1 className="text-2xl font-bold">Selected product</h1>
+            <h1 className="text-2xl font-bold">All Products</h1>
             <div className="mt-4 md:mt-0">
               <Search
                 allowClear
@@ -171,7 +171,34 @@ const SelectedType = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 py-6 justify-center items-center">
             {isLoading ? (
-              <p className="text-gray-500">Loading...</p>
+              // Skeleton Loader
+              Array.from({ length: 6 }).map((_, idx) => (
+                <div
+                  key={idx}
+                  className="bg-white shadow-lg rounded-lg p-4 animate-pulse"
+                >
+                  {/* Image Skeleton */}
+                  <div className="flex justify-center my-3">
+                    <div className="w-40 h-40 bg-gray-200 rounded-md"></div>
+                  </div>
+
+                  {/* Title Skeleton */}
+                  <div className="h-6 bg-gray-200 rounded w-3/4 mx-auto my-4"></div>
+
+                  {/* Details Skeleton */}
+                  <div className="space-y-2 h-20">
+                    <div className="h-4 bg-gray-200 rounded w-5/6 mx-auto"></div>
+                    <div className="h-4 bg-gray-200 rounded w-4/6 mx-auto"></div>
+                    <div className="h-4 bg-gray-200 rounded w-3/6 mx-auto"></div>
+                  </div>
+
+                  {/* Price & Rating Skeleton */}
+                  <div className="flex justify-between items-center mt-5">
+                    <div className="h-5 bg-gray-200 rounded w-16"></div>
+                    <div className="h-5 bg-gray-200 rounded w-20"></div>
+                  </div>
+                </div>
+              ))
             ) : filteredProducts.length > 0 ? (
               filteredProducts.map((product: any) => (
                 <div
