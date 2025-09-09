@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import React from "react";
-import banner from "../../../assets/image/banner.png";
+// import banner from "../../../assets/image/banner.png";
 import Link from "next/link";
 import { useGetBannerQuery } from "@/redux/features/heroApi/heroApi";
 

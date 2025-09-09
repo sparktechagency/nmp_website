@@ -91,7 +91,7 @@ const BestSellers = () => {
                   </p>
                 )}
               </div>
-              <div className="flex items-center gap-1 text-yellow-400">
+              <div className="flex items-center gap-1 text-yellow-400 -mt-3">
                 {[...Array(5)].map((_, i) => (
                   <FaStar
                     key={i}
