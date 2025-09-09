@@ -8,7 +8,7 @@ const TermsCondition = () => {
   const { data: termsData, isLoading: termsLoading } =
     useTermsAndConditionQuery(undefined);
   return (
-    <div className="container mx-auto md:px-10 md:h-[60vh] my-20">
+    <div className="container mx-auto md:px-10 min-h-screen my-20 px-2 ">
       {termsLoading ? (
         <div className="flex justify-center items-center py-10">
           <Spin size="large" />

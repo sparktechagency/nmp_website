@@ -5,7 +5,7 @@ import React from "react";
 import { Form, Input, message } from "antd";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import image from "../../../assets/image/Rectangle 29 (1).png";
 import { useNewPasswordMutation } from "@/redux/features/auth/authApi";
 import toast from "react-hot-toast";
@@ -18,14 +18,19 @@ interface NewPasswordValues {
 const NewPassword: React.FC = () => {
   const [form] = Form.useForm<NewPasswordValues>();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email");
+  const otp = searchParams.get("otp");
   const [newPassword] = useNewPasswordMutation();
   const onFinish = async (values: any) => {
     try {
       const data = {
-        currentPassword: values.password,
-        newPassword: values.confirmPassword,
+        email: email,
+        otp: otp,
+        password: values?.confirmPassword,
       };
       const res = await newPassword(data).unwrap();
+      console.log("res,", res);
       toast.success(res.message);
       router.push("/sign-in");
     } catch (e: any) {
@@ -110,16 +115,14 @@ const NewPassword: React.FC = () => {
                   </Form.Item>
 
                   <Form.Item className="mb-0">
-                    <Link href="/">
-                      <div className="text-white">
-                        <button
-                          type="submit"
-                          className="w-full py-3 rounded-xl  font-semibold shadow-lg transition focus:outline-none focus:ring-4 focus:ring-indigo-300 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-700 hover:via-purple-700 hover:to-pink-700"
-                        >
-                          Reset Password
-                        </button>
-                      </div>
-                    </Link>
+                    <div className="text-white">
+                      <button
+                        type="submit"
+                        className="w-full py-3 rounded-xl  font-semibold shadow-lg transition focus:outline-none focus:ring-4 focus:ring-indigo-300 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-700 hover:via-purple-700 hover:to-pink-700"
+                      >
+                        Reset Password
+                      </button>
+                    </div>
                   </Form.Item>
                 </Form>
 

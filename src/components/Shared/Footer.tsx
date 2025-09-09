@@ -194,14 +194,14 @@ const Footer: React.FC = () => {
           <div>
             <h3 className="font-semibold mb-4">CUSTOMER SERVICE</h3>
             <ul className="space-y-2 text-sm text-gray-700">
-              <Link href="/delivary-information">
+              {/* <Link href="/delivary-information">
                 <li
                   className="cursor-pointer hover:text-blue-600"
                   // onClick={() => setIsDeliveryOpen(true)}
                 >
                   Delivery Information
                 </li>
-              </Link>
+              </Link> */}
               <Link href="/terms-condition">
                 <li
                   className="cursor-pointer hover:text-blue-600 mt-2"

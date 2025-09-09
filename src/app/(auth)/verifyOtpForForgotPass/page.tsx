@@ -50,7 +50,9 @@ const VerifyOtpForForgotPass: React.FC = () => {
       }).unwrap();
 
       toast.success(res?.message);
-      router.push("/new-password");
+      // router.push("/new-password");
+      router.push(`/new-password?email=${encodeURIComponent(email)}&otp=${clean}`);
+
     } catch (err: unknown) {
       console.error(err);
       if (typeof err === "object" && err && "data" in err) {
