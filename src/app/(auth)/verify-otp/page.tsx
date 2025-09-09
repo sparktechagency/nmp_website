@@ -150,7 +150,7 @@ console.log("Email:", email)
                 <p className="mt-2 text-center text-xs text-gray-500">
                   Wrong email?{" "}
                   <Link
-                    href="/forgot-password"
+                    href="/forgate-pass"
                     className="underline hover:text-gray-700"
                   >
                     Go back
