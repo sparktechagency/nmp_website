@@ -245,12 +245,19 @@ const SelectedType = () => {
                       )}
                     </div>
 
-                    <div className=" flex items-baseline gap-1 text-yellow-500">
-                      {[...Array(Math.floor(product?.ratings ?? 0))].map(
-                        (_, i) => (
-                          <FaStar key={i} />
-                        )
-                      )}
+                    <div className="flex items-center gap-2 mt-2">
+                      {Array(5)
+                        .fill(null)
+                        .map((_, i) => (
+                          <FaStar
+                            key={i}
+                            className={`${
+                              i < product.ratings
+                                ? "text-orange-400"
+                                : "text-gray-300"
+                            }`}
+                          />
+                        ))}
                       <span className="text-gray-500 text-sm ml-1">
                         ({product.totalReview} reviews)
                       </span>
