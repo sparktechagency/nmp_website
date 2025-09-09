@@ -34,6 +34,9 @@ const BestSellers = () => {
     }
   };
 
+  // ✅ Hide entire section if no products
+  if (!products.length) return null;
+
   return (
     <div className="container mx-auto">
       <SectionTitle heading={"Best Seller Products"} />
@@ -128,13 +131,13 @@ const BestSellers = () => {
               <button
                 onClick={() => handleAddToCart(product._id)}
                 disabled={product.stockStatus !== "in_stock"}
-                className="cur px-4 py-2 border border-blue-500 text-white rounded-md  transition"
+                className="cur px-4 py-2 border border-blue-500 text-white rounded-md transition disabled:opacity-50"
               >
                 Add to Cart
               </button>
 
               <Link href={`/products/${product._id}`}>
-                <button className=" px-4 py-2 border border-blue-500 rounded-md hover:bg-gray-100 transition">
+                <button className="px-4 py-2 border border-blue-500 rounded-md hover:bg-gray-100 transition">
                   Details
                 </button>
               </Link>
@@ -143,12 +146,12 @@ const BestSellers = () => {
         ))}
       </div>
 
-      {/* Show More / See More Button */}
+      {/* Show More / Show Less Button */}
       <div className="flex justify-center items-center my-16 text-white">
         {products.length > 6 && (
           <button
             onClick={() => setShowAll(!showAll)}
-            className="flex items-center gap-2 px-4 py-2 bg-[#ff8904]  rounded-md  transition shadow-md"
+            className="flex items-center gap-2 px-4 py-2 bg-[#ff8904] rounded-md transition shadow-md"
           >
             {showAll ? "Show Less" : "Show More"}
             <MdKeyboardDoubleArrowRight className="text-xl" />

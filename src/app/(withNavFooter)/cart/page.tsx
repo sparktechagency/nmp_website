@@ -186,7 +186,7 @@ const CartPage = () => {
           <p className="text-gray-600 font-semibold text-lg">
             🛒 No items in your cart
           </p>
-          <Link href="/products" className="text-white">
+          <Link href="/product-type" className="text-white">
             <button className="mt-4 bg-[#3f67bc]  px-6 py-2 rounded-lg">
               Browse Products
             </button>

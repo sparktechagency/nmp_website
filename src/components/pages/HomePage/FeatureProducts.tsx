@@ -32,6 +32,9 @@ const FeatureProducts = () => {
     }
   };
 
+  // ✅ Hide entire section (including title) if no products
+  if (!products.length) return null;
+
   return (
     <div className="container mx-auto">
       <SectionTitle heading={"Featured Products"} />

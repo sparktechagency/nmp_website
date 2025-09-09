@@ -88,7 +88,7 @@ const NavBar = () => {
                   alt="profile"
                   height={40}
                   width={40}
-                  className="rounded-full cursor-pointer"
+                  className="h-12 w-12 rounded-full cursor-pointer"
                 />
               ) : (
                 <Image
