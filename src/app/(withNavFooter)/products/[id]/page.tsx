@@ -200,11 +200,27 @@ const ProductDetails = () => {
                 </div>
 
                 <div className="w-full md:w-[80%]">
-                  <div className="flex items-center gap-1 text-yellow-500 mb-2">
+                  {/* <div className="flex items-center gap-1 text-yellow-500 mb-2">
                     {[...Array(review.star)].map((_, i) => (
                       <FaStar key={i} />
                     ))}
+                  </div> */}
+
+                  <div className="flex items-center gap-2 mt-2">
+                    {Array(5)
+                      .fill(null)
+                      .map((_, i) => (
+                        <FaStar
+                          key={i}
+                          className={`${
+                            i < product.ratings
+                              ? "text-yellow-400"
+                              : "text-gray-300"
+                          }`}
+                        />
+                      ))}
                   </div>
+
                   <h2 className="text-lg font-semibold">{review.fullName}</h2>
                   <h3 className="text-sm text-gray-500">{review.email}</h3>
                   <p className="text-gray-600">{review.comment}</p>
@@ -232,5 +248,3 @@ const ProductDetails = () => {
 };
 
 export default ProductDetails;
-
-
