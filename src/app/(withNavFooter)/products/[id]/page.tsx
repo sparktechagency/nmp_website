@@ -69,7 +69,7 @@ const ProductDetails = () => {
 
   const handleAddToCart = async () => {
     if (!token) {
-      router.push("/sign-in"); 
+      router.push("/sign-in");
       return;
     }
     try {
@@ -97,18 +97,19 @@ const ProductDetails = () => {
             height={400}
             className="rounded"
           />
+          <p
+            className="pt-5"
+            dangerouslySetInnerHTML={{ __html: product.description }}
+          />
         </div>
 
         <div className="w-full md:w-[60%]">
           <h1 className="text-4xl font-bold">{product.name}</h1>
-
           <p className="text-xl text-orange-400 mt-2">
             ${product.currentPrice}
-            {product.discount && (
-              <span className="text-sm line-through text-gray-400 ml-2">
-                ${product.originalPrice}
-              </span>
-            )}
+            <span className="text-sm line-through text-gray-400 ml-2">
+              ${product.originalPrice}
+            </span>
           </p>
 
           <div className="flex items-center gap-2 mt-2">
@@ -129,18 +130,27 @@ const ProductDetails = () => {
 
           <div className="mt-4">
             <p>
-              <strong>Brand:</strong> {product.brand}
-            </p>
-            <p>
               <strong>Category:</strong> {product.category}
             </p>
-            <p>
+            {product?.brand ? (
+              <p>
+                <strong>Brand:</strong> {product.brand}
+              </p>
+            ) : (
+              ""
+            )}
+
+            {product?.flavor ? (
+              <p>
+                <strong>Flavor:</strong> {product.flavor}
+              </p>
+            ) : (
+              ""
+            )}
+            {/* <p>
               <strong>Flavor:</strong> {product.flavor}
-            </p>
-            <p
-              className="mt-2"
-              dangerouslySetInnerHTML={{ __html: product.description }}
-            />
+            </p> */}
+
             <p className="mt-2">
               <strong>Stock Status:</strong>{" "}
               <span
@@ -184,12 +194,13 @@ const ProductDetails = () => {
           </div>
         </div>
       </div>
-      <div className="container mx-auto my-20">
-        <h1 className="text-3xl font-bold text-center pb-20">
-          Ratings & Reviews
-        </h1>
 
-        {reviews.length > 0 ? (
+      {reviews.length > 0 && (
+        <div className="container mx-auto my-20">
+          <h1 className="text-3xl font-bold text-center pb-20">
+            Ratings & Reviews
+          </h1>
+
           <div className="flex flex-col gap-10">
             {reviews.map((review: any) => (
               <div
@@ -207,12 +218,6 @@ const ProductDetails = () => {
                 </div>
 
                 <div className="w-full md:w-[80%]">
-                  {/* <div className="flex items-center gap-1 text-yellow-500 mb-2">
-                    {[...Array(review.star)].map((_, i) => (
-                      <FaStar key={i} />
-                    ))}
-                  </div> */}
-
                   <div className="flex items-center gap-2 mt-2">
                     {Array(5)
                       .fill(null)
@@ -235,21 +240,10 @@ const ProductDetails = () => {
               </div>
             ))}
           </div>
-        ) : (
-          <p className="text-center text-gray-500">
-            No reviews for this product yet.
-          </p>
-        )}
+        </div>
+      )}
 
-        {/* <div className="flex justify-center items-center my-20 text-white">
-          <Link href="/products">
-            <button className="flex justify-center items-center gap-2 px-4 py-2 bg-orange-400 rounded-md cursor-pointer">
-              See More
-              <MdKeyboardDoubleArrowRight />
-            </button>
-          </Link>
-        </div> */}
-      </div>
+   
     </div>
   );
 };
