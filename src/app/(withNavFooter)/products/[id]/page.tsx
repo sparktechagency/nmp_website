@@ -1,19 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-
+import { useSelector } from "react-redux";
 import React, { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { FaStar } from "react-icons/fa";
 import { IoIosCart } from "react-icons/io";
-import Link from "next/link";
 import { useGetSingleProductQuery } from "@/redux/features/productsApi/productsApi";
 import { useAddToCartMutation } from "@/redux/features/cartApi/cartApi";
 import toast from "react-hot-toast";
-import { MdKeyboardDoubleArrowRight } from "react-icons/md";
 import { useGetAllReviewQuery } from "@/redux/features/reviewApi/reviewApi";
 
+import { userCurrentToken } from "@/redux/features/auth/authSlice";
+
 const ProductDetails = () => {
+  const token = useSelector(userCurrentToken);
+
   const router = useRouter();
   const params = useParams();
   const id = params?.id;
@@ -64,7 +66,12 @@ const ProductDetails = () => {
   }
 
   const product = singleProduct.data;
+
   const handleAddToCart = async () => {
+    if (!token) {
+      router.push("/sign-in"); 
+      return;
+    }
     try {
       const data = {
         productId: id,

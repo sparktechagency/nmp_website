@@ -122,6 +122,9 @@ const SelectedType = () => {
     searchText,
   ]);
 
+
+
+  
   return (
     <div className="container mx-auto my-10 min-h-screen">
       <div className="w-full flex flex-col md:flex-row justify-start items-start gap-10 px-2 md:px-0 ">

@@ -10,17 +10,25 @@ import { useGetBestSellerProductQuery } from "@/redux/features/productsApi/produ
 import { useAddToCartMutation } from "@/redux/features/cartApi/cartApi";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
+import { userCurrentToken } from "@/redux/features/auth/authSlice";
 
 const BestSellers = () => {
+    const token = useSelector(userCurrentToken);
   const { data: bestSellerData } = useGetBestSellerProductQuery(undefined);
   const products = bestSellerData?.data || [];
-
   const [showAll, setShowAll] = useState(false);
   const displayedProducts = showAll ? products : products.slice(0, 6);
   const [addToCart] = useAddToCartMutation();
+ // ✅ get token from redux
   const router = useRouter();
 
   const handleAddToCart = async (productId: string) => {
+    if (!token) {
+      router.push("/sign-in"); // redirect to login if no token
+      return;
+    }
+
     try {
       const payload = {
         productId,

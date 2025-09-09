@@ -11,14 +11,21 @@ import { useGetFeatureProductsQuery } from "@/redux/features/productsApi/product
 import { useAddToCartMutation } from "@/redux/features/cartApi/cartApi";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
+import { useSelector } from "react-redux";
+import { userCurrentToken } from "@/redux/features/auth/authSlice";
 
 const FeatureProducts = () => {
+    const token = useSelector(userCurrentToken);
   const { data: productsData } = useGetFeatureProductsQuery(undefined);
   const products = productsData?.data || [];
   const [addToCart] = useAddToCartMutation();
   const router = useRouter();
 
   const handleAddToCart = async (productId: string) => {
+     if (!token) {
+      router.push("/sign-in");
+      return;
+    }
     try {
       const payload = {
         productId,
@@ -32,7 +39,7 @@ const FeatureProducts = () => {
     }
   };
 
-  // ✅ Hide entire section (including title) if no products
+ 
   if (!products.length) return null;
 
   return (
@@ -45,14 +52,14 @@ const FeatureProducts = () => {
             key={product._id}
             className="group relative bg-white shadow-lg rounded-2xl p-5 hover:shadow-2xl transition-all duration-300 border border-gray-100"
           >
-            {/* Discount Badge */}
+ 
             {product?.discount > 0 && (
               <span className="absolute top-3 left-3 bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-full z-10 shadow-md">
                 -{product.discount}%
               </span>
             )}
 
-            {/* Product Image */}
+    
             <Link href={`/products/${product._id}`}>
               <div className="flex justify-center my-4">
                 <Image
@@ -65,7 +72,6 @@ const FeatureProducts = () => {
               </div>
             </Link>
 
-            {/* Product Info */}
             <div className="text-center">
               <h2 className="font-bold text-lg text-gray-800 group-hover:text-blue-600 transition">
                 {product.name}
@@ -78,7 +84,6 @@ const FeatureProducts = () => {
               )}
             </div>
 
-            {/* Price + Ratings */}
             <div className="flex justify-between items-center mt-4">
               <div className="flex items-center gap-2">
                 <p className="text-lg font-bold text-blue-600">
@@ -105,7 +110,6 @@ const FeatureProducts = () => {
               </div>
             </div>
 
-            {/* Stock Status */}
             <p
               className={`mt-2 text-xs font-semibold ${
                 product.stockStatus === "in_stock"
@@ -116,7 +120,7 @@ const FeatureProducts = () => {
               {product.stockStatus === "in_stock" ? "In Stock" : "Out of Stock"}
             </p>
 
-            {/* Action Buttons */}
+     
             <div className="mt-5 flex justify-between gap-3 text-blue-500">
               <button
                 onClick={() => handleAddToCart(product._id)}
