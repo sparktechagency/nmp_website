@@ -191,7 +191,7 @@ const OrderPage = () => {
   ];
 
   return (
-    <div className="container mx-auto mb-20 px-4">
+    <div className="container mx-auto mb-20 px-4 min-h-screen">
       <SectionTitle heading="All Orders" />
 
       <Table
