@@ -156,8 +156,8 @@ const ProductDetails = () => {
               <span
                 className={`${
                   product.stockStatus === "in_stock"
-                    ? "text-green-500"
-                    : "text-red-500"
+                    ? "text-red-500"
+                    : " text-green-500"
                 }`}
               >
                 {product.stockStatus.replace("_", " ")}
@@ -242,8 +242,6 @@ const ProductDetails = () => {
           </div>
         </div>
       )}
-
-   
     </div>
   );
 };
