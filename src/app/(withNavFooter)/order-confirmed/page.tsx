@@ -38,7 +38,7 @@ const OrderConfirmedPage = () => {
   }
 
   return (
-    <div className="container mx-auto my-20">
+    <div className="container mx-auto my-20 min-h-screen">
       <div className="flex md:flex-col justify-center items-center gap-3">
         <FaRegCheckCircle className="h-40 w-40 text-green-500" />
         <h1 className="text-4xl font-bold my-3">Payment Successful!</h1>
