@@ -15,7 +15,7 @@ const TermsCondition = () => {
         </div>
       ) : (
         <div className="space-y-4">
-          <h2 className="text-xl font-semibold">Terms & Conditions</h2>
+          <h2 className="text-4xl font-bold mb-6 text-gray-900">Terms & Conditions</h2>
           <div
             className="text-gray-700 leading-relaxed max-h-[400px] overflow-y-auto"
             dangerouslySetInnerHTML={{

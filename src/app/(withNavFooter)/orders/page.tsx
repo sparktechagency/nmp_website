@@ -144,14 +144,14 @@ const OrderPage = () => {
               <div>
                 <p className="font-medium">{product.name}</p>
                 <p className="text-sm text-gray-500">
-                  Qty: {product.quantity} | ${product.price.toFixed(2)}
+                  Qty: {product?.quantity} | ${product?.price?.toFixed(2)}
                 </p>
                 <Button
                   onClick={() => handleModalOpen(product.productId, record._id)}
                   type="primary"
-                  disabled={product.isReview}
+                  disabled={product?.isReview}
                 >
-                  {product.isReview ? "Already Reviewed" : "Review"}
+                  {product?.isReview ? "Already Reviewed" : "Review"}
                 </Button>
               </div>
             </div>
@@ -162,10 +162,10 @@ const OrderPage = () => {
 
     {
       title: "Total",
-      dataIndex: "totalPrice",
-      key: "totalPrice",
+      dataIndex: "total",
+      key: "total",
       render: (total: number) => (
-        <span className="font-semibold">${total.toFixed(2)}</span>
+        <span className="font-semibold">${total?.toFixed(2)}</span>
       ),
     },
     {
@@ -174,7 +174,7 @@ const OrderPage = () => {
       key: "status",
       render: (status: string) => (
         <Tag color={status === "delivered" ? "green" : "gold"}>
-          {status.toUpperCase()}
+          {status?.toUpperCase()}
         </Tag>
       ),
     },
@@ -184,7 +184,7 @@ const OrderPage = () => {
       key: "paymentStatus",
       render: (status: string) => (
         <Tag color={status === "paid" ? "green" : "red"}>
-          {status.toUpperCase()}
+          {status?.toUpperCase()}
         </Tag>
       ),
     },

@@ -3,8 +3,6 @@
 import React, { useState } from "react";
 import { ConfigProvider, Form, Input, Spin } from "antd";
 import type { FormProps } from "antd";
-import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
 import {
   useCreateOrderMutation,
   useGetShippingCostQuery,
@@ -19,10 +17,7 @@ interface ContactFormValues {
 }
 
 const CheckoutPage: React.FC = () => {
-  const searchParams = useSearchParams();
-  const total = searchParams.get("total");
-  const quantity = searchParams.get("quantity");
-  const router = useRouter();
+
   // console.log(total, quantity);
 
   const [createOrder] = useCreateOrderMutation();

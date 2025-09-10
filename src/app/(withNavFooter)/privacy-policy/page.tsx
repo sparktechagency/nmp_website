@@ -8,14 +8,14 @@ const PrivacyPolicy = () => {
   const { data: privacyData, isLoading: privacyLoading } =
     usePrivacyPolicyQuery(undefined);
   return (
-    <div className="container mx-auto my-20 px-10">
+    <div className="container mx-auto my-20 px-2">
       {privacyLoading ? (
         <div className="flex justify-center items-center py-10">
           <Spin size="large" />
         </div>
       ) : (
         <div className="space-y-4">
-          <h2 className="text-xl font-semibold">Privacy Policy</h2>
+          <h2 className="text-4xl font-bold mb-6 text-gray-900">Privacy Policy</h2>
           <div
             className="text-gray-700 "
             dangerouslySetInnerHTML={{
