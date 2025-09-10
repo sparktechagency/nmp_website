@@ -84,7 +84,7 @@ const FeatureProducts = () => {
               )}
             </div>
 
-            <div className="flex justify-between items-center mt-4">
+            <div className="flex justify-between items-center mt-4 ">
               <div className="flex items-center gap-2">
                 <p className="text-lg font-bold text-blue-600">
                   ${product.currentPrice}
@@ -95,7 +95,7 @@ const FeatureProducts = () => {
                   </p>
                 )}
               </div>
-              <div className="flex items-center gap-1 text-yellow-400">
+              <div className="flex items-center gap-1 text-yellow-400 -mt-5">
                 {[...Array(5)].map((_, i) => (
                   <FaStar
                     key={i}
