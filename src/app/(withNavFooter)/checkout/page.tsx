@@ -5,7 +5,10 @@ import { ConfigProvider, Form, Input, Spin } from "antd";
 import type { FormProps } from "antd";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCreateOrderMutation } from "@/redux/features/ordersApi/ordersApi";
+import {
+  useCreateOrderMutation,
+  useGetShippingCostQuery,
+} from "@/redux/features/ordersApi/ordersApi";
 import toast from "react-hot-toast";
 
 interface ContactFormValues {
@@ -51,6 +54,9 @@ const CheckoutPage: React.FC = () => {
     }
   };
 
+  const { data: shippingData } = useGetShippingCostQuery(undefined);
+  console.log("shippingData", shippingData?.data);
+
   return (
     <div className="container mx-auto my-12">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-28">
@@ -59,16 +65,16 @@ const CheckoutPage: React.FC = () => {
           <div className="border-b-2 border-b-neutral-300 pb-5">
             <div className="text-neutral-400 flex justify-between items-center gap-5">
               <h1 className="">SUBTOTAL</h1>
-              <p>${total}</p>
+              <p>${shippingData?.data?.subTotal}</p>
             </div>
-            {/* <div className="text-neutral-400 flex justify-between items-center gap-5">
+            <div className="text-neutral-400 flex justify-between items-center gap-5">
               <h1>SHIPPING</h1>
-              <p>$80</p>
-            </div> */}
+              <p>{shippingData?.data?.shippingCost}</p>
+            </div>
           </div>
           <div className="text-neutral-400 flex justify-between items-center gap-5 mt-5">
             <h1>TOTAL</h1>
-            <p>${total}</p>
+            <p>${shippingData?.data?.total}</p>
           </div>
         </div>
         <ConfigProvider
@@ -102,9 +108,7 @@ const CheckoutPage: React.FC = () => {
             <Form.Item
               name="streetAddress"
               label={<p className="text-md">Street Address</p>}
-              rules={[
-                { message: "Please enter your Street Address" },
-              ]}
+              rules={[{ message: "Please enter your Street Address" }]}
             >
               <Input
                 placeholder="Your Street Address"

@@ -122,9 +122,6 @@ const SelectedType = () => {
     searchText,
   ]);
 
-
-
-  
   return (
     <div className="container mx-auto my-10 min-h-screen">
       <div className="w-full flex flex-col md:flex-row justify-start items-start gap-10 px-2 md:px-0 ">
@@ -232,8 +229,8 @@ const SelectedType = () => {
 
                   <div className="text-gray-600 text-sm text-center space-y-1 h-20">
                     <p>Category: {product.category}</p>
-                    <p>Brand: {product.brand}</p>
-                    <p>Flavour: {product.flavor}</p>
+                    {product?.brand ? <p>Brand: {product.brand}</p> : ""}
+                    {product?.flavor ? <p>Flavour: {product.flavor}</p> : ""}
                   </div>
 
                   <div className=" flex justify-between items-baseline p-2 mt-5">
