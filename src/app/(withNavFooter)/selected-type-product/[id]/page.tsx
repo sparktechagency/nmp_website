@@ -218,7 +218,8 @@ const SelectedType = () => {
                         height={200}
                         width={200}
                         alt={product.name}
-                        className="rounded-md"
+                        className="rounded-md  h-40 w-full object-contain"
+                
                       />
                     </div>
                   </Link>

@@ -2,8 +2,10 @@
 
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useSelector } from "react-redux";
 import { useGetBannerQuery } from "@/redux/features/heroApi/heroApi";
 import toast from "react-hot-toast";
+import { userCurrentToken } from "@/redux/features/auth/authSlice";
 
 const AgeVerification: React.FC = () => {
   const { data: infoData } = useGetBannerQuery(undefined);
@@ -11,20 +13,32 @@ const AgeVerification: React.FC = () => {
   const [isVerified, setIsVerified] = useState(false);
 
   const age = infoData?.data?.age;
+   const token = useSelector(userCurrentToken); 
+
+  useEffect(() => {
+    const storedVerification = localStorage.getItem("ageVerified");
+
+    if (!token || storedVerification !== "true") {
+      setShowPopup(true);
+    } else {
+      setIsVerified(true);
+    }
+  }, [token]); 
 
   useEffect(() => {
     if (age && !isVerified) {
-      setShowPopup(true);
+      setShowPopup(true); 
     }
   }, [age, isVerified]);
 
   const handleVerify = () => {
+    localStorage.setItem("ageVerified", "true"); 
     setIsVerified(true);
-    setShowPopup(false);
+    setShowPopup(false); 
   };
 
   const handleReject = () => {
-    toast.error(" Sorry, you are not allowed to enter.", {
+    toast.error("Sorry, you are not allowed to enter.", {
       duration: 4000,
       position: "top-center",
       style: {
@@ -42,7 +56,7 @@ const AgeVerification: React.FC = () => {
 
   return (
     <AnimatePresence>
-      {showPopup && (
+      {showPopup && !isVerified && (
         <motion.div
           className="fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-md z-50"
           initial={{ opacity: 0 }}

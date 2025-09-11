@@ -67,7 +67,7 @@ const FeatureProducts = () => {
                   height={220}
                   width={220}
                   alt={product.name}
-                  className="rounded-lg group-hover:scale-105 transition-transform duration-300"
+                  className="rounded-lg group-hover:scale-105 transition-transform duration-300 h-40 w-full object-contain"
                 />
               </div>
             </Link>
