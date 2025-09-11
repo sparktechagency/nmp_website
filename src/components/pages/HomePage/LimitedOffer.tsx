@@ -72,7 +72,7 @@ const LimitedOffer: React.FC = () => {
             ))}
           </div>
           <div className="text-white">
-            <Link href="/products">
+            <Link href="/product-type">
               <button className="bg-[#3f67bc] px-6 py-2 rounded-md transition">
                 Shop Now
               </button>
@@ -82,7 +82,7 @@ const LimitedOffer: React.FC = () => {
 
         <div className="w-[325px] h-[450px] relative">
           <Image
-            src={productImg}
+            src={infoData?.data?.countDownImg}
             alt="Product"
             fill
             className="object-contain"
