@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import productImg from "../../../assets/image/Rectangle 161.png";
 import Link from "next/link";
 import { useGetBannerQuery } from "@/redux/features/heroApi/heroApi";
 
@@ -55,32 +54,38 @@ const LimitedOffer: React.FC = () => {
   }, [targetDate]);
 
   return (
-    <div className="container mx-auto">
-      <div className="flex flex-col md:flex-row items-center justify-between bg-gray-50 p-8 rounded-lg shadow-lg">
-        <div className="mb-6 md:mb-0">
-          <h1 className="text-4xl font-bold mb-6">Offer Ends Soon</h1>
+    <div className="container mx-auto px-4">
+      {/* On mobile: column-reverse (image first), on md+: row */}
+      <div className="flex flex-col-reverse md:flex-row items-center justify-between bg-gray-50 p-6 md:p-8 rounded-lg shadow-lg gap-6">
+        {/* Text & Countdown */}
+        <div className="flex-1">
+          <h1 className="text-3xl md:text-4xl font-bold mb-6 text-center md:text-left">
+            Offer Ends Soon
+          </h1>
 
-          <div className="flex flex-col md:flex-row gap-4 my-16">
+          <div className="flex flex-col md:flex-row gap-4 justify-center md:justify-start my-6 md:my-16">
             {Object.entries(timeLeft).map(([label, value]) => (
               <div
                 key={label}
-                className="bg-blue-50 text-center px-6 py-4 rounded-lg min-w-[80px]"
+                className="bg-blue-50 text-center px-4 md:px-6 py-3 md:py-4 rounded-lg min-w-[70px]"
               >
-                <p className="text-2xl font-bold">{value}</p>
+                <p className="text-2xl md:text-3xl font-bold">{value}</p>
                 <p className="text-sm capitalize">{label}</p>
               </div>
             ))}
           </div>
-          <div className="text-white">
+
+          <div className="flex justify-center md:justify-start mt-4 text-white">
             <Link href="/product-type">
-              <button className="bg-[#3f67bc] px-6 py-2 rounded-md transition">
+              <button className="bg-[#3f67bc]  px-6 py-2 rounded-md transition hover:bg-[#3550a1]">
                 Shop Now
               </button>
             </Link>
           </div>
         </div>
 
-        <div className="w-[325px] h-[450px] relative">
+        {/* Image */}
+        <div className="w-full md:w-[325px] h-[300px] md:h-[450px] relative">
           <Image
             src={infoData?.data?.countDownImg}
             alt="Product"
