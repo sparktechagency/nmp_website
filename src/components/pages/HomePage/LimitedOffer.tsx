@@ -8,8 +8,9 @@ import { useGetBannerQuery } from "@/redux/features/heroApi/heroApi";
 const LimitedOffer: React.FC = () => {
   const { data: infoData } = useGetBannerQuery(undefined);
 
-  const targetDate = infoData?.data?.countDownDate
-    ? new Date(infoData.data.countDownDate).getTime()
+  const rawDate = infoData?.data?.countDownDate;
+  const targetDate = rawDate
+    ? new Date(rawDate.replace("Z", "")).getTime()
     : null;
 
   const calculateTimeLeft = () => {
