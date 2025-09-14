@@ -131,13 +131,13 @@ const NavBar = () => {
       <div className="w-full bg-[#0c0111] text-white">
         <div className="container mx-auto flex items-center justify-center py-4 px-6 lg:px-8">
           <div className="flex items-center w-full h-full">
-            <Link href="/">
+            {/* <Link href="/">
               <Image
                 src={img}
                 alt="logo"
                 className="lg:h-11 h-16 w-auto rounded-full"
               />
-            </Link>
+            </Link> */}
 
             <div className="lg:hidden ml-auto">
               <Button
