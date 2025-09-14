@@ -56,9 +56,7 @@ const LimitedOffer: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4">
-      {/* On mobile: column-reverse (image first), on md+: row */}
       <div className="flex flex-col-reverse md:flex-row items-center justify-between bg-gray-50 p-6 md:p-8 rounded-lg shadow-lg gap-6">
-        {/* Text & Countdown */}
         <div className="flex-1">
           <h1 className="text-3xl md:text-4xl font-bold mb-6 text-center md:text-left">
             Offer Ends Soon
@@ -85,7 +83,6 @@ const LimitedOffer: React.FC = () => {
           </div>
         </div>
 
-        {/* Image */}
         <div className="w-full md:w-[325px] h-[300px] md:h-[450px] relative">
           <Image
             src={infoData?.data?.countDownImg}

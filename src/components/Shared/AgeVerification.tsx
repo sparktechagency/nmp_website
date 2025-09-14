@@ -13,28 +13,28 @@ const AgeVerification: React.FC = () => {
   const [isVerified, setIsVerified] = useState(false);
 
   const age = infoData?.data?.age;
-   const token = useSelector(userCurrentToken); 
+  const token = useSelector(userCurrentToken);
 
   useEffect(() => {
     const storedVerification = localStorage.getItem("ageVerified");
+
+    if (!age || age === 0) {
+      setIsVerified(true);
+      setShowPopup(false);
+      return;
+    }
 
     if (!token || storedVerification !== "true") {
       setShowPopup(true);
     } else {
       setIsVerified(true);
     }
-  }, [token]); 
-
-  useEffect(() => {
-    if (age && !isVerified) {
-      setShowPopup(true); 
-    }
-  }, [age, isVerified]);
+  }, [token, age]);
 
   const handleVerify = () => {
-    localStorage.setItem("ageVerified", "true"); 
+    localStorage.setItem("ageVerified", "true");
     setIsVerified(true);
-    setShowPopup(false); 
+    setShowPopup(false);
   };
 
   const handleReject = () => {
