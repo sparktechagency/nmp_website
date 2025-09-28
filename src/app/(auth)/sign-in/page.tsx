@@ -166,9 +166,9 @@ const SignIn: React.FC = () => {
                  E-Com Online Corner Store
                 </h3>
                 <p className="mt-3 text-white/80 max-w-md text-sm">
-                  Sign in or create an account to explore our latest vape
-                  collections, exclusive flavors, and member-only discounts.
-                  Your vaping journey starts here.
+                  Sign in or create an account to explore our latest 
+                  collections and member-only discounts.
+                  Your Online Shopping journey starts here.
                 </p>
               </div>
             </div>

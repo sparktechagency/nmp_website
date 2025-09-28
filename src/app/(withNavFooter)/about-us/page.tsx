@@ -60,7 +60,7 @@ const AboutUs = () => {
         <div className="">
           <Image
             src={image}
-            alt="About Vape"
+            alt="About "
             height={0}
             width={0}
             className="rounded-xl shadow-lg h-auto w-full items-end"
