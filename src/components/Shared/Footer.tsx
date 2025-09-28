@@ -239,7 +239,7 @@ const Footer: React.FC = () => {
         </div>
 
         <div className="text-center text-sm text-gray-500 mt-8">
-          © 2025 E-Com | All rights reserved
+     © {new Date().getFullYear()} E-Com | All rights reserved Change E-Com to Onlinecornerstore ||c
         </div>
       </div>
     </>

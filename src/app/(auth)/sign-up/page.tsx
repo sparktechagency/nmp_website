@@ -195,7 +195,7 @@ const SignUpPage: React.FC = () => {
                 <div className="h-1 w-10 bg-white/70 rounded mb-4" />
                 <h3 className="text-3xl font-semibold leading-tight">
                   Welcome to <br />
-                  VapeHub
+                   E-Com Online Corner Store
                 </h3>
                 <p className="mt-3 text-white/80 max-w-md text-sm">
                   Sign in or create an account to explore our latest vape
