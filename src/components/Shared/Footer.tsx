@@ -239,7 +239,8 @@ const Footer: React.FC = () => {
         </div>
 
         <div className="text-center text-sm text-gray-500 mt-8">
-     © {new Date().getFullYear()} E-Com | All rights reserved Change E-Com to Onlinecornerstore ||c
+     {/* © {new Date().getFullYear()} E-Com | All rights reserved Change E-Com to Onlinecornerstore ||c */}
+     © {new Date().getFullYear()}  All rights reserved  to Onlinecornerstore LLC
         </div>
       </div>
     </>

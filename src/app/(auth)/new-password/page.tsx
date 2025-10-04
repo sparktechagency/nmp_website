@@ -6,7 +6,8 @@ import { Form, Input, message } from "antd";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import image from "../../../assets/image/Rectangle 29 (1).png";
+// import image from "../../../assets/image/Rectangle 29 (1).png";
+import image from "../../../assets/image/logo.png";
 import { useNewPasswordMutation } from "@/redux/features/auth/authApi";
 import toast from "react-hot-toast";
 
