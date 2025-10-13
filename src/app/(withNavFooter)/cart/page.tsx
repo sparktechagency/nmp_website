@@ -70,6 +70,7 @@ const CartPage = () => {
 
     setCartItems(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
+    window.dispatchEvent(new Event("cartUpdated"));
     toast.success("Cart updated successfully");
   };
 

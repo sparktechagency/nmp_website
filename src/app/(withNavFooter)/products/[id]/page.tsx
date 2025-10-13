@@ -102,6 +102,7 @@ const ProductDetails = () => {
         quantity: quantity,
       });
       localStorage.setItem("cart", JSON.stringify(cart));
+      window.dispatchEvent(new Event("cartUpdated"));
       toast.success("Product added to cart");
     }
   };

@@ -22,19 +22,34 @@ interface Label {
 }
 
 const NavBar = () => {
+  const [cartCount, setCartCount] = useState(0);
   const [drawerVisible, setDrawerVisible] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const { data: profileData } = useGetProfileQuery(undefined);
   const { data: cartData } = useGetCartQuery(undefined);
   // const cartItems = cartData?.data || [];
-  const cartItems = localStorage.getItem("cart")
-    ? JSON.parse(localStorage.getItem("cart")!)
-    : [];
+  const updateCartCount = () => {
+    const cartString = localStorage.getItem("cart");
+    const cart = cartString ? JSON.parse(cartString) : [];
+    setCartCount(cart.length);
+  };
+
+  useEffect(() => {
+    // Initial load
+    updateCartCount();
+
+    // Listen for cart changes
+    window.addEventListener("cartUpdated", updateCartCount);
+
+    return () => {
+      window.removeEventListener("cartUpdated", updateCartCount);
+    };
+  }, []);
 
   console.log("profileData", profileData);
   // const dispatch = useDispatch();
 
-  console.log("cartItems", cartItems?.length);
+  console.log("cartItems", cartCount);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -71,7 +86,7 @@ const NavBar = () => {
     localStorage.removeItem("user");
     sessionStorage.clear();
 
-    dispatch(logout()); 
+    dispatch(logout());
     persistor.purge();
     window.location.replace("/sign-in");
   };
@@ -112,9 +127,9 @@ const NavBar = () => {
         <div className="flex items-center gap-4">
           <Link href="/cart" className="relative flex items-center">
             <IoCartOutline className="text-3xl  transition" />
-            {cartItems?.length > 0 && (
+            {cartCount > 0 && (
               <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-md">
-                {cartItems.length}
+                {cartCount}
               </span>
             )}
           </Link>
@@ -169,9 +184,9 @@ const NavBar = () => {
                 {profileData?.data && (
                   <Link href="/cart" className="relative flex items-center">
                     <IoCartOutline className="text-3xl  transition" />
-                    {cartItems?.length > 0 && (
+                    {cartCount > 0 && (
                       <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-md">
-                        {cartItems.length}
+                        {cartCount}
                       </span>
                     )}
                   </Link>
@@ -203,9 +218,9 @@ const NavBar = () => {
               {profileData?.data && (
                 <Link href="/cart" className="relative flex items-center">
                   <IoCartOutline className="text-2xl" />
-                  {cartItems?.length > 0 && (
+                  {cartCount > 0 && (
                     <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-md">
-                      {cartItems.length}
+                      {cartCount}
                     </span>
                   )}
                 </Link>
