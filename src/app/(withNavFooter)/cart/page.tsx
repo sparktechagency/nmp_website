@@ -1,37 +1,37 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  useDeleteCartMutation,
-  useGetCartQuery,
-  useUpdateCartMutation,
-} from "@/redux/features/cartApi/cartApi";
 import toast from "react-hot-toast";
 import { FaTrash } from "react-icons/fa";
 import Swal from "sweetalert2";
 
 const CartPage = () => {
-  const { data: cartData, isLoading } = useGetCartQuery(undefined);
-  const cartItems = cartData?.data || [];
-  const [updateCart] = useUpdateCartMutation();
-  const [deleteCart] = useDeleteCartMutation();
+  const [cartItems, setCartItems] = useState<any[]>([]);
   const router = useRouter();
 
-  // Calculate totals
+  // Load cart from localStorage on first render
+  useEffect(() => {
+    const cartString =
+      typeof window !== "undefined" ? localStorage.getItem("cart") : null;
+    setCartItems(cartString ? JSON.parse(cartString) : []);
+  }, []);
+
+  // Total calculations
   const totalQuantity = cartItems.reduce(
-    (sum: number, item: any) => sum + item.quantity,
+    (sum, item) => sum + item.quantity,
     0
   );
   const totalPrice = cartItems.reduce(
-    (sum: number, item: any) => sum + item.total,
+    (sum, item) => sum + (item.price * item.quantity),
     0
   );
 
-  const handleDelete = async (id: string) => {
+  // DELETE from LocalStorage
+  const handleDelete = (id: string) => {
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -40,20 +40,19 @@ const CartPage = () => {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
-    }).then(async (result) => {
+    }).then((result) => {
       if (result.isConfirmed) {
-        try {
-          const res = await deleteCart({ _id: id }).unwrap();
-          // toast.success(res?.message || "Item removed from cart");
-          Swal.fire("Deleted!", "The item has been removed.", "success");
-        } catch (error: any) {
-          toast.error(error?.data?.message || "Failed to remove item");
-        }
+        const updatedCart = cartItems.filter((item) => item._id !== id);
+        setCartItems(updatedCart);
+        localStorage.setItem("cart", JSON.stringify(updatedCart));
+
+        Swal.fire("Deleted!", "The item has been removed.", "success");
       }
     });
   };
 
-  const updateQuantity = async (
+  // UPDATE quantity in LocalStorage
+  const updateQuantity = (
     id: string,
     type: "increase" | "decrease",
     currentQty: number
@@ -65,30 +64,21 @@ const CartPage = () => {
       return;
     }
 
-    try {
-      const data = { quantity: newQty };
-      await updateCart({ _id: id, data }).unwrap();
-      toast.success("Cart updated successfully");
-    } catch (error) {
-      toast.error("Failed to update cart");
-    }
+    const updatedCart = cartItems.map((item) =>
+      item._id === id ? { ...item, quantity: newQty } : item
+    );
+
+    setCartItems(updatedCart);
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    toast.success("Cart updated successfully");
   };
 
   const handleCheckout = () => {
-    // send total + quantity + price to checkout page
-    router.push(`/checkout?total=${totalPrice}&quantity=${totalQuantity}`);
+    // router.push(`/checkout?total=${totalPrice}&quantity=${totalQuantity}`);
   };
 
-  if (isLoading) {
-    return (
-      <div className="container mx-auto p-5 text-center">
-        <p>Loading your cart...</p>
-      </div>
-    );
-  }
-
   return (
-    <div className="container mx-auto md:h-[70vh] p-5">
+    <div className="container mx-auto p-5">
       <div className="flex justify-between items-center my-5">
         <h1 className="text-lg font-bold">Your Cart</h1>
         <p className="text-gray-600 font-bold">{cartItems.length} Items</p>
@@ -103,7 +93,7 @@ const CartPage = () => {
       </div>
 
       {/* Cart Items */}
-      {cartItems.map((item: any) => (
+      {cartItems?.map((item: any) => (
         <div
           key={item._id}
           className="md:grid grid-cols-3 md:grid-cols-5 md:items-center gap-4 border-b border-b-gray-400 py-4"
@@ -130,18 +120,14 @@ const CartPage = () => {
           {/* Quantity Controls */}
           <div className="flex md:items-center justify-center gap-2">
             <button
-              onClick={() =>
-                updateQuantity(item._id, "decrease", item.quantity)
-              }
+              onClick={() => updateQuantity(item._id, "decrease", item.quantity)}
               className="border px-2"
             >
               −
             </button>
             <span className="border px-3 py-1">{item.quantity}</span>
             <button
-              onClick={() =>
-                updateQuantity(item._id, "increase", item.quantity)
-              }
+              onClick={() => updateQuantity(item._id, "increase", item.quantity)}
               className="border px-2"
             >
               +
@@ -150,7 +136,7 @@ const CartPage = () => {
 
           {/* Price */}
           <div className="hidden md:block col-span-2 text-right font-medium">
-            ${item.total}
+            ${item.price * item.quantity}
           </div>
 
           {/* Delete Button */}

@@ -38,13 +38,13 @@ const baseQueryWithRefreshToken: BaseQueryFn<
     const errorMessage = errorData.message || "Something went wrong";
 
     if (status === 500) {
-      message.error(errorMessage);
+      message?.error(errorMessage);
     }
     if (status === 404) {
-      message.error(errorMessage);
+      message?.error(errorMessage);
     }
     if (status === 403) {
-      message.error(errorMessage);
+      message?.error(errorMessage);
     }
     // If you want to include 400 (Bad Request):
     // if (status === 400) {

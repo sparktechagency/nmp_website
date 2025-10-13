@@ -10,7 +10,6 @@ import { FaRegUser } from "react-icons/fa";
 import { useGetProfileQuery } from "@/redux/features/profileApi/profileApi";
 import Image from "next/image";
 import { Tooltip } from "antd";
-import img from "../../assets/image/image 23.png";
 import { useGetCartQuery } from "@/redux/features/cartApi/cartApi";
 import { LuLogOut } from "react-icons/lu";
 import user from "../../assets/image/user.jpeg";
@@ -27,9 +26,13 @@ const NavBar = () => {
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const { data: profileData } = useGetProfileQuery(undefined);
   const { data: cartData } = useGetCartQuery(undefined);
-  const cartItems = cartData?.data || [];
+  // const cartItems = cartData?.data || [];
+  const cartItems = localStorage.getItem("cart")
+    ? JSON.parse(localStorage.getItem("cart")!)
+    : [];
 
-  const dispatch = useDispatch();
+  console.log("profileData", profileData);
+  // const dispatch = useDispatch();
 
   console.log("cartItems", cartItems?.length);
 
@@ -64,15 +67,12 @@ const NavBar = () => {
   };
 
   const handleLogout = () => {
-    // Remove the user from localStorage and sessionStorage
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     sessionStorage.clear();
 
-    // Optionally dispatch a logout action if you have a global state like Redux
-    dispatch(logout()); // Assuming logout() is imported from your auth slice
-  persistor.purge(); 
-    // Redirect to login page
+    dispatch(logout()); 
+    persistor.purge();
     window.location.replace("/sign-in");
   };
 
@@ -109,9 +109,19 @@ const NavBar = () => {
       );
     } else {
       return (
-        <Link href="/sign-in">
-          <FaRegUser className="text-2xl" />
-        </Link>
+        <div className="flex items-center gap-4">
+          <Link href="/cart" className="relative flex items-center">
+            <IoCartOutline className="text-3xl  transition" />
+            {cartItems?.length > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-md">
+                {cartItems.length}
+              </span>
+            )}
+          </Link>
+          <Link href="/sign-in">
+            <FaRegUser className="text-2xl" />
+          </Link>
+        </div>
       );
     }
   };

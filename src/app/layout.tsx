@@ -36,7 +36,8 @@ export default function RootLayout({
       >
         <Providers>
           <AgeVerification />
-          <PrivateRoute>{children}</PrivateRoute>
+          {/* <PrivateRoute>{children}</PrivateRoute> */}
+          {children}
           <Toaster position="top-center" />
         </Providers>
       </body>

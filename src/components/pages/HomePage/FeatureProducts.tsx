@@ -22,10 +22,10 @@ const FeatureProducts = () => {
   const router = useRouter();
 
   const handleAddToCart = async (productId: string) => {
-     if (!token) {
-      router.push("/sign-in");
-      return;
-    }
+    //  if (!token) {
+    //   router.push("/sign-in");
+    //   return;
+    // }
     try {
       const payload = {
         productId,

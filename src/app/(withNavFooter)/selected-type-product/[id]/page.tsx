@@ -219,15 +219,13 @@ const SelectedType = () => {
                         width={200}
                         alt={product.name}
                         className="rounded-md  h-40 w-full object-contain"
-                
                       />
                     </div>
+
+                    <h1 className="font-bold mt-4 text-blue-500 text-center text-xl my-2">
+                      {product.name}
+                    </h1>
                   </Link>
-
-                  <h1 className="font-bold mt-4 text-blue-500 text-center text-xl my-2">
-                    {product.name}
-                  </h1>
-
                   <div className="text-gray-600 text-sm text-center space-y-1 h-20">
                     <p>Category: {product.category}</p>
                     {product?.brand ? <p>Brand: {product.brand}</p> : ""}

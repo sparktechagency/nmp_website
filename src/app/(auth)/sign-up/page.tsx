@@ -10,6 +10,7 @@ import image from "../../../assets/image/logo.png";
 import { useRegisterMutation } from "@/redux/features/auth/authApi";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { FaLock } from "react-icons/fa";
 interface SignUpValues {
   name: string;
   email: string;
@@ -51,7 +52,7 @@ const SignUpPage: React.FC = () => {
           <div className="flex items-center justify-center p-6 sm:p-10">
             <div className="w-full max-w-md">
               <div className="mx-auto mb-5 h-12 w-12 grid place-items-center rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 shadow-lg">
-                <span className="text-white font-semibold">C</span>
+                <FaLock className="text-white font-semibold h-5 w-5"></FaLock>
               </div>
 
               <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 text-center">
@@ -196,12 +197,12 @@ const SignUpPage: React.FC = () => {
                 <div className="h-1 w-10 bg-white/70 rounded mb-4" />
                 <h3 className="text-3xl font-semibold leading-tight">
                   Welcome to <br />
-                   E-Com Online Corner Store
+                  Online Corner Store
                 </h3>
                 <p className="mt-3 text-white/80 max-w-md text-sm">
-                 Sign in or create an account to explore our latest 
-                  collections and member-only discounts.
-                  Your Online Shopping journey starts here.
+                  Sign in or create an account to explore our latest collections
+                  and member-only discounts. Your Online Shopping journey starts
+                  here.
                 </p>
               </div>
             </div>

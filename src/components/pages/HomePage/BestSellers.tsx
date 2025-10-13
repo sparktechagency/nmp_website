@@ -24,10 +24,10 @@ const BestSellers = () => {
   const router = useRouter();
 
   const handleAddToCart = async (productId: string) => {
-    if (!token) {
-      router.push("/sign-in"); // redirect to login if no token
-      return;
-    }
+    // if (!token) {
+    //   router.push("/sign-in"); // redirect to login if no token
+    //   return;
+    // }
 
     try {
       const payload = {
