@@ -25,8 +25,8 @@ const OrdersApi = baseApi.injectEndpoints({
       providesTags: ["Orders"],
     }),
     getShippingCost: builder.query({
-      query: () => ({
-        url: "/shipping-cost/get-my-shipping-cost",
+      query: ({subTotal}) => ({
+        url: `/shipping-cost/get-my-shipping-cost/${subTotal}`,
         method: "GET",
       }),
       providesTags: ["Orders"],

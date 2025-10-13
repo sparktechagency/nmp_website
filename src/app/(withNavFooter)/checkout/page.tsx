@@ -8,6 +8,7 @@ import {
   useGetShippingCostQuery,
 } from "@/redux/features/ordersApi/ordersApi";
 import toast from "react-hot-toast";
+import { useSearchParams } from "next/navigation";
 
 interface ContactFormValues {
   streetAddress: string;
@@ -17,9 +18,11 @@ interface ContactFormValues {
 }
 
 const CheckoutPage: React.FC = () => {
-
-  // console.log(total, quantity);
-
+  const searchParams = useSearchParams();
+  const subTotal = searchParams.get("total");
+  const quantity = searchParams.get("quantity");
+  const cartData = JSON.parse(localStorage.getItem("cart") || "[]");
+  console.log("cartData", cartData);
   const [createOrder] = useCreateOrderMutation();
   const [loading, setLoading] = useState(false);
   const onFinish: FormProps<ContactFormValues>["onFinish"] = async (values) => {
@@ -38,18 +41,18 @@ const CheckoutPage: React.FC = () => {
 
       if (res?.success && res?.data?.url) {
         toast.success(res?.message);
-        window.location.href = res.data.url; // redirect to Stripe
+        window.location.href = res.data.url;
       } else {
         toast.error("Payment link not found!");
       }
     } catch (error: any) {
       toast.error(error?.data?.message || "Something went wrong");
     } finally {
-      setLoading(false); // hide loader if error
+      setLoading(false);
     }
   };
 
-  const { data: shippingData } = useGetShippingCostQuery(undefined);
+  const { data: shippingData } = useGetShippingCostQuery({ subTotal });
   console.log("shippingData", shippingData?.data);
 
   return (

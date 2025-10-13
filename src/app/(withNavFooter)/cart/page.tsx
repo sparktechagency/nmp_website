@@ -21,12 +21,9 @@ const CartPage = () => {
   }, []);
 
   // Total calculations
-  const totalQuantity = cartItems.reduce(
-    (sum, item) => sum + item.quantity,
-    0
-  );
+  const totalQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = cartItems.reduce(
-    (sum, item) => sum + (item.price * item.quantity),
+    (sum, item) => sum + item.price * item.quantity,
     0
   );
 
@@ -45,7 +42,7 @@ const CartPage = () => {
         const updatedCart = cartItems.filter((item) => item._id !== id);
         setCartItems(updatedCart);
         localStorage.setItem("cart", JSON.stringify(updatedCart));
-
+        window.dispatchEvent(new Event("cartUpdated"));
         Swal.fire("Deleted!", "The item has been removed.", "success");
       }
     });
@@ -75,11 +72,11 @@ const CartPage = () => {
   };
 
   const handleCheckout = () => {
-    // router.push(`/checkout?total=${totalPrice}&quantity=${totalQuantity}`);
+    router.push(`/checkout?total=${totalPrice}&quantity=${totalQuantity}`);
   };
 
   return (
-    <div className="container mx-auto p-5">
+    <div className="container mx-auto p-5 min-h-[70vh]">
       <div className="flex justify-between items-center my-5">
         <h1 className="text-lg font-bold">Your Cart</h1>
         <p className="text-gray-600 font-bold">{cartItems.length} Items</p>
@@ -121,14 +118,18 @@ const CartPage = () => {
           {/* Quantity Controls */}
           <div className="flex md:items-center justify-center gap-2">
             <button
-              onClick={() => updateQuantity(item._id, "decrease", item.quantity)}
+              onClick={() =>
+                updateQuantity(item._id, "decrease", item.quantity)
+              }
               className="border px-2"
             >
               −
             </button>
             <span className="border px-3 py-1">{item.quantity}</span>
             <button
-              onClick={() => updateQuantity(item._id, "increase", item.quantity)}
+              onClick={() =>
+                updateQuantity(item._id, "increase", item.quantity)
+              }
               className="border px-2"
             >
               +
