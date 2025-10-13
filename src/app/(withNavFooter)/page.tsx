@@ -10,7 +10,7 @@ const HomePage = () => {
       <Banner />
       <FeatureProducts />
       <LimitedOffer />
-      <BestSellers />
+      {/* <BestSellers /> */}
     </div>
   );
 };
