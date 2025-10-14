@@ -3,7 +3,6 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { FaEdit } from "react-icons/fa";
 import { Button, Input, Spin, message } from "antd";
 import {
   useGetProfileQuery,

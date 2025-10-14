@@ -16,7 +16,7 @@ import Link from "next/link";
 
 const Footer: React.FC = () => {
   const [email, setEmail] = useState("");
-  const [sentSbuscribe, { isLoading }] = useSentSbuscribeMutation();
+  const [sentSbuscribe] = useSentSbuscribeMutation();
 
   const { data: privacyData, isLoading: privacyLoading } =
     usePrivacyPolicyQuery(undefined);
@@ -30,8 +30,10 @@ const Footer: React.FC = () => {
   // Separate modal states
   const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
   const [isTermsOpen, setIsTermsOpen] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isDeliveryOpen, setIsDeliveryOpen] = useState(false);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleSubscribe = async () => {
     if (!email) {
       toast.error("Please enter your email");

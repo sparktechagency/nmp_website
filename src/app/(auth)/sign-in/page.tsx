@@ -5,7 +5,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Form, Input, Checkbox, message } from "antd";
+import { Form, Input, Checkbox } from "antd";
 // import image from "../../../assets/image/Rectangle 29 (1).png";
 import image from "../../../assets/image/logo.png";
 import { useLoginApiMutation } from "@/redux/features/auth/authApi";

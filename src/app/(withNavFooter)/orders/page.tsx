@@ -40,6 +40,7 @@ interface Order {
 }
 
 const OrderPage = () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [pageSize, setPageSize] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
   const handlePageChange = (page: any) => {

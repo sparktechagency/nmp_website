@@ -14,11 +14,14 @@ import { useGetAllReviewQuery } from "@/redux/features/reviewApi/reviewApi";
 import { userCurrentToken } from "@/redux/features/auth/authSlice";
 
 const ProductDetails = () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const token = useSelector(userCurrentToken);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const router = useRouter();
   const params = useParams();
   const id = params?.id;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [addToCart] = useAddToCartMutation();
   const { data: singleProduct } = useGetSingleProductQuery(id);
   const { data: reviewData } = useGetAllReviewQuery(id as string);

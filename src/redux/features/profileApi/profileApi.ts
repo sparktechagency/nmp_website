@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { baseApi } from "@/redux/api/baseApi";
-import build from "next/dist/build";
 
 interface Profile {
   data: any;

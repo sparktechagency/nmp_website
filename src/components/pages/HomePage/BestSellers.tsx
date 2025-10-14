@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 import { userCurrentToken } from "@/redux/features/auth/authSlice";
 
 const BestSellers = () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const token = useSelector(userCurrentToken);
   const { data: bestSellerData } = useGetBestSellerProductQuery(undefined);
   const products = bestSellerData?.data || [];

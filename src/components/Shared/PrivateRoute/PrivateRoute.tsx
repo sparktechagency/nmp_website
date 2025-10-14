@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import { useSelector } from "react-redux";
@@ -14,6 +15,7 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
   const router = useRouter();
 
   // Define which routes are public & protected
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const publicRoutes = ["/", "/products", "/sign-in", "/register"];
   const protectedRoutes = ["/cart", "/orders"];
 

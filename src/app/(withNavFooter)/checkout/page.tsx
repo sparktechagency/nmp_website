@@ -10,6 +10,7 @@ import {
 } from "@/redux/features/ordersApi/ordersApi";
 import toast from "react-hot-toast";
 import { useSearchParams } from "next/navigation";
+import Image from "next/image";
 
 /** ===== Types ===== */
 type Mode = "guest" | "logged-in";
@@ -173,9 +174,11 @@ const CheckoutPage: React.FC = () => {
                   <div className="flex items-center gap-3">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     {item.image ? (
-                      <img
+                      <Image
                         src={item.image}
                         alt={item.name}
+                        height={20}
+                        width={20}
                         className="w-12 h-12 object-cover rounded-md"
                       />
                     ) : (

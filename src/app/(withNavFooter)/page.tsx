@@ -1,5 +1,5 @@
 import Banner from "@/components/pages/HomePage/Banner";
-import BestSellers from "@/components/pages/HomePage/BestSellers";
+// import BestSellers from "@/components/pages/HomePage/BestSellers";
 import FeatureProducts from "@/components/pages/HomePage/FeatureProducts";
 import LimitedOffer from "@/components/pages/HomePage/LimitedOffer";
 import React from "react";

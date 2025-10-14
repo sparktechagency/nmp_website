@@ -13,7 +13,6 @@ import { Tooltip } from "antd";
 import { useGetCartQuery } from "@/redux/features/cartApi/cartApi";
 import { LuLogOut } from "react-icons/lu";
 import user from "../../assets/image/user.jpeg";
-import { useDispatch } from "react-redux";
 import { logout } from "@/redux/features/auth/authSlice";
 import { persistor } from "@/redux/store";
 interface Label {
@@ -26,6 +25,7 @@ const NavBar = () => {
   const [drawerVisible, setDrawerVisible] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const { data: profileData } = useGetProfileQuery(undefined);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { data: cartData } = useGetCartQuery(undefined);
   // const cartItems = cartData?.data || [];
   const updateCartCount = () => {
@@ -75,6 +75,7 @@ const NavBar = () => {
     setDrawerVisible(!drawerVisible);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const select = (_index: number) => {
     if (isMobile) {
       setDrawerVisible(false);
@@ -235,3 +236,7 @@ const NavBar = () => {
 };
 
 export default NavBar;
+function dispatch(arg0: { payload: undefined; type: "auth/logout"; }) {
+  throw new Error("Function not implemented.");
+}
+

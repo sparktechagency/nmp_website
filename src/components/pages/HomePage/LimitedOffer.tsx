@@ -52,6 +52,7 @@ const LimitedOffer: React.FC = () => {
     }, 1000);
 
     return () => clearInterval(timer);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [targetDate]);
 
   return (

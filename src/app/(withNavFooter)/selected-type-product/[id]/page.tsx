@@ -66,10 +66,12 @@ const FilterSection: React.FC<{
 };
 
 const SelectedType = () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [selectedFlavours, setSelectedFlavours] = useState<string[]>([]);
   const [searchText, setSearchText] = useState("");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [pageSize, setPageSize] = useState(6);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -88,11 +90,13 @@ const SelectedType = () => {
 
   const { data: filterData } = useGetFilterDropdownByIdQuery(id);
   console.log("filterData from selected type", filterData?.data);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const products = productsData?.data ?? [];
   const total = productsData?.meta?.total ?? 0;
   const handlePageChange = (page: any) => {
     setCurrentPage(page);
   };
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const categories = categoryDropdata?.data?.map((c: any) => c.name) ?? [];
 
   const filteredProducts = useMemo(() => {

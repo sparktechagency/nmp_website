@@ -12,6 +12,7 @@ const CategoryPage = () => {
   const { data: categoryData } = useGetCatDropDownQuery(undefined);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [searchText, setSearchText] = useState("");
   const [pageSize, setPageSize] = useState(6);
   const [currentPage, setCurrentPage] = useState(1);

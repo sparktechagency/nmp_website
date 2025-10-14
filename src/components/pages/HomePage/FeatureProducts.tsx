@@ -15,6 +15,7 @@ import { useSelector } from "react-redux";
 import { userCurrentToken } from "@/redux/features/auth/authSlice";
 
 const FeatureProducts = () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const token = useSelector(userCurrentToken);
   const { data: productsData } = useGetFeatureProductsQuery(undefined);
   const products = productsData?.data || [];

@@ -2,7 +2,7 @@
 "use client";
 
 import React from "react";
-import { Form, Input, message } from "antd";
+import { Form, Input } from "antd";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
