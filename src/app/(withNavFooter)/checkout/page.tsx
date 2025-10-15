@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
@@ -160,6 +159,7 @@ const CheckoutPage: React.FC = () => {
       } else {
         toast.error(res?.message || "Payment link not found!");
       }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error?.data?.message || "Something went wrong");
     } finally {

@@ -237,6 +237,7 @@ const NavBar = () => {
 };
 
 export default NavBar;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function dispatch(arg0: { payload: undefined; type: "auth/logout"; }) {
   throw new Error("Function not implemented.");
 }
