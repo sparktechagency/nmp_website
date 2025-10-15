@@ -10,7 +10,7 @@ import {
 import toast from "react-hot-toast";
 import Image from "next/image";
 
-type Mode = "guest" | "logged-in";
+type Mode = "guest" | "logged-in"; // used only for UI toggle
 
 interface CartItem {
   _id: string;
@@ -28,7 +28,6 @@ interface UserLike {
 interface ContactFormValues {
   fullName?: string;
   email?: string;
-
   streetAddress: string;
   city: string;
   state: string;
@@ -48,50 +47,74 @@ const getCartFromStorage = (): CartItem[] =>
     ? safeParse<CartItem[]>(localStorage.getItem("cart"), [])
     : [];
 
-const getUserFromStorage = (): UserLike | null =>
-  typeof window !== "undefined"
-    ? safeParse<UserLike | null>(localStorage.getItem("user"), null)
-    : null;
-
+/** Build payload for API from cart items */
 const buildCartProducts = (items: CartItem[]) =>
   items
     .filter((i) => i && i._id && Number.isFinite(i.quantity) && i.quantity > 0)
     .map((i) => ({ productId: i._id, quantity: i.quantity }));
 
-const CheckoutPage: React.FC = () => {
-  // const searchParams = useSearchParams();
-  // const _ignoredTotal = searchParams.get("total");
-  // const token = localStorage.getItem("token");
-  // console.log("token from checkout", token);
+/** Safe Base64URL -> JSON decode for JWT payload */
+const decodeJwtPayload = (token: string): Record<string, unknown> | null => {
+  try {
+    const parts = token.split(".");
+    if (parts.length !== 3) return null;
+    const base64Url = parts[1];
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    const padded = base64 + "===".slice((base64.length + 3) % 4);
+    const json = atob(padded)
+      .split("")
+      .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+      .join("");
+    return JSON.parse(decodeURIComponent(json));
+  } catch {
+    return null;
+  }
+};
 
+const extractUserFromToken = (claims: Record<string, unknown> | null): UserLike | null => {
+  if (!claims) return null;
+  const email =
+    (claims["email"] as string) ||
+    (claims["upn"] as string) ||
+    undefined;
+
+  const fullName =
+    (claims["fullName"] as string) ||
+    (claims["name"] as string) ||
+    (claims["given_name"] && claims["family_name"]
+      ? `${claims["given_name"] as string} ${claims["family_name"] as string}`.trim()
+      : undefined);
+
+  if (!email && !fullName) return null;
+  return { email, fullName };
+};
+
+const CheckoutPage: React.FC = () => {
   const [mode, setMode] = useState<Mode>("guest");
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [storedUser, setStoredUser] = useState<UserLike | null>(null);
-
-  const [createOrder] = useCreateOrderMutation();
+  const [tokenUser, setTokenUser] = useState<UserLike | null>(null); // derived from token for name/email only
   const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    const c = getCartFromStorage();
-    setCart(c);
-    const u = getUserFromStorage();
-    setStoredUser(u);
+  const [form] = Form.useForm<ContactFormValues>();
+  const [createOrder] = useCreateOrderMutation();
 
-    // ✅ Use token directly for mode switch
-    const t = localStorage.getItem("token");
-    if (t) {
-      setMode("logged-in");
-    } else {
-      setMode("guest");
+  console.log("tokenuser", tokenUser)
+  // Load cart and decode token once on mount
+  useEffect(() => {
+    setCart(getCartFromStorage());
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("token");
+      if (token) {
+        const claims = decodeJwtPayload(token);
+        const u = extractUserFromToken(claims);
+        if (u) {
+          setTokenUser(u);
+          setMode("logged-in");
+          // Keep form fields in sync even though they're hidden for logged-in
+          form.setFieldsValue({ fullName: u.fullName, email: u.email });
+        }
+      }
     }
-  }, []);
-
-  useEffect(() => {
-    const c = getCartFromStorage();
-    setCart(c);
-    const u = getUserFromStorage();
-    setStoredUser(u);
-    if (u?.email || u?.fullName) setMode("logged-in");
-  }, []);
+  }, [form]);
 
   const subTotal = useMemo(
     () =>
@@ -121,26 +144,27 @@ const CheckoutPage: React.FC = () => {
         return;
       }
 
-      const fullName =
-        mode === "guest"
-          ? (values.fullName || "").trim()
-          : (storedUser?.fullName || "").trim();
-      const email =
-        mode === "guest"
-          ? (values.email || "").trim()
-          : (storedUser?.email || "").trim();
+      // Core rule:
+      // - If tokenUser exists, ALWAYS use its fullName/email.
+      // - If not, take them from the form.
+      const userData = tokenUser
+        ? {
+            fullName: (tokenUser.fullName || "").trim(),
+            email: (tokenUser.email || "").trim(),
+          }
+        : {
+            fullName: (values.fullName || "").trim(),
+            email: (values.email || "").trim(),
+          };
 
-      if (!fullName || !email) {
-        toast.error(
-          mode === "guest"
-            ? "Please enter your full name and email."
-            : "No saved name/email found. Switch to Guest or log in again."
-        );
+      if (!userData.fullName || !userData.email) {
+        // Simple, unified message—no “switch to guest” suggestion.
+        toast.error("Please provide your full name and email.");
         return;
       }
 
       const payload = {
-        userData: { fullName, email },
+        userData,
         shippingAddress: {
           streetAddress: values.streetAddress,
           city: values.city,
@@ -155,7 +179,7 @@ const CheckoutPage: React.FC = () => {
       if (res?.success && res?.data?.url) {
         toast.success(res?.message || "Redirecting to payment…");
         window.location.href = res.data.url;
-         localStorage.removeItem("cart");
+        localStorage.removeItem("cart");
       } else {
         toast.error(res?.message || "Payment link not found!");
       }
@@ -174,7 +198,7 @@ const CheckoutPage: React.FC = () => {
         <div>
           <h1 className="text-2xl font-bold text-neutral-600">Order Summary</h1>
 
-          {/* Cart items (simple list) */}
+          {/* Cart items */}
           <div className="mt-4 space-y-3">
             {cart.length === 0 ? (
               <p className="text-neutral-400">Your cart is empty.</p>
@@ -197,12 +221,9 @@ const CheckoutPage: React.FC = () => {
                       <div className="w-12 h-12 bg-neutral-200 rounded-md" />
                     )}
                     <div>
-                      <p className="text-neutral-700 font-medium">
-                        {item.name}
-                      </p>
+                      <p className="text-neutral-700 font-medium">{item.name}</p>
                       <p className="text-neutral-400 text-sm">
-                        Qty: {item.quantity} • ${Number(item.price).toFixed(2)}{" "}
-                        each
+                        Qty: {item.quantity} • ${Number(item.price).toFixed(2)} each
                       </p>
                     </div>
                   </div>
@@ -231,13 +252,10 @@ const CheckoutPage: React.FC = () => {
           </div>
         </div>
 
-        {/* ===== Right: Checkout Form (pure divs, no Card) ===== */}
+        {/* ===== Right: Checkout Form ===== */}
         <ConfigProvider
           theme={{
-            components: {
-              Form: { borderRadius: 0 },
-              Input: { borderRadius: 5 },
-            },
+            components: { Form: { borderRadius: 0 }, Input: { borderRadius: 5 } },
           }}
         >
           <div className="py-10 mx-4 md:mx-0 px-6 md:px-10 border border-neutral-200 rounded-lg">
@@ -245,41 +263,27 @@ const CheckoutPage: React.FC = () => {
               <h2 className="text-neutral-700 text-xl md:text-2xl lg:text-3xl font-bold mb-2 uppercase">
                 Checkout
               </h2>
-              <p className="text-neutral-400 lg:text-lg font-bold">
-                Shipping Information
-              </p>
+              <p className="text-neutral-400 lg:text-lg font-bold">Shipping Information</p>
             </div>
 
-           
-
             <Form<ContactFormValues>
+              form={form}
               name="checkout"
-              initialValues={{
-                fullName: storedUser?.fullName,
-                email: storedUser?.email,
-              }}
               onFinish={onFinish}
               layout="vertical"
-              className=""
             >
-              {/* Guest-only fields */}
-              {mode === "guest" && (
+              {/* Only show name/email fields for guests (no token) */}
+              {mode === "guest" && !tokenUser && (
                 <>
                   <Form.Item
                     name="fullName"
                     label={<p className="text-md">Full Name</p>}
                     rules={[
-                      {
-                        required: true,
-                        message: "Please enter your full name",
-                      },
+                      { required: true, message: "Please enter your full name" },
                       { min: 2, message: "Name looks too short" },
                     ]}
                   >
-                    <Input
-                      placeholder="Your full name"
-                      style={{ padding: "6px" }}
-                    />
+                    <Input placeholder="Your full name" style={{ padding: "6px" }} />
                   </Form.Item>
 
                   <Form.Item
@@ -290,10 +294,7 @@ const CheckoutPage: React.FC = () => {
                       { type: "email", message: "Enter a valid email" },
                     ]}
                   >
-                    <Input
-                      placeholder="you@example.com"
-                      style={{ padding: "6px" }}
-                    />
+                    <Input placeholder="you@example.com" style={{ padding: "6px" }} />
                   </Form.Item>
                 </>
               )}
@@ -302,17 +303,9 @@ const CheckoutPage: React.FC = () => {
               <Form.Item
                 name="streetAddress"
                 label={<p className="text-md">Street Address</p>}
-                rules={[
-                  {
-                    required: true,
-                    message: "Please enter your Street Address",
-                  },
-                ]}
+                rules={[{ required: true, message: "Please enter your Street Address" }]}
               >
-                <Input
-                  placeholder="Your Street Address"
-                  style={{ padding: "6px" }}
-                />
+                <Input placeholder="Your Street Address" style={{ padding: "6px" }} />
               </Form.Item>
 
               <Form.Item
