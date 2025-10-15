@@ -88,6 +88,7 @@ const LimitedOffer: React.FC = () => {
           <Image
             src={infoData?.data?.countDownImg}
             alt="Product"
+   
             fill
             className="object-contain"
             priority

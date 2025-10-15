@@ -25,10 +25,18 @@ const ProductDetails = () => {
   const [addToCart] = useAddToCartMutation();
   const { data: singleProduct } = useGetSingleProductQuery(id);
   const { data: reviewData } = useGetAllReviewQuery(id as string);
-
   const [quantity, setQuantity] = useState(1);
+  const totalQuantityOfProduct = singleProduct?.data?.quantity;
+  localStorage.setItem("totalQuantity", totalQuantityOfProduct);
 
-  const increaseQty = () => setQuantity((prev) => prev + 1);
+  const increaseQty = () => {
+    if (quantity < totalQuantityOfProduct) {
+      setQuantity((prev) => prev + 1);
+    } else {
+      toast("Stock not available! You cannot add more of this product.");
+    }
+  };
+
   const decreaseQty = () => {
     if (quantity > 1) setQuantity((prev) => prev - 1);
   };
@@ -103,6 +111,7 @@ const ProductDetails = () => {
         image: product.image,
         price: product.currentPrice,
         quantity: quantity,
+        totalQty: product?.quantity,
       });
       localStorage.setItem("cart", JSON.stringify(cart));
       window.dispatchEvent(new Event("cartUpdated"));
@@ -187,6 +196,10 @@ const ProductDetails = () => {
               >
                 {product.stockStatus.replace("_", " ")}
               </span>
+            </p>
+            <p className="mt-2">
+              <strong>Total Quantity:</strong>
+              {product.quantity}
             </p>
           </div>
 
