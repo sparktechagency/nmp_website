@@ -98,24 +98,27 @@ const ProductDetails = () => {
 
   const handleAddToCart = () => {
     const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-
-    const existingItem = cart.find((item: any) => item._id === product._id);
-    if (existingItem) {
-      // existingItem.quantity += quantity;
-      toast.error("Product already in cart");
-      return;
+    if (totalQuantityOfProduct != 0) {
+      const existingItem = cart.find((item: any) => item._id === product._id);
+      if (existingItem) {
+        // existingItem.quantity += quantity;
+        toast.error("Product already in cart");
+        return;
+      } else {
+        cart.push({
+          _id: product._id,
+          name: product.name,
+          image: product.image,
+          price: product.currentPrice,
+          quantity: quantity,
+          totalQty: product?.quantity,
+        });
+        localStorage.setItem("cart", JSON.stringify(cart));
+        window.dispatchEvent(new Event("cartUpdated"));
+        toast.success("Product added to cart");
+      }
     } else {
-      cart.push({
-        _id: product._id,
-        name: product.name,
-        image: product.image,
-        price: product.currentPrice,
-        quantity: quantity,
-        totalQty: product?.quantity,
-      });
-      localStorage.setItem("cart", JSON.stringify(cart));
-      window.dispatchEvent(new Event("cartUpdated"));
-      toast.success("Product added to cart");
+      toast.error("This product is out of Stock");
     }
   };
 
@@ -189,11 +192,13 @@ const ProductDetails = () => {
               <strong>Stock Status:</strong>{" "}
               <span
                 className={`${
-                  product.stockStatus === "in_stock"
-                    ? " text-green-500"
+                  product.stockStatus === "In Stock"
+                    ? "text-green-500"
                     : product.stockStatus === "Limited Stock"
                     ? "text-yellow-500"
-                    : "text-red-500"
+                    : product.stockStatus === "Out of Stock"
+                    ? "text-red-500"
+                    : ""
                 }`}
               >
                 {product.stockStatus.replace("_", " ")}
