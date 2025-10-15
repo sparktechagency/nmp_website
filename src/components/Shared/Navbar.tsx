@@ -15,6 +15,7 @@ import { LuLogOut } from "react-icons/lu";
 import user from "../../assets/image/user.jpeg";
 import { logout } from "@/redux/features/auth/authSlice";
 import { persistor } from "@/redux/store";
+import { useDispatch } from "react-redux";
 interface Label {
   name: string;
   link: string;
@@ -47,7 +48,7 @@ const NavBar = () => {
   }, []);
 
   console.log("profileData", profileData);
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   console.log("cartItems", cartCount);
 
