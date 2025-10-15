@@ -90,7 +90,7 @@ const NavBar = () => {
 
     dispatch(logout());
     persistor.purge();
-    window.location.replace("/sign-in");
+    window.location.replace("/");
   };
 
   const renderUserSection = () => {
