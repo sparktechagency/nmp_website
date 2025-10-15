@@ -99,7 +99,6 @@ const ProductDetails = () => {
   const handleAddToCart = () => {
     const cart = JSON.parse(localStorage.getItem("cart") || "[]");
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const existingItem = cart.find((item: any) => item._id === product._id);
     if (existingItem) {
       // existingItem.quantity += quantity;

@@ -185,7 +185,6 @@ const CheckoutPage: React.FC = () => {
                   className="flex items-center justify-between border border-neutral-200 rounded-md p-3"
                 >
                   <div className="flex items-center gap-3">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     {item.image ? (
                       <Image
                         src={item.image}
