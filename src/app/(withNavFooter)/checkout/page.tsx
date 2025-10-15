@@ -9,14 +9,12 @@ import {
   useGetShippingCostQuery,
 } from "@/redux/features/ordersApi/ordersApi";
 import toast from "react-hot-toast";
-import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 
-/** ===== Types ===== */
 type Mode = "guest" | "logged-in";
 
 interface CartItem {
-  _id: string;       // productId
+  _id: string;
   name: string;
   price: number;
   quantity: number;
@@ -29,18 +27,15 @@ interface UserLike {
 }
 
 interface ContactFormValues {
-  // guest-only contact fields
   fullName?: string;
   email?: string;
 
-  // address
   streetAddress: string;
   city: string;
   state: string;
   zipCode: string;
 }
 
-/** ===== Helpers ===== */
 const safeParse = <T,>(val: string | null, fallback: T): T => {
   try {
     return val ? (JSON.parse(val) as T) : fallback;
@@ -50,21 +45,25 @@ const safeParse = <T,>(val: string | null, fallback: T): T => {
 };
 
 const getCartFromStorage = (): CartItem[] =>
-  typeof window !== "undefined" ? safeParse<CartItem[]>(localStorage.getItem("cart"), []) : [];
+  typeof window !== "undefined"
+    ? safeParse<CartItem[]>(localStorage.getItem("cart"), [])
+    : [];
 
 const getUserFromStorage = (): UserLike | null =>
-  typeof window !== "undefined" ? safeParse<UserLike | null>(localStorage.getItem("user"), null) : null;
+  typeof window !== "undefined"
+    ? safeParse<UserLike | null>(localStorage.getItem("user"), null)
+    : null;
 
 const buildCartProducts = (items: CartItem[]) =>
   items
     .filter((i) => i && i._id && Number.isFinite(i.quantity) && i.quantity > 0)
     .map((i) => ({ productId: i._id, quantity: i.quantity }));
 
-/** ===== Component ===== */
 const CheckoutPage: React.FC = () => {
-  const searchParams = useSearchParams();
-  // you used ?total before; we'll recompute from cart for safety (no trust in URL)
-  const _ignoredTotal = searchParams.get("total");
+  // const searchParams = useSearchParams();
+  // const _ignoredTotal = searchParams.get("total");
+  const token = localStorage.getItem("token");
+  console.log("token from checkout", token);
 
   const [mode, setMode] = useState<Mode>("guest");
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -72,17 +71,29 @@ const CheckoutPage: React.FC = () => {
 
   const [createOrder] = useCreateOrderMutation();
   const [loading, setLoading] = useState(false);
-
-  // Load cart and stored user on mount
   useEffect(() => {
     const c = getCartFromStorage();
     setCart(c);
     const u = getUserFromStorage();
     setStoredUser(u);
-    if (u?.email || u?.fullName) setMode("logged-in"); // default to logged-in if we have a user
+
+    // ✅ Use token directly for mode switch
+    const t = localStorage.getItem("token");
+    if (t) {
+      setMode("logged-in");
+    } else {
+      setMode("guest");
+    }
   }, []);
 
-  // Subtotal computed from cart
+  useEffect(() => {
+    const c = getCartFromStorage();
+    setCart(c);
+    const u = getUserFromStorage();
+    setStoredUser(u);
+    if (u?.email || u?.fullName) setMode("logged-in");
+  }, []);
+
   const subTotal = useMemo(
     () =>
       cart.reduce((sum, item) => {
@@ -93,7 +104,6 @@ const CheckoutPage: React.FC = () => {
     [cart]
   );
 
-  // Shipping API (expects subTotal)
   const { data: shippingData } = useGetShippingCostQuery(
     { subTotal: String(subTotal) },
     { skip: !Number.isFinite(subTotal) }
@@ -106,18 +116,20 @@ const CheckoutPage: React.FC = () => {
     try {
       setLoading(true);
 
-      // Build cart products
       const cartProducts = buildCartProducts(cart);
       if (cartProducts.length === 0) {
         toast.error("Your cart is empty or quantities are invalid.");
         return;
       }
 
-      // Pick user info based on mode
       const fullName =
-        mode === "guest" ? (values.fullName || "").trim() : (storedUser?.fullName || "").trim();
+        mode === "guest"
+          ? (values.fullName || "").trim()
+          : (storedUser?.fullName || "").trim();
       const email =
-        mode === "guest" ? (values.email || "").trim() : (storedUser?.email || "").trim();
+        mode === "guest"
+          ? (values.email || "").trim()
+          : (storedUser?.email || "").trim();
 
       if (!fullName || !email) {
         toast.error(
@@ -144,6 +156,7 @@ const CheckoutPage: React.FC = () => {
       if (res?.success && res?.data?.url) {
         toast.success(res?.message || "Redirecting to payment…");
         window.location.href = res.data.url;
+         localStorage.removeItem("cart");
       } else {
         toast.error(res?.message || "Payment link not found!");
       }
@@ -185,9 +198,12 @@ const CheckoutPage: React.FC = () => {
                       <div className="w-12 h-12 bg-neutral-200 rounded-md" />
                     )}
                     <div>
-                      <p className="text-neutral-700 font-medium">{item.name}</p>
+                      <p className="text-neutral-700 font-medium">
+                        {item.name}
+                      </p>
                       <p className="text-neutral-400 text-sm">
-                        Qty: {item.quantity} • ${Number(item.price).toFixed(2)} each
+                        Qty: {item.quantity} • ${Number(item.price).toFixed(2)}{" "}
+                        each
                       </p>
                     </div>
                   </div>
@@ -230,54 +246,12 @@ const CheckoutPage: React.FC = () => {
               <h2 className="text-neutral-700 text-xl md:text-2xl lg:text-3xl font-bold mb-2 uppercase">
                 Checkout
               </h2>
-              <p className="text-neutral-400 lg:text-lg font-bold">Shipping Information</p>
+              <p className="text-neutral-400 lg:text-lg font-bold">
+                Shipping Information
+              </p>
             </div>
 
-            {/* Mode Switch (div buttons, no Card) */}
-            <div className="flex justify-center gap-3 mb-6">
-              <button
-                type="button"
-                onClick={() => setMode("guest")}
-                className={`px-4 py-2 rounded-md border ${
-                  mode === "guest"
-                    ? "bg-[#3f67bc] text-white border-[#3f67bc]"
-                    : "bg-white text-neutral-700 border-neutral-300"
-                }`}
-              >
-                Guest checkout
-              </button>
-              <button
-                type="button"
-                onClick={() => setMode("logged-in")}
-                className={`px-4 py-2 rounded-md border ${
-                  mode === "logged-in"
-                    ? "bg-[#3f67bc] text-white border-[#3f67bc]"
-                    : "bg-white text-neutral-700 border-neutral-300"
-                }`}
-              >
-                I’m logged in
-              </button>
-            </div>
-
-            {/* Logged-in info banner (div) */}
-            {mode === "logged-in" && (
-              <div className="mb-6 rounded-md border border-green-200 bg-green-50 p-3 text-sm text-green-800">
-                <p className="font-semibold">Using saved account details</p>
-                <p className="mt-1">
-                  <span className="font-medium">Name:</span>{" "}
-                  {storedUser?.fullName || "— not found —"}
-                </p>
-                <p>
-                  <span className="font-medium">Email:</span>{" "}
-                  {storedUser?.email || "— not found —"}
-                </p>
-                {!storedUser?.email && (
-                  <p className="mt-1 text-green-900">
-                    We couldn’t find your saved details. Switch to Guest checkout or log in again.
-                  </p>
-                )}
-              </div>
-            )}
+           
 
             <Form<ContactFormValues>
               name="checkout"
@@ -296,11 +270,17 @@ const CheckoutPage: React.FC = () => {
                     name="fullName"
                     label={<p className="text-md">Full Name</p>}
                     rules={[
-                      { required: true, message: "Please enter your full name" },
+                      {
+                        required: true,
+                        message: "Please enter your full name",
+                      },
                       { min: 2, message: "Name looks too short" },
                     ]}
                   >
-                    <Input placeholder="Your full name" style={{ padding: "6px" }} />
+                    <Input
+                      placeholder="Your full name"
+                      style={{ padding: "6px" }}
+                    />
                   </Form.Item>
 
                   <Form.Item
@@ -308,10 +288,13 @@ const CheckoutPage: React.FC = () => {
                     label={<p className="text-md">Email</p>}
                     rules={[
                       { required: true, message: "Please enter your email" },
-                      { type: "email" as const, message: "Enter a valid email" },
+                      { type: "email", message: "Enter a valid email" },
                     ]}
                   >
-                    <Input placeholder="you@example.com" style={{ padding: "6px" }} />
+                    <Input
+                      placeholder="you@example.com"
+                      style={{ padding: "6px" }}
+                    />
                   </Form.Item>
                 </>
               )}
@@ -320,9 +303,17 @@ const CheckoutPage: React.FC = () => {
               <Form.Item
                 name="streetAddress"
                 label={<p className="text-md">Street Address</p>}
-                rules={[{ required: true, message: "Please enter your Street Address" }]}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter your Street Address",
+                  },
+                ]}
               >
-                <Input placeholder="Your Street Address" style={{ padding: "6px" }} />
+                <Input
+                  placeholder="Your Street Address"
+                  style={{ padding: "6px" }}
+                />
               </Form.Item>
 
               <Form.Item

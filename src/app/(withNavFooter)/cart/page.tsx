@@ -67,7 +67,7 @@ const CartPage = () => {
           toast.error(
             `Only ${item.totalQty} in stock! You cannot add more of this product.`
           );
-          newQty = item.totalQty; 
+          newQty = item.totalQty;
         } else {
           toast.success("Cart updated successfully");
         }
@@ -89,6 +89,7 @@ const CartPage = () => {
 
   const handleCheckout = () => {
     router.push(`/checkout?total=${totalPrice}&quantity=${totalQuantity}`);
+   
   };
 
   return (

@@ -1,15 +1,23 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useVerifySessionQuery } from "@/redux/features/ordersApi/ordersApi";
 import Link from "next/link";
 import React from "react";
 import { FaRegCheckCircle } from "react-icons/fa";
-
 const OrderConfirmedPage = () => {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
+  const token = localStorage.getItem("token");
+  const router = useRouter();
 
+  const handleShowOrder = () => {
+    if (token) {
+      router.push("/orders");
+    } else {
+      router.push("/sign-in");
+    }
+  };
   const { data: sessionData, isLoading } = useVerifySessionQuery(
     { session: sessionId },
     { skip: !sessionId }
@@ -52,9 +60,12 @@ const OrderConfirmedPage = () => {
               </button>
             </Link>
           </div>
-          <Link href="/orders">
-            <button className="border px-6 py-3 rounded-md">View Orders</button>
-          </Link>
+          <button
+            onClick={handleShowOrder}
+            className="border px-6 py-3 rounded-md"
+          >
+            View Orders
+          </button>
         </div>
       </div>
     </div>
