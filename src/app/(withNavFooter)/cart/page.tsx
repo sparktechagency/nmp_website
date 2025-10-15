@@ -12,7 +12,7 @@ import Swal from "sweetalert2";
 const CartPage = () => {
   const [cartItems, setCartItems] = useState<any[]>([]);
   const router = useRouter();
-  console.log(cartItems);
+  // console.log(cartItems);
   // Load cart from localStorage on first render
   useEffect(() => {
     const cartString =
@@ -30,8 +30,9 @@ const CartPage = () => {
     0
   );
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const totalNumberOfProduct = cartItems?.map((item) => item?.totalQty);
-  console.log("totalNumberOfProduct,", totalNumberOfProduct);
+  // console.log("totalNumberOfProduct,", totalNumberOfProduct);
   // DELETE from LocalStorage
   const handleDelete = (id: string) => {
     Swal.fire({

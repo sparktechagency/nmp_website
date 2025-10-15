@@ -31,7 +31,7 @@ const NewPassword: React.FC = () => {
         password: values?.confirmPassword,
       };
       const res = await newPassword(data).unwrap();
-      console.log("res,", res);
+      // console.log("res,", res);
       toast.success(res.message);
       router.push("/sign-in");
     } catch (e: any) {

@@ -32,7 +32,7 @@ const authSlice = createSlice({
     },
 
     logout: (state) => {
-      console.log("Logout");
+      // console.log("Logout");
       state.user = null;
       state.token = null;
       if (typeof window !== "undefined") {

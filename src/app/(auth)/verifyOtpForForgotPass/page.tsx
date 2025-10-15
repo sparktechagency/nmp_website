@@ -21,7 +21,7 @@ interface FormValues {
 const VerifyOtpForForgotPass: React.FC = () => {
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
-  console.log("Email:", email);
+  // console.log("Email:", email);
 
   const [verifyOtpForgot] = useVerifyOtpForgotMutation();
   const router = useRouter();

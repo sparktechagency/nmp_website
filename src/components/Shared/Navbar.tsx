@@ -47,10 +47,10 @@ const NavBar = () => {
     };
   }, []);
 
-  console.log("profileData", profileData);
+  // console.log("profileData", profileData);
   const dispatch = useDispatch();
 
-  console.log("cartItems", cartCount);
+  // console.log("cartItems", cartCount);
 
   useEffect(() => {
     if (typeof window !== "undefined") {

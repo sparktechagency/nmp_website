@@ -21,7 +21,7 @@ interface FormValues {
 const VerifyOtp: React.FC = () => {
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
-console.log("Email:", email)
+// console.log("Email:", email)
 
 
   const [verifyOtp] = useVerifyOtpMutation();
@@ -67,7 +67,7 @@ console.log("Email:", email)
       const data = {
         email: email,
       };
-      console.log("data:", data);
+      // console.log("data:", data);
       const res = await resendOtp(data).unwrap();
       toast.success(res.message);
     } catch (err: any) {

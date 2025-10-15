@@ -23,7 +23,7 @@ const ForgatePassword: React.FC = () => {
       const data = {
         email: values.email,
       };
-      console.log("data:", data);
+      // console.log("data:", data);
       const res = await forgotPassword(data).unwrap();
       toast.success(res.message);
       // router.push("/verify-otp");

@@ -77,7 +77,7 @@ const SelectedType = () => {
 
   const params = useParams();
   const id = params.id;
-  console.log("id from selected type", id);
+  // console.log("id from selected type", id);
 
   const { data: productsData, isLoading } = useGetProductsQuery({
     page: currentPage,
@@ -89,7 +89,7 @@ const SelectedType = () => {
   const { data: categoryDropdata } = useGetCatDropDownQuery(undefined);
 
   const { data: filterData } = useGetFilterDropdownByIdQuery(id);
-  console.log("filterData from selected type", filterData?.data);
+  // console.log("filterData from selected type", filterData?.data);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const products = productsData?.data ?? [];
   const total = productsData?.meta?.total ?? 0;

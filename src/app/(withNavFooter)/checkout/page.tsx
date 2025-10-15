@@ -62,8 +62,8 @@ const buildCartProducts = (items: CartItem[]) =>
 const CheckoutPage: React.FC = () => {
   // const searchParams = useSearchParams();
   // const _ignoredTotal = searchParams.get("total");
-  const token = localStorage.getItem("token");
-  console.log("token from checkout", token);
+  // const token = localStorage.getItem("token");
+  // console.log("token from checkout", token);
 
   const [mode, setMode] = useState<Mode>("guest");
   const [cart, setCart] = useState<CartItem[]>([]);
