@@ -47,8 +47,8 @@ const SignUpPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center p-4">
-      <div className="w-full max-w-6xl bg-white rounded-3xl shadow-2xl overflow-hidden ring-1 ring-white/70">
-        <div className="grid grid-cols-1 lg:grid-cols-2">
+      <div className="w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden ring-1 ring-white/70">
+        <div className="grid grid-cols-1 ">
           <div className="flex items-center justify-center p-6 sm:p-10">
             <div className="w-full max-w-md">
               <div className="mx-auto mb-5 h-12 w-12 grid place-items-center rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 shadow-lg">
@@ -180,7 +180,7 @@ const SignUpPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="relative hidden lg:block">
+          {/* <div className="relative hidden lg:block">
             <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600" />
             <div className="absolute inset-0 p-8 sm:p-10 md:p-12 flex flex-col">
               <div className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden shadow-2xl border border-white/10">
@@ -207,7 +207,7 @@ const SignUpPage: React.FC = () => {
               </div>
             </div>
             <div className="absolute inset-3 rounded-[22px] ring-1 ring-white/60 pointer-events-none" />
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
