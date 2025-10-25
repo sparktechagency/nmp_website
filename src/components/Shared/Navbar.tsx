@@ -25,7 +25,11 @@ const NavBar = () => {
   const [cartCount, setCartCount] = useState(0);
   const [drawerVisible, setDrawerVisible] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState<boolean>(false);
-  const { data: profileData } = useGetProfileQuery(undefined);
+  const { data: profileData ,refetch } = useGetProfileQuery(undefined);
+  const token = localStorage.getItem("token");
+  useEffect(() => {
+  if (token) refetch();
+}, [token, refetch]);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { data: cartData } = useGetCartQuery(undefined);
   // const cartItems = cartData?.data || [];

@@ -13,7 +13,10 @@ import {
   useVerifyOtpMutation,
 } from "@/redux/features/auth/authApi";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { jwtDecode } from "jwt-decode";
 
+import { setUser } from "@/redux/features/auth/authSlice";
 interface FormValues {
   otp: string;
 }
@@ -21,8 +24,7 @@ interface FormValues {
 const VerifyOtp: React.FC = () => {
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
-// console.log("Email:", email)
-
+  // console.log("Email:", email)
 
   const [verifyOtp] = useVerifyOtpMutation();
   const router = useRouter();
@@ -30,6 +32,7 @@ const VerifyOtp: React.FC = () => {
   const [otp, setOtp] = useState<string>("");
   const [submitting, setSubmitting] = useState(false);
   const [resendOtp] = useResendOtpMutation();
+  const dispatch = useDispatch();
 
   const onFinish = async () => {
     const clean = otp.replace(/\s/g, "");
@@ -51,7 +54,23 @@ const VerifyOtp: React.FC = () => {
       }).unwrap();
 
       toast.success(res?.message);
-      router.push("/sign-in");
+      const token = res?.data?.accessToken;
+      if (token) {
+        localStorage.setItem("token", token);
+        const decodedUser: any = jwtDecode(token);
+
+        const user = {
+          id: decodedUser?.id,
+          name: decodedUser?.fullName,
+          email: decodedUser?.email,
+        };
+
+        dispatch(setUser({ user, token }));
+
+        router.push("/");
+      } else {
+        toast.error("No token received. Please try again.");
+      }
     } catch (err: any) {
       console.error(err);
       toast.error(
