@@ -17,6 +17,14 @@ const OrdersApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Orders"],
     }),
+    cashOnDelivary: builder.mutation({
+      query: (data) => ({
+        url: "/order/create-order-with-cash",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Orders"],
+    }),
     verifySession: builder.query({
       query: ({ session }) => ({
         url: `/order/verify-session?sessionId=${session}`,
@@ -25,7 +33,7 @@ const OrdersApi = baseApi.injectEndpoints({
       providesTags: ["Orders"],
     }),
     getShippingCost: builder.query({
-      query: ({subTotal}) => ({
+      query: ({ subTotal }) => ({
         url: `/shipping-cost/get-my-shipping-cost/${subTotal}`,
         method: "GET",
       }),
@@ -38,4 +46,5 @@ export const {
   useCreateOrderMutation,
   useVerifySessionQuery,
   useGetShippingCostQuery,
+  useCashOnDelivaryMutation
 } = OrdersApi;

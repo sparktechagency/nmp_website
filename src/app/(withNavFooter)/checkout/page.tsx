@@ -1,14 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
 import { ConfigProvider, Form, Input, Spin } from "antd";
 import type { FormProps } from "antd";
 import {
+  useCashOnDelivaryMutation,
   useCreateOrderMutation,
   useGetShippingCostQuery,
 } from "@/redux/features/ordersApi/ordersApi";
 import toast from "react-hot-toast";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 type Mode = "guest" | "logged-in"; // used only for UI toggle
 
@@ -47,6 +50,8 @@ const getCartFromStorage = (): CartItem[] =>
     ? safeParse<CartItem[]>(localStorage.getItem("cart"), [])
     : [];
 
+
+    
 /** Build payload for API from cart items */
 const buildCartProducts = (items: CartItem[]) =>
   items
@@ -71,18 +76,20 @@ const decodeJwtPayload = (token: string): Record<string, unknown> | null => {
   }
 };
 
-const extractUserFromToken = (claims: Record<string, unknown> | null): UserLike | null => {
+const extractUserFromToken = (
+  claims: Record<string, unknown> | null
+): UserLike | null => {
   if (!claims) return null;
   const email =
-    (claims["email"] as string) ||
-    (claims["upn"] as string) ||
-    undefined;
+    (claims["email"] as string) || (claims["upn"] as string) || undefined;
 
   const fullName =
     (claims["fullName"] as string) ||
     (claims["name"] as string) ||
     (claims["given_name"] && claims["family_name"]
-      ? `${claims["given_name"] as string} ${claims["family_name"] as string}`.trim()
+      ? `${claims["given_name"] as string} ${
+          claims["family_name"] as string
+        }`.trim()
       : undefined);
 
   if (!email && !fullName) return null;
@@ -96,7 +103,8 @@ const CheckoutPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm<ContactFormValues>();
   const [createOrder] = useCreateOrderMutation();
-
+  const [cashOnDelivary] = useCashOnDelivaryMutation();
+  const router = useRouter();
   // console.log("tokenuser", tokenUser)
   // Load cart and decode token once on mount
   useEffect(() => {
@@ -144,9 +152,6 @@ const CheckoutPage: React.FC = () => {
         return;
       }
 
-      // Core rule:
-      // - If tokenUser exists, ALWAYS use its fullName/email.
-      // - If not, take them from the form.
       const userData = tokenUser
         ? {
             fullName: (tokenUser.fullName || "").trim(),
@@ -158,7 +163,6 @@ const CheckoutPage: React.FC = () => {
           };
 
       if (!userData.fullName || !userData.email) {
-        // Simple, unified message—no “switch to guest” suggestion.
         toast.error("Please provide your full name and email.");
         return;
       }
@@ -183,7 +187,61 @@ const CheckoutPage: React.FC = () => {
       } else {
         toast.error(res?.message || "Payment link not found!");
       }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCashOndelivary = async (values: ContactFormValues) => {
+    try {
+      setLoading(true);
+      const cartProducts = buildCartProducts(cart);
+
+      if (cartProducts.length === 0) {
+        toast.error("Your cart is empty or quantities are invalid.");
+        return;
+      }
+
+      const userData = tokenUser
+        ? {
+            fullName: (tokenUser.fullName || "").trim(),
+            email: (tokenUser.email || "").trim(),
+          }
+        : {
+            fullName: (values.fullName || "").trim(),
+            email: (values.email || "").trim(),
+          };
+
+      if (!userData.fullName || !userData.email) {
+        toast.error("Please provide your full name and email.");
+        return;
+      }
+
+      const payload = {
+        userData,
+        shippingAddress: {
+          streetAddress: values.streetAddress,
+          city: values.city,
+          state: values.state,
+          zipCode: values.zipCode,
+        },
+        cartProducts,
+      };
+
+      const res = await cashOnDelivary(payload).unwrap();
+
+      if (res?.success) {
+        toast.success(res?.message || "Order placed successfully!");
+        localStorage.removeItem("cart");
+      window.dispatchEvent(new Event("cartUpdated"));
+        // optionally redirect:
+        router.push("/successfull-order");
+      } else {
+        toast.error(res?.message || "Failed to place cash on delivery order.");
+      }
     } catch (error: any) {
       toast.error(error?.data?.message || "Something went wrong");
     } finally {
@@ -221,9 +279,12 @@ const CheckoutPage: React.FC = () => {
                       <div className="w-12 h-12 bg-neutral-200 rounded-md" />
                     )}
                     <div>
-                      <p className="text-neutral-700 font-medium">{item.name}</p>
+                      <p className="text-neutral-700 font-medium">
+                        {item.name}
+                      </p>
                       <p className="text-neutral-400 text-sm">
-                        Qty: {item.quantity} • ${Number(item.price).toFixed(2)} each
+                        Qty: {item.quantity} • ${Number(item.price).toFixed(2)}{" "}
+                        each
                       </p>
                     </div>
                   </div>
@@ -255,7 +316,10 @@ const CheckoutPage: React.FC = () => {
         {/* ===== Right: Checkout Form ===== */}
         <ConfigProvider
           theme={{
-            components: { Form: { borderRadius: 0 }, Input: { borderRadius: 5 } },
+            components: {
+              Form: { borderRadius: 0 },
+              Input: { borderRadius: 5 },
+            },
           }}
         >
           <div className="py-10 mx-4 md:mx-0 px-6 md:px-10 border border-neutral-200 rounded-lg">
@@ -263,7 +327,9 @@ const CheckoutPage: React.FC = () => {
               <h2 className="text-neutral-700 text-xl md:text-2xl lg:text-3xl font-bold mb-2 uppercase">
                 Checkout
               </h2>
-              <p className="text-neutral-400 lg:text-lg font-bold">Shipping Information</p>
+              <p className="text-neutral-400 lg:text-lg font-bold">
+                Shipping Information
+              </p>
             </div>
 
             <Form<ContactFormValues>
@@ -279,11 +345,17 @@ const CheckoutPage: React.FC = () => {
                     name="fullName"
                     label={<p className="text-md">Full Name</p>}
                     rules={[
-                      { required: true, message: "Please enter your full name" },
+                      {
+                        required: true,
+                        message: "Please enter your full name",
+                      },
                       { min: 2, message: "Name looks too short" },
                     ]}
                   >
-                    <Input placeholder="Your full name" style={{ padding: "6px" }} />
+                    <Input
+                      placeholder="Your full name"
+                      style={{ padding: "6px" }}
+                    />
                   </Form.Item>
 
                   <Form.Item
@@ -294,7 +366,10 @@ const CheckoutPage: React.FC = () => {
                       { type: "email", message: "Enter a valid email" },
                     ]}
                   >
-                    <Input placeholder="you@example.com" style={{ padding: "6px" }} />
+                    <Input
+                      placeholder="you@example.com"
+                      style={{ padding: "6px" }}
+                    />
                   </Form.Item>
                 </>
               )}
@@ -303,9 +378,17 @@ const CheckoutPage: React.FC = () => {
               <Form.Item
                 name="streetAddress"
                 label={<p className="text-md">Street Address</p>}
-                rules={[{ required: true, message: "Please enter your Street Address" }]}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter your Street Address",
+                  },
+                ]}
               >
-                <Input placeholder="Your Street Address" style={{ padding: "6px" }} />
+                <Input
+                  placeholder="Your Street Address"
+                  style={{ padding: "6px" }}
+                />
               </Form.Item>
 
               <Form.Item
@@ -347,6 +430,13 @@ const CheckoutPage: React.FC = () => {
                 </div>
               </Form.Item>
             </Form>
+            <button
+              onClick={() => handleCashOndelivary(form.getFieldsValue())}
+              className="w-full mt-2 text-xs py-3 font-bold bg-[#3f67bc] text-white rounded-md shadow-lg disabled:opacity-70"
+              disabled={loading || cart.length === 0}
+            >
+              {loading ? <Spin size="small" /> : "Cash On Delivery"}
+            </button>
           </div>
         </ConfigProvider>
       </div>
