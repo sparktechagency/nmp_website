@@ -50,8 +50,6 @@ const getCartFromStorage = (): CartItem[] =>
     ? safeParse<CartItem[]>(localStorage.getItem("cart"), [])
     : [];
 
-
-    
 /** Build payload for API from cart items */
 const buildCartProducts = (items: CartItem[]) =>
   items
@@ -236,7 +234,7 @@ const CheckoutPage: React.FC = () => {
       if (res?.success) {
         toast.success(res?.message || "Order placed successfully!");
         localStorage.removeItem("cart");
-      window.dispatchEvent(new Event("cartUpdated"));
+        window.dispatchEvent(new Event("cartUpdated"));
         // optionally redirect:
         router.push("/successfull-order");
       } else {
@@ -430,13 +428,15 @@ const CheckoutPage: React.FC = () => {
                 </div>
               </Form.Item>
             </Form>
-            <button
-              onClick={() => handleCashOndelivary(form.getFieldsValue())}
-              className="w-full mt-2 text-xs py-3 font-bold bg-[#3f67bc] text-white rounded-md shadow-lg disabled:opacity-70"
-              disabled={loading || cart.length === 0}
-            >
-              {loading ? <Spin size="small" /> : "Cash On Delivery"}
-            </button>
+            <div className="text-white">
+              <button
+                onClick={() => handleCashOndelivary(form.getFieldsValue())}
+                className="w-full mt-2 text-xs py-3 font-bold bg-[#3f67bc] text-white rounded-md shadow-lg disabled:opacity-70"
+                disabled={loading || cart.length === 0}
+              >
+                {loading ? <Spin size="small" /> : "Cash On Delivery"}
+              </button>
+            </div>
           </div>
         </ConfigProvider>
       </div>

@@ -25,11 +25,11 @@ const NavBar = () => {
   const [cartCount, setCartCount] = useState(0);
   const [drawerVisible, setDrawerVisible] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState<boolean>(false);
-  const { data: profileData ,refetch } = useGetProfileQuery(undefined);
+  const { data: profileData, refetch } = useGetProfileQuery(undefined);
   const token = localStorage.getItem("token");
   useEffect(() => {
-  if (token) refetch();
-}, [token, refetch]);
+    if (token) refetch();
+  }, [token, refetch]);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { data: cartData } = useGetCartQuery(undefined);
   // const cartItems = cartData?.data || [];
@@ -170,7 +170,20 @@ const NavBar = () => {
               />
             </Link> */}
 
-            <div className="lg:hidden ml-auto">
+            <div className="lg:hidden ml-auto flex gap-5">
+              <div className="flex justify-between items-center gap-3 ml-2">
+                {profileData?.data && (
+                  <Link href="/cart" className="relative flex items-center">
+                    <IoCartOutline className="text-3xl  transition" />
+                    {cartCount > 0 && (
+                      <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-md">
+                        {cartCount}
+                      </span>
+                    )}
+                  </Link>
+                )}
+                {/* {renderUserSection()} */}
+              </div>
               <Button
                 icon={<RxHamburgerMenu className="text-white" />}
                 onClick={handleMobileMenuClick}
@@ -221,7 +234,7 @@ const NavBar = () => {
               </Link>
             ))}
             <div className="flex justify-between items-center gap-3 mt-4">
-              {profileData?.data && (
+              {/* {profileData?.data && (
                 <Link href="/cart" className="relative flex items-center">
                   <IoCartOutline className="text-2xl" />
                   {cartCount > 0 && (
@@ -230,7 +243,7 @@ const NavBar = () => {
                     </span>
                   )}
                 </Link>
-              )}
+              )} */}
               {renderUserSection()}
             </div>
           </div>
@@ -242,7 +255,6 @@ const NavBar = () => {
 
 export default NavBar;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function dispatch(arg0: { payload: undefined; type: "auth/logout"; }) {
+function dispatch(arg0: { payload: undefined; type: "auth/logout" }) {
   throw new Error("Function not implemented.");
 }
-
