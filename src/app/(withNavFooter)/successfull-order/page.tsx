@@ -1,7 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
-import { useVerifySessionQuery } from "@/redux/features/ordersApi/ordersApi";
+import { useRouter} from "next/navigation";
 import Link from "next/link";
 import React from "react";
 import { FaRegCheckCircle } from "react-icons/fa";
