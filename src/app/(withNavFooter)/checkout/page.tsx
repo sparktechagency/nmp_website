@@ -101,6 +101,7 @@ const CheckoutPage: React.FC = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [tokenUser, setTokenUser] = useState<UserLike | null>(null); // derived from token for name/email only
   const [loading, setLoading] = useState(false);
+  const [cashLoading, setCashLoading] = useState(false);
   const [form] = Form.useForm<ContactFormValues>();
   const [createOrder] = useCreateOrderMutation();
   const [cashOnDelivary] = useCashOnDelivaryMutation();
@@ -198,7 +199,7 @@ const CheckoutPage: React.FC = () => {
 
   const handleCashOndelivary = async (values: ContactFormValues) => {
     try {
-      setLoading(true);
+      setCashLoading(true);
       const cartProducts = buildCartProducts(cart);
 
       if (cartProducts.length === 0) {
@@ -249,7 +250,7 @@ const CheckoutPage: React.FC = () => {
     } catch (error: any) {
       toast.error(error?.data?.message || "Something went wrong");
     } finally {
-      setLoading(false);
+      setCashLoading(false);
     }
   };
 
@@ -446,9 +447,9 @@ const CheckoutPage: React.FC = () => {
               <button
                 onClick={() => handleCashOndelivary(form.getFieldsValue())}
                 className="w-full mt-2 text-xs py-3 font-bold bg-[#3f67bc] text-white rounded-md shadow-lg disabled:opacity-70"
-                disabled={loading || cart.length === 0}
+                disabled={cashLoading || cart.length === 0}
               >
-                {loading ? <Spin size="small" /> : "Cash On Delivery"}
+                {cashLoading ? <Spin size="small" /> : "Cash On Delivery"}
               </button>
             </div>
           </div>
