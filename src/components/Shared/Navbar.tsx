@@ -132,13 +132,14 @@ const NavBar = () => {
       return (
         <div className="flex items-center gap-4">
           {/* <Link href="/cart" className="relative flex items-center">
+          {/* <Link href="/cart" className="relative flex items-center">
             <IoCartOutline className="text-3xl  transition" />
             {cartCount > 0 && (
               <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-md">
                 {cartCount}
               </span>
             )}
-          </Link> */}
+          </Link>
           <Link href="/sign-in">
             <FaRegUser className="text-2xl" />
           </Link>
@@ -172,14 +173,16 @@ const NavBar = () => {
 
             <div className="lg:hidden ml-auto flex gap-5">
               <div className="flex justify-between items-center gap-3 ml-2">
-                <Link href="/cart" className="relative flex items-center">
-                  <IoCartOutline className="text-3xl  transition" />
-                  {cartCount > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-md">
-                      {cartCount}
-                    </span>
-                  )}
-                </Link>
+                {profileData?.data && (
+                  <Link href="/cart" className="relative flex items-center">
+                    <IoCartOutline className="text-3xl  transition" />
+                    {cartCount > 0 && (
+                      <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-md">
+                        {cartCount}
+                      </span>
+                    )}
+                  </Link>
+                )}
                 {/* {renderUserSection()} */}
               </div>
               <Button
@@ -207,6 +210,24 @@ const NavBar = () => {
                     </span>
                   )}
                 </Link>
+                {profileData?.data && (
+                  <Link href="/cart" className="relative flex items-center">
+                    <IoCartOutline className="text-3xl  transition" />
+                    {cartCount > 0 && (
+                      <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-md">
+                        {cartCount}
+                      </span>
+                    )}
+                  </Link>
+                )}
+                 <Link href="/cart" className="relative flex items-center">
+            <IoCartOutline className="text-3xl  transition" />
+            {cartCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-md">
+                {cartCount}
+              </span>
+            )}
+          </Link>
                 {renderUserSection()}
               </div>
             </div>
