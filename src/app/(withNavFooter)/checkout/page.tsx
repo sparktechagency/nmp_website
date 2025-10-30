@@ -26,12 +26,14 @@ interface CartItem {
 interface UserLike {
   fullName?: string;
   email?: string;
+  phone?: string;
 }
 
 interface ContactFormValues {
   fullName?: string;
   email?: string;
   streetAddress: string;
+  phone?: string;
   city: string;
   state: string;
   zipCode: string;
@@ -154,10 +156,12 @@ const CheckoutPage: React.FC = () => {
         ? {
             fullName: (tokenUser.fullName || "").trim(),
             email: (tokenUser.email || "").trim(),
+            phone: (values.phone || "").trim(),
           }
         : {
             fullName: (values.fullName || "").trim(),
             email: (values.email || "").trim(),
+            phone: values.phone,
           };
 
       if (!userData.fullName || !userData.email) {
@@ -206,10 +210,12 @@ const CheckoutPage: React.FC = () => {
         ? {
             fullName: (tokenUser.fullName || "").trim(),
             email: (tokenUser.email || "").trim(),
+            phone: (values.phone || "").trim(),
           }
         : {
             fullName: (values.fullName || "").trim(),
             email: (values.email || "").trim(),
+            phone: values.phone,
           };
 
       if (!userData.fullName || !userData.email) {
@@ -221,6 +227,7 @@ const CheckoutPage: React.FC = () => {
         userData,
         shippingAddress: {
           streetAddress: values.streetAddress,
+          phone: values.phone,
           city: values.city,
           state: values.state,
           zipCode: values.zipCode,
@@ -387,7 +394,15 @@ const CheckoutPage: React.FC = () => {
                   style={{ padding: "6px" }}
                 />
               </Form.Item>
-
+              <Form.Item
+                name="phone"
+                label={<p className="text-md">Phone Number</p>}
+                rules={[
+                  { required: true, message: "Please enter your Phone Number" },
+                ]}
+              >
+                <Input placeholder="Phone Number" style={{ padding: "6px" }} />
+              </Form.Item>
               <Form.Item
                 name="city"
                 label={<p className="text-md">City</p>}
