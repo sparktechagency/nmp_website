@@ -39,6 +39,32 @@ interface ContactFormValues {
   zipCode: string;
 }
 
+// ✅ Function to get coordinates using Nominatim API
+async function getManhattanCoordinates(addressPart: string) {
+  try {
+    const fullAddress = `${addressPart}, Manhattan, NY 10016`;
+    const encoded = encodeURIComponent(fullAddress);
+    const url = `https://nominatim.openstreetmap.org/search?q=${encoded}&format=json&limit=1`;
+
+    const res = await fetch(url, {
+      headers: { "User-Agent": "MyApp/1.0 (example@domain.com)" },
+    });
+
+    const data = await res.json();
+    if (data.length > 0) {
+      return {
+        lat: data[0].lat,
+        lon: data[0].lon,
+      };
+    } else {
+      return { lat: null, lon: null };
+    }
+  } catch (err) {
+    console.error("Geocoding error:", err);
+    return { lat: null, lon: null };
+  }
+}
+
 const safeParse = <T,>(val: string | null, fallback: T): T => {
   try {
     return val ? (JSON.parse(val) as T) : fallback;
@@ -52,13 +78,11 @@ const getCartFromStorage = (): CartItem[] =>
     ? safeParse<CartItem[]>(localStorage.getItem("cart"), [])
     : [];
 
-/** Build payload for API from cart items */
 const buildCartProducts = (items: CartItem[]) =>
   items
     .filter((i) => i && i._id && Number.isFinite(i.quantity) && i.quantity > 0)
     .map((i) => ({ productId: i._id, quantity: i.quantity }));
 
-/** Safe Base64URL -> JSON decode for JWT payload */
 const decodeJwtPayload = (token: string): Record<string, unknown> | null => {
   try {
     const parts = token.split(".");
@@ -99,14 +123,25 @@ const extractUserFromToken = (
 const CheckoutPage: React.FC = () => {
   const [mode, setMode] = useState<Mode>("guest");
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [tokenUser, setTokenUser] = useState<UserLike | null>(null); // derived from token for name/email only
+  const [tokenUser, setTokenUser] = useState<UserLike | null>(null);
   const [loading, setLoading] = useState(false);
   const [cashLoading, setCashLoading] = useState(false);
   const [form] = Form.useForm<ContactFormValues>();
   const [createOrder] = useCreateOrderMutation();
   const [cashOnDelivary] = useCashOnDelivaryMutation();
   const router = useRouter();
-  // console.log("tokenuser", tokenUser)
+
+  // ✅ For coordinates display
+  const [coordinates, setCoordinates] = useState<{
+    lat: string | null;
+    lon: string | null;
+  }>({
+    lat: null,
+    lon: null,
+  });
+  console.log("coordinates", coordinates);
+  const [geoLoading, setGeoLoading] = useState(false);
+
   // Load cart and decode token once on mount
   useEffect(() => {
     setCart(getCartFromStorage());
@@ -118,7 +153,6 @@ const CheckoutPage: React.FC = () => {
         if (u) {
           setTokenUser(u);
           setMode("logged-in");
-          // Keep form fields in sync even though they're hidden for logged-in
           form.setFieldsValue({ fullName: u.fullName, email: u.email });
         }
       }
@@ -143,59 +177,128 @@ const CheckoutPage: React.FC = () => {
   const shippingCost = Number(shippingData?.data?.shippingCost ?? 0);
   const total = subTotal + shippingCost;
 
-  const onFinish: FormProps<ContactFormValues>["onFinish"] = async (values) => {
-    try {
-      setLoading(true);
-
-      const cartProducts = buildCartProducts(cart);
-      if (cartProducts.length === 0) {
-        toast.error("Your cart is empty or quantities are invalid.");
-        return;
-      }
-
-      const userData = tokenUser
-        ? {
-            fullName: (tokenUser.fullName || "").trim(),
-            email: (tokenUser.email || "").trim(),
-            phone: (values.phone || "").trim(),
-          }
-        : {
-            fullName: (values.fullName || "").trim(),
-            email: (values.email || "").trim(),
-            phone: values.phone,
-          };
-
-      if (!userData.fullName || !userData.email) {
-        toast.error("Please provide your full name and email.");
-        return;
-      }
-
-      const payload = {
-        userData,
-        shippingAddress: {
-          streetAddress: values.streetAddress,
-          city: values.city,
-          state: values.state,
-          zipCode: values.zipCode,
-        },
-        cartProducts,
-      };
-
-      const res = await createOrder(payload).unwrap();
-
-      if (res?.success && res?.data?.url) {
-        toast.success(res?.message || "Redirecting to payment…");
-        window.location.href = res.data.url;
-        localStorage.removeItem("cart");
-      } else {
-        toast.error(res?.message || "Payment link not found!");
-      }
-    } catch (error: any) {
-      toast.error(error?.data?.message || "Something went wrong");
-    } finally {
-      setLoading(false);
+  // ✅ Fetch coordinates automatically when streetAddress changes
+  const handleAddressChange = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = e.target.value;
+    form.setFieldsValue({ streetAddress: value });
+    if (!value.trim()) {
+      setCoordinates({ lat: null, lon: null });
+      return;
     }
+
+    setGeoLoading(true);
+    const result = await getManhattanCoordinates(value);
+    setCoordinates(result);
+    setGeoLoading(false);
   };
+
+// 🔹 Fetch coordinates from OpenStreetMap (Nominatim)
+const getCoordinates = async (address: string) => {
+  try {
+    // Clean up any trailing comma/spaces
+    const cleanAddress = address.trim().replace(/,+$/, "");
+    // Append Manhattan info
+    const fullAddress = `${cleanAddress}, Manhattan, NY 10016`;
+    const encodedAddress = encodeURIComponent(fullAddress);
+
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/search?q=${encodedAddress}&format=json&limit=1`,
+      {
+        headers: {
+          "User-Agent": "my-checkout-app/1.0 (example@email.com)", // required header
+        },
+      }
+    );
+
+    const data = await res.json();
+
+    if (Array.isArray(data) && data.length > 0) {
+      const { lat, lon } = data[0];
+      return {
+        lat: parseFloat(lat),
+        lon: parseFloat(lon),
+      };
+    } else {
+      console.warn("No coordinates found for:", fullAddress);
+      return { lat: null, lon: null };
+    }
+  } catch (err) {
+    console.error("Error fetching coordinates:", err);
+    return { lat: null, lon: null };
+  }
+};
+
+
+
+const onFinish: FormProps<ContactFormValues>["onFinish"] = async (values) => {
+  try {
+    setLoading(true);
+
+    const cartProducts = buildCartProducts(cart);
+    if (cartProducts.length === 0) {
+      toast.error("Your cart is empty or quantities are invalid.");
+      return;
+    }
+
+    const userData = tokenUser
+      ? {
+          fullName: (tokenUser.fullName || "").trim(),
+          email: (tokenUser.email || "").trim(),
+          phone: (values.phone || "").trim(),
+        }
+      : {
+          fullName: (values.fullName || "").trim(),
+          email: (values.email || "").trim(),
+          phone: values.phone,
+        };
+
+    if (!userData.fullName || !userData.email) {
+      toast.error("Please provide your full name and email.");
+      return;
+    }
+
+    // ✅ Fetch coordinates before sending payload
+ const cleanStreet = values.streetAddress.trim().replace(/,+$/, "");
+const coordinates = await getCoordinates(cleanStreet);
+console.log("Coordinates:", coordinates);
+
+
+    const payload = {
+      userData,
+      shippingAddress: {
+        streetAddress: values.streetAddress,
+        city: "Manhattan",
+        state: "NY",
+        zipCode: "10016",
+        latitude: coordinates.lat,
+        longitude: coordinates.lon,
+      },
+      cartProducts,
+    };
+
+    console.log("payload", payload);
+
+    // --- TEMP: You can test until coords are confirmed ---
+    // return 0;
+
+    const res = await createOrder(payload).unwrap();
+
+    if (res?.success && res?.data?.url) {
+      toast.success(res?.message || "Redirecting to payment…");
+      window.location.href = res.data.url;
+      localStorage.removeItem("cart");
+    } else {
+      toast.error(res?.message || "Payment link not found!");
+    }
+  } catch (error: any) {
+    toast.error(error?.data?.message || "Something went wrong");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const handleCashOndelivary = async (values: ContactFormValues) => {
     try {
@@ -229,9 +332,11 @@ const CheckoutPage: React.FC = () => {
         shippingAddress: {
           streetAddress: values.streetAddress,
           phone: values.phone,
-          city: values.city,
-          state: values.state,
-          zipCode: values.zipCode,
+          city: "Manhattan",
+          state: "NY",
+          zipCode: "10016",
+          latitude: coordinates.lat,
+          longitude: coordinates.lon,
         },
         cartProducts,
       };
@@ -242,7 +347,6 @@ const CheckoutPage: React.FC = () => {
         toast.success(res?.message || "Order placed successfully!");
         localStorage.removeItem("cart");
         window.dispatchEvent(new Event("cartUpdated"));
-        // optionally redirect:
         router.push("/successfull-order");
       } else {
         toast.error(res?.message || "Failed to place cash on delivery order.");
@@ -260,8 +364,6 @@ const CheckoutPage: React.FC = () => {
         {/* ===== Left: Order Summary ===== */}
         <div>
           <h1 className="text-2xl font-bold text-neutral-600">Order Summary</h1>
-
-          {/* Cart items */}
           <div className="mt-4 space-y-3">
             {cart.length === 0 ? (
               <p className="text-neutral-400">Your cart is empty.</p>
@@ -301,20 +403,19 @@ const CheckoutPage: React.FC = () => {
             )}
           </div>
 
-          {/* Totals */}
           <div className="border-b-2 border-b-neutral-300 pb-5 mt-6">
-            <div className="text-neutral-400 flex justify-between items-center gap-5">
+            <div className="text-neutral-400 flex justify-between">
               <h1>SUBTOTAL</h1>
               <p>${subTotal.toFixed(2)}</p>
             </div>
-            <div className="text-neutral-400 flex justify-between items-center gap-5">
+            <div className="text-neutral-400 flex justify-between">
               <h1>SHIPPING</h1>
               <p>${shippingCost.toFixed(2)}</p>
             </div>
           </div>
-          <div className="text-neutral-600 flex justify-between items-center gap-5 mt-5">
-            <h1 className="font-semibold">TOTAL</h1>
-            <p className="font-semibold">${total.toFixed(2)}</p>
+          <div className="text-neutral-600 flex justify-between mt-5 font-semibold">
+            <h1>TOTAL</h1>
+            <p>${total.toFixed(2)}</p>
           </div>
         </div>
 
@@ -329,7 +430,7 @@ const CheckoutPage: React.FC = () => {
         >
           <div className="py-10 mx-4 md:mx-0 px-6 md:px-10 border border-neutral-200 rounded-lg">
             <div className="mb-4 text-center">
-              <h2 className="text-neutral-700 text-xl md:text-2xl lg:text-3xl font-bold mb-2 uppercase">
+              <h2 className="text-neutral-700 text-2xl font-bold mb-2 uppercase">
                 Checkout
               </h2>
               <p className="text-neutral-400 lg:text-lg font-bold">
@@ -343,7 +444,6 @@ const CheckoutPage: React.FC = () => {
               onFinish={onFinish}
               layout="vertical"
             >
-              {/* Only show name/email fields for guests (no token) */}
               {mode === "guest" && !tokenUser && (
                 <>
                   <Form.Item
@@ -354,13 +454,9 @@ const CheckoutPage: React.FC = () => {
                         required: true,
                         message: "Please enter your full name",
                       },
-                      { min: 2, message: "Name looks too short" },
                     ]}
                   >
-                    <Input
-                      placeholder="Your full name"
-                      style={{ padding: "6px" }}
-                    />
+                    <Input placeholder="Your full name" />
                   </Form.Item>
 
                   <Form.Item
@@ -371,15 +467,12 @@ const CheckoutPage: React.FC = () => {
                       { type: "email", message: "Enter a valid email" },
                     ]}
                   >
-                    <Input
-                      placeholder="you@example.com"
-                      style={{ padding: "6px" }}
-                    />
+                    <Input placeholder="you@example.com" />
                   </Form.Item>
                 </>
               )}
 
-              {/* Shipping fields (always) */}
+              {/* Street Address Field with Live Coordinates */}
               <Form.Item
                 name="streetAddress"
                 label={<p className="text-md">Street Address</p>}
@@ -391,10 +484,22 @@ const CheckoutPage: React.FC = () => {
                 ]}
               >
                 <Input
-                  placeholder="Your Street Address"
-                  style={{ padding: "6px" }}
+                  placeholder="e.g. Building 25, Room 304, 123 Lexington Ave"
+                  onChange={handleAddressChange}
                 />
               </Form.Item>
+
+              {/* Show Coordinates */}
+              {geoLoading ? (
+                <p className="text-xs text-blue-500 mb-3">
+                  Fetching coordinates...
+                </p>
+              ) : coordinates.lat ? (
+                <p className="text-xs text-green-600 mb-3">
+                  📍 Latitude: {coordinates.lat}, Longitude: {coordinates.lon}
+                </p>
+              ) : null}
+
               <Form.Item
                 name="phone"
                 label={<p className="text-md">Phone Number</p>}
@@ -402,56 +507,38 @@ const CheckoutPage: React.FC = () => {
                   { required: true, message: "Please enter your Phone Number" },
                 ]}
               >
-                <Input placeholder="Phone Number" style={{ padding: "6px" }} />
-              </Form.Item>
-              <Form.Item
-                name="city"
-                label={<p className="text-md">City</p>}
-                rules={[{ required: true, message: "Please enter your city" }]}
-              >
-                <Input placeholder="Your city" style={{ padding: "6px" }} />
+                <Input placeholder="Phone Number" />
               </Form.Item>
 
-              <Form.Item
-                name="state"
-                label={<p className="text-md">State</p>}
-                rules={[{ required: true, message: "Please enter your state" }]}
-              >
-                <Input placeholder="State" style={{ padding: "6px" }} />
+              {/* City, State, ZIP fixed */}
+              <Form.Item name="city" label="City" initialValue="Manhattan">
+                <Input disabled />
               </Form.Item>
-
-              <Form.Item
-                name="zipCode"
-                label={<p className="text-md">Zip Code</p>}
-                rules={[
-                  { required: true, message: "Please enter your zip code" },
-                  { min: 4, message: "Zip looks too short" },
-                ]}
-              >
-                <Input placeholder="zipCode" className="w-full rounded-md" />
+              <Form.Item name="state" label="State" initialValue="NY">
+                <Input disabled />
+              </Form.Item>
+              <Form.Item name="zipCode" label="Zip Code" initialValue="10016">
+                <Input disabled />
               </Form.Item>
 
               <Form.Item className="text-center">
-                <div className="text-white">
-                  <button
-                    type="submit"
-                    className="w-full py-3 font-bold text-2xl bg-[#3f67bc] rounded-md shadow-lg disabled:opacity-70"
-                    disabled={loading || cart.length === 0}
-                  >
-                    {loading ? <Spin size="small" /> : "Pay with Stripe"}
-                  </button>
-                </div>
+                <button
+                  type="submit"
+                  className="w-full py-3 font-bold text-2xl bg-[#3f67bc] text-white rounded-md shadow-lg disabled:opacity-70"
+                  disabled={loading || cart.length === 0}
+                >
+                  {loading ? <Spin size="small" /> : "Pay with Stripe"}
+                </button>
               </Form.Item>
             </Form>
-            <div className="text-white">
-              <button
-                onClick={() => handleCashOndelivary(form.getFieldsValue())}
-                className="w-full mt-2 text-xs py-3 font-bold bg-[#3f67bc] text-white rounded-md shadow-lg disabled:opacity-70"
-                disabled={cashLoading || cart.length === 0}
-              >
-                {cashLoading ? <Spin size="small" /> : "Cash On Delivery"}
-              </button>
-            </div>
+
+            <button
+              onClick={() => handleCashOndelivary(form.getFieldsValue())}
+              className="w-full mt-2 text-xs py-3 font-bold bg-[#3f67bc] text-white rounded-md shadow-lg disabled:opacity-70"
+              disabled={cashLoading || cart.length === 0}
+            >
+              {cashLoading ? <Spin size="small" /> : "Cash On Delivery"}
+            </button>
           </div>
         </ConfigProvider>
       </div>
