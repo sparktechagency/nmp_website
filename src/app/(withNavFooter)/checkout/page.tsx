@@ -15,7 +15,7 @@ import toast from "react-hot-toast";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-type Mode = "guest" | "logged-in"; 
+type Mode = "guest" | "logged-in";
 
 interface CartItem {
   _id: string;
@@ -328,7 +328,6 @@ const CheckoutPage: React.FC = () => {
 
       console.log("payload", payload);
 
-  
       // return 0;
 
       const res = await createOrder(payload).unwrap();
@@ -519,7 +518,6 @@ const CheckoutPage: React.FC = () => {
                 </>
               )}
 
-            
               {/* UI portion where you show status under address field */}
               <Form.Item
                 name="streetAddress"
@@ -591,25 +589,26 @@ const CheckoutPage: React.FC = () => {
               </Form.Item>
 
               <Form.Item className="text-center">
-             
-                <button
-                  type="submit"
-                  className="w-full py-3 font-bold text-2xl bg-[#3f67bc] text-white rounded-md shadow-lg disabled:opacity-70"
-                  disabled={loading || cart.length === 0 || !isWithinRange}
-                >
-                  {loading ? <Spin size="small" /> : "Pay with Stripe"}
-                </button>
+                <div className="text-white">
+                  <button
+                    type="submit"
+                    className="w-full py-3 font-bold text-2xl bg-[#3f67bc] text-white rounded-md shadow-lg disabled:opacity-70"
+                    disabled={loading || cart.length === 0 || !isWithinRange}
+                  >
+                    {loading ? <Spin size="small" /> : "Pay with Stripe"}
+                  </button>
+                </div>
               </Form.Item>
             </Form>
-
-        
-            <button
-              onClick={() => handleCashOndelivary(form.getFieldsValue())}
-              className="w-full mt-2 text-xs py-3 font-bold bg-[#3f67bc] text-white rounded-md shadow-lg disabled:opacity-70"
-              disabled={cashLoading || cart.length === 0 || !isWithinRange}
-            >
-              {cashLoading ? <Spin size="small" /> : "Cash On Delivery"}
-            </button>
+            <div className="text-white">
+              <button
+                onClick={() => handleCashOndelivary(form.getFieldsValue())}
+                className="w-full mt-2 text-xs py-3 font-bold bg-[#3f67bc] text-white rounded-md shadow-lg disabled:opacity-70"
+                disabled={cashLoading || cart.length === 0 || !isWithinRange}
+              >
+                {cashLoading ? <Spin size="small" /> : "Cash On Delivery"}
+              </button>
+            </div>
           </div>
         </ConfigProvider>
       </div>
