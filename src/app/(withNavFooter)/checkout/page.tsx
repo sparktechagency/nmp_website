@@ -7,6 +7,8 @@ import type { FormProps } from "antd";
 import {
   useCashOnDelivaryMutation,
   useCreateOrderMutation,
+  useGetLocationApiQuery,
+  useGetNearbyLocationQuery,
   useGetShippingCostQuery,
 } from "@/redux/features/ordersApi/ordersApi";
 import toast from "react-hot-toast";
@@ -130,6 +132,8 @@ const CheckoutPage: React.FC = () => {
   const [createOrder] = useCreateOrderMutation();
   const [cashOnDelivary] = useCashOnDelivaryMutation();
   const router = useRouter();
+  const [distance, setDistance] = useState<number | null>(null);
+  const [isWithinRange, setIsWithinRange] = useState(true);
 
   // ✅ For coordinates display
   const [coordinates, setCoordinates] = useState<{
@@ -141,6 +145,13 @@ const CheckoutPage: React.FC = () => {
   });
   console.log("coordinates", coordinates);
   const [geoLoading, setGeoLoading] = useState(false);
+  const { data: ownerLocation } = useGetLocationApiQuery({});
+  const { data: customerLocation } = useGetNearbyLocationQuery({
+    long: coordinates?.lon,
+    lat: coordinates?.lat,
+  });
+  // console.log(ownerLocation?.data);
+  console.log("customerLocation,", customerLocation);
 
   // Load cart and decode token once on mount
   useEffect(() => {
@@ -178,6 +189,7 @@ const CheckoutPage: React.FC = () => {
   const total = subTotal + shippingCost;
 
   // ✅ Fetch coordinates automatically when streetAddress changes
+  // handle address input change
   const handleAddressChange = async (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -187,118 +199,154 @@ const CheckoutPage: React.FC = () => {
       setCoordinates({ lat: null, lon: null });
       return;
     }
-
     setGeoLoading(true);
-    const result = await getManhattanCoordinates(value);
-    setCoordinates(result);
+    const result = await getCoordinates(value);
+    setCoordinates({
+      lat: result.lat?.toString() ?? null,
+      lon: result.lon?.toString() ?? null,
+    });
     setGeoLoading(false);
   };
 
-// 🔹 Fetch coordinates from OpenStreetMap (Nominatim)
-const getCoordinates = async (address: string) => {
-  try {
-    // Clean up any trailing comma/spaces
-    const cleanAddress = address.trim().replace(/,+$/, "");
-    // Append Manhattan info
-    const fullAddress = `${cleanAddress}, Manhattan, NY 10016`;
-    const encodedAddress = encodeURIComponent(fullAddress);
-
-    const res = await fetch(
-      `https://nominatim.openstreetmap.org/search?q=${encodedAddress}&format=json&limit=1`,
-      {
-        headers: {
-          "User-Agent": "my-checkout-app/1.0 (example@email.com)", // required header
-        },
+  // 🔹 Fetch coordinates from OpenStreetMap (Nominatim)
+  // Geocoding function (forward)
+  async function getCoordinates(address: string) {
+    try {
+      const cleanAddress = address.trim().replace(/,+$/, "");
+      const encoded = encodeURIComponent(cleanAddress);
+      const url = `https://nominatim.openstreetmap.org/search?q=${encoded}&format=json&limit=1`;
+      const res = await fetch(url, {
+        headers: { "User-Agent": "MyApp/1.0 (example@domain.com)" },
+      });
+      const data = await res.json();
+      if (Array.isArray(data) && data.length > 0) {
+        return {
+          lat: parseFloat(data[0].lat),
+          lon: parseFloat(data[0].lon),
+        };
       }
-    );
-
-    const data = await res.json();
-
-    if (Array.isArray(data) && data.length > 0) {
-      const { lat, lon } = data[0];
-      return {
-        lat: parseFloat(lat),
-        lon: parseFloat(lon),
-      };
-    } else {
-      console.warn("No coordinates found for:", fullAddress);
+      return { lat: null, lon: null };
+    } catch (err) {
+      console.error("Geocoding error:", err);
       return { lat: null, lon: null };
     }
-  } catch (err) {
-    console.error("Error fetching coordinates:", err);
-    return { lat: null, lon: null };
   }
-};
 
+  // ✅ Haversine formula to calculate distance between two lat/lon points
+  function calculateDistance(
+    lat1: number,
+    lon1: number,
+    lat2: number,
+    lon2: number
+  ) {
+    const toRad = (value: number) => (value * Math.PI) / 180;
+    const R = 6371; // Earth's radius in km
+    const dLat = toRad(lat2 - lat1);
+    const dLon = toRad(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(toRad(lat1)) *
+        Math.cos(toRad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distanceInKm = R * c;
+    return distanceInKm * 0.621371; // ✅ return distance in miles
+  }
 
-
-const onFinish: FormProps<ContactFormValues>["onFinish"] = async (values) => {
-  try {
-    setLoading(true);
-
-    const cartProducts = buildCartProducts(cart);
-    if (cartProducts.length === 0) {
-      toast.error("Your cart is empty or quantities are invalid.");
+  // 🔍 Check distance whenever coordinates or ownerLocation change
+  // 🔍 Check distance whenever coordinates or ownerLocation change
+  // Distance check effect
+  useEffect(() => {
+    // if no valid coordinates then reset distance
+    if (!coordinates.lat || !coordinates.lon) {
+      setDistance(null);
+      setIsWithinRange(true);
       return;
     }
 
-    const userData = tokenUser
-      ? {
-          fullName: (tokenUser.fullName || "").trim(),
-          email: (tokenUser.email || "").trim(),
-          phone: (values.phone || "").trim(),
-        }
-      : {
-          fullName: (values.fullName || "").trim(),
-          email: (values.email || "").trim(),
-          phone: values.phone,
-        };
-
-    if (!userData.fullName || !userData.email) {
-      toast.error("Please provide your full name and email.");
-      return;
+    if (ownerLocation?.data?.latitude && ownerLocation?.data?.longitude) {
+      const dist = calculateDistance(
+        Number(ownerLocation.data.latitude),
+        Number(ownerLocation.data.longitude),
+        Number(coordinates.lat),
+        Number(coordinates.lon)
+      );
+      console.log("Distance check:", {
+        owner: ownerLocation.data,
+        customer: coordinates,
+        dist,
+      });
+      setDistance(dist);
+      setIsWithinRange(dist <= 5);
     }
+  }, [ownerLocation, coordinates]);
 
-    // ✅ Fetch coordinates before sending payload
- const cleanStreet = values.streetAddress.trim().replace(/,+$/, "");
-const coordinates = await getCoordinates(cleanStreet);
-console.log("Coordinates:", coordinates);
+  const onFinish: FormProps<ContactFormValues>["onFinish"] = async (values) => {
+    try {
+      setLoading(true);
 
+      const cartProducts = buildCartProducts(cart);
+      if (cartProducts.length === 0) {
+        toast.error("Your cart is empty or quantities are invalid.");
+        return;
+      }
 
-    const payload = {
-      userData,
-      shippingAddress: {
-        streetAddress: values.streetAddress,
-        city: "Manhattan",
-        state: "NY",
-        zipCode: "10016",
-        latitude: coordinates.lat,
-        longitude: coordinates.lon,
-      },
-      cartProducts,
-    };
+      const userData = tokenUser
+        ? {
+            fullName: (tokenUser.fullName || "").trim(),
+            email: (tokenUser.email || "").trim(),
+            phone: (values.phone || "").trim(),
+          }
+        : {
+            fullName: (values.fullName || "").trim(),
+            email: (values.email || "").trim(),
+            phone: values.phone,
+          };
 
-    console.log("payload", payload);
+      if (!userData.fullName || !userData.email) {
+        toast.error("Please provide your full name and email.");
+        return;
+      }
 
-    // --- TEMP: You can test until coords are confirmed ---
-    // return 0;
+      // ✅ Fetch coordinates before sending payload
+      const cleanStreet = values.streetAddress.trim().replace(/,+$/, "");
+      const coordinates = await getCoordinates(cleanStreet);
+      console.log("Coordinates:", coordinates);
 
-    const res = await createOrder(payload).unwrap();
+      const payload = {
+        userData,
+        shippingAddress: {
+          streetAddress: values.streetAddress,
+          city: "Manhattan",
+          state: "NY",
+          zipCode: "10016",
+          latitude: coordinates.lat,
+          longitude: coordinates.lon,
+        },
+        cartProducts,
+      };
 
-    if (res?.success && res?.data?.url) {
-      toast.success(res?.message || "Redirecting to payment…");
-      window.location.href = res.data.url;
-      localStorage.removeItem("cart");
-    } else {
-      toast.error(res?.message || "Payment link not found!");
+      console.log("payload", payload);
+
+      // --- TEMP: You can test until coords are confirmed ---
+      // return 0;
+
+      const res = await createOrder(payload).unwrap();
+
+      if (res?.success && res?.data?.url) {
+        toast.success(res?.message || "Redirecting to payment…");
+        window.location.href = res.data.url;
+        localStorage.removeItem("cart");
+      } else {
+        toast.error(res?.message || "Payment link not found!");
+      }
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
-  } catch (error: any) {
-    toast.error(error?.data?.message || "Something went wrong");
-  } finally {
-    setLoading(false);
-  }
-};
-
+  };
 
   const handleCashOndelivary = async (values: ContactFormValues) => {
     try {
@@ -473,6 +521,44 @@ console.log("Coordinates:", coordinates);
               )}
 
               {/* Street Address Field with Live Coordinates */}
+              {/* <Form.Item
+                name="streetAddress"
+                label={<p className="text-md">Street Address</p>}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter your Street Address",
+                  },
+                ]}
+              >
+                <Input
+                  placeholder="e.g. Building 25, Room 304, 123 Lexington Ave"
+                  onChange={handleAddressChange}
+                />
+              </Form.Item> */}
+
+              {/* Show Coordinates */}
+              {/* {geoLoading ? (
+                <p className="text-xs text-blue-500 mb-3">
+                  Fetching coordinates...
+                </p>
+              ) : coordinates.lat ? (
+                <p className="text-xs text-green-600 mb-3">
+                  📍 Latitude: {coordinates.lat}, Longitude: {coordinates.lon}
+                </p>
+              ) : null}
+              {distance !== null && (
+                <p
+                  className={`text-sm mb-3 ${
+                    isWithinRange ? "text-green-600" : "text-red-500"
+                  }`}
+                >
+                  🚗 Distance: {distance.toFixed(2)} miles{" "}
+                  {!isWithinRange && "(Out of delivery range)"}
+                </p>
+              )} */}
+
+              {/* UI portion where you show status under address field */}
               <Form.Item
                 name="streetAddress"
                 label={<p className="text-md">Street Address</p>}
@@ -489,16 +575,37 @@ console.log("Coordinates:", coordinates);
                 />
               </Form.Item>
 
-              {/* Show Coordinates */}
-              {geoLoading ? (
+              {geoLoading && (
                 <p className="text-xs text-blue-500 mb-3">
-                  Fetching coordinates...
+                  Fetching coordinates…
                 </p>
-              ) : coordinates.lat ? (
-                <p className="text-xs text-green-600 mb-3">
-                  📍 Latitude: {coordinates.lat}, Longitude: {coordinates.lon}
-                </p>
-              ) : null}
+              )}
+
+              {!geoLoading &&
+                coordinates.lat === null &&
+                form.getFieldValue("streetAddress")?.trim() && (
+                  <p className="text-xs text-red-500 mb-3">
+                    Could not locate this address. Please check spelling or try
+                    again.
+                  </p>
+                )}
+
+              {coordinates.lat && distance !== null && (
+                <div className="mb-3">
+                  <p
+                    className={`text-sm ${
+                      isWithinRange ? "text-green-600" : "text-red-500"
+                    }`}
+                  >
+                    🚗 Distance: {distance.toFixed(2)} miles
+                  </p>
+                  {!isWithinRange && (
+                    <p className="text-xs text-red-500 font-medium">
+                      Sorry, this address is outside our 5-mile delivery range.
+                    </p>
+                  )}
+                </div>
+              )}
 
               <Form.Item
                 name="phone"
@@ -522,20 +629,34 @@ console.log("Coordinates:", coordinates);
               </Form.Item>
 
               <Form.Item className="text-center">
-                <button
+                {/* <button
                   type="submit"
                   className="w-full py-3 font-bold text-2xl bg-[#3f67bc] text-white rounded-md shadow-lg disabled:opacity-70"
                   disabled={loading || cart.length === 0}
+                >
+                  {loading ? <Spin size="small" /> : "Pay with Stripe"}
+                </button> */}
+                <button
+                  type="submit"
+                  className="w-full py-3 font-bold text-2xl bg-[#3f67bc] text-white rounded-md shadow-lg disabled:opacity-70"
+                  disabled={loading || cart.length === 0 || !isWithinRange}
                 >
                   {loading ? <Spin size="small" /> : "Pay with Stripe"}
                 </button>
               </Form.Item>
             </Form>
 
-            <button
+            {/* <button
               onClick={() => handleCashOndelivary(form.getFieldsValue())}
               className="w-full mt-2 text-xs py-3 font-bold bg-[#3f67bc] text-white rounded-md shadow-lg disabled:opacity-70"
               disabled={cashLoading || cart.length === 0}
+            >
+              {cashLoading ? <Spin size="small" /> : "Cash On Delivery"}
+            </button> */}
+            <button
+              onClick={() => handleCashOndelivary(form.getFieldsValue())}
+              className="w-full mt-2 text-xs py-3 font-bold bg-[#3f67bc] text-white rounded-md shadow-lg disabled:opacity-70"
+              disabled={cashLoading || cart.length === 0 || !isWithinRange}
             >
               {cashLoading ? <Spin size="small" /> : "Cash On Delivery"}
             </button>

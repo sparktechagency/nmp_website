@@ -39,6 +39,22 @@ const OrdersApi = baseApi.injectEndpoints({
       }),
       providesTags: ["Orders"],
     }),
+
+    // Location Api:
+    getLocationApi: builder.query({
+      query: () => ({
+        url: "/information/get-information",
+        method: "GET",
+      }),
+      providesTags: ["Orders"],
+    }),
+    getNearbyLocation: builder.query({
+      query: ({ long, lat }) => ({
+        url: `/information/check-nearby-location?longitude=${long}&latitude=${lat}`,
+        method: "GET",
+      }),
+      providesTags: ["Orders"],
+    }),
   }),
 });
 export const {
@@ -46,5 +62,7 @@ export const {
   useCreateOrderMutation,
   useVerifySessionQuery,
   useGetShippingCostQuery,
-  useCashOnDelivaryMutation
+  useCashOnDelivaryMutation,
+  useGetLocationApiQuery,
+  useGetNearbyLocationQuery,
 } = OrdersApi;
