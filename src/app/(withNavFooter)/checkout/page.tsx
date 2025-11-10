@@ -319,7 +319,7 @@ const CheckoutPage: React.FC = () => {
           streetAddress: values.streetAddress,
           city: "Manhattan",
           state: "NY",
-          zipCode: "10016",
+          zipCode: values.zipCode,
           latitude: coordinates.lat,
           longitude: coordinates.lon,
         },
@@ -517,7 +517,15 @@ const CheckoutPage: React.FC = () => {
                   </Form.Item>
                 </>
               )}
-
+              <Form.Item
+                name="phone"
+                label={<p className="text-md">Phone Number</p>}
+                rules={[
+                  { required: true, message: "Please enter your Phone Number" },
+                ]}
+              >
+                <Input placeholder="Phone Number" />
+              </Form.Item>
               {/* UI portion where you show status under address field */}
               <Form.Item
                 name="streetAddress"
@@ -530,7 +538,7 @@ const CheckoutPage: React.FC = () => {
                 ]}
               >
                 <Input
-                  placeholder="e.g. Building 25, Room 304, 123 Lexington Ave"
+                  placeholder="e.g. 200 Central Park West"
                   onChange={handleAddressChange}
                 />
               </Form.Item>
@@ -567,7 +575,7 @@ const CheckoutPage: React.FC = () => {
                 </div>
               )}
 
-              <Form.Item
+              {/* <Form.Item
                 name="phone"
                 label={<p className="text-md">Phone Number</p>}
                 rules={[
@@ -575,7 +583,7 @@ const CheckoutPage: React.FC = () => {
                 ]}
               >
                 <Input placeholder="Phone Number" />
-              </Form.Item>
+              </Form.Item> */}
 
               {/* City, State, ZIP fixed */}
               <Form.Item name="city" label="City" initialValue="Manhattan">
@@ -584,8 +592,18 @@ const CheckoutPage: React.FC = () => {
               <Form.Item name="state" label="State" initialValue="NY">
                 <Input disabled />
               </Form.Item>
-              <Form.Item name="zipCode" label="Zip Code" initialValue="10016">
-                <Input disabled />
+              <Form.Item
+                name="zipCode"
+                label="Zip Code"
+                rules={[
+                  { required: true, message: "Please enter your ZIP code" },
+                  {
+                    pattern: /^\d{5}$/,
+                    message: "ZIP code must be exactly 5 digits",
+                  },
+                ]}
+              >
+                <Input placeholder="e.g. 10016" maxLength={5} />
               </Form.Item>
 
               <Form.Item className="text-center">
