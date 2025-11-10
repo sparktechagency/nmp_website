@@ -15,7 +15,7 @@ import toast from "react-hot-toast";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-type Mode = "guest" | "logged-in"; // used only for UI toggle
+type Mode = "guest" | "logged-in"; 
 
 interface CartItem {
   _id: string;
@@ -42,30 +42,30 @@ interface ContactFormValues {
 }
 
 // ✅ Function to get coordinates using Nominatim API
-async function getManhattanCoordinates(addressPart: string) {
-  try {
-    const fullAddress = `${addressPart}, Manhattan, NY 10016`;
-    const encoded = encodeURIComponent(fullAddress);
-    const url = `https://nominatim.openstreetmap.org/search?q=${encoded}&format=json&limit=1`;
+// async function getManhattanCoordinates(addressPart: string) {
+//   try {
+//     const fullAddress = `${addressPart}, Manhattan, NY 10016`;
+//     const encoded = encodeURIComponent(fullAddress);
+//     const url = `https://nominatim.openstreetmap.org/search?q=${encoded}&format=json&limit=1`;
 
-    const res = await fetch(url, {
-      headers: { "User-Agent": "MyApp/1.0 (example@domain.com)" },
-    });
+//     const res = await fetch(url, {
+//       headers: { "User-Agent": "MyApp/1.0 (example@domain.com)" },
+//     });
 
-    const data = await res.json();
-    if (data.length > 0) {
-      return {
-        lat: data[0].lat,
-        lon: data[0].lon,
-      };
-    } else {
-      return { lat: null, lon: null };
-    }
-  } catch (err) {
-    console.error("Geocoding error:", err);
-    return { lat: null, lon: null };
-  }
-}
+//     const data = await res.json();
+//     if (data.length > 0) {
+//       return {
+//         lat: data[0].lat,
+//         lon: data[0].lon,
+//       };
+//     } else {
+//       return { lat: null, lon: null };
+//     }
+//   } catch (err) {
+//     console.error("Geocoding error:", err);
+//     return { lat: null, lon: null };
+//   }
+// }
 
 const safeParse = <T,>(val: string | null, fallback: T): T => {
   try {
@@ -135,7 +135,7 @@ const CheckoutPage: React.FC = () => {
   const [distance, setDistance] = useState<number | null>(null);
   const [isWithinRange, setIsWithinRange] = useState(true);
 
-  // ✅ For coordinates display
+  // For coordinates display
   const [coordinates, setCoordinates] = useState<{
     lat: string | null;
     lon: string | null;
@@ -188,7 +188,7 @@ const CheckoutPage: React.FC = () => {
   const shippingCost = Number(shippingData?.data?.shippingCost ?? 0);
   const total = subTotal + shippingCost;
 
-  // ✅ Fetch coordinates automatically when streetAddress changes
+  // Fetch coordinates automatically when streetAddress changes
   // handle address input change
   const handleAddressChange = async (
     e: React.ChangeEvent<HTMLInputElement>
@@ -208,7 +208,7 @@ const CheckoutPage: React.FC = () => {
     setGeoLoading(false);
   };
 
-  // 🔹 Fetch coordinates from OpenStreetMap (Nominatim)
+  //  Fetch coordinates from OpenStreetMap (Nominatim)
   // Geocoding function (forward)
   async function getCoordinates(address: string) {
     try {
@@ -232,7 +232,7 @@ const CheckoutPage: React.FC = () => {
     }
   }
 
-  // ✅ Haversine formula to calculate distance between two lat/lon points
+  //  Haversine formula to calculate distance between two lat/lon points
   function calculateDistance(
     lat1: number,
     lon1: number,
@@ -251,10 +251,9 @@ const CheckoutPage: React.FC = () => {
         Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distanceInKm = R * c;
-    return distanceInKm * 0.621371; // ✅ return distance in miles
+    return distanceInKm * 0.621371; // return distance in miles
   }
 
-  // 🔍 Check distance whenever coordinates or ownerLocation change
   // 🔍 Check distance whenever coordinates or ownerLocation change
   // Distance check effect
   useEffect(() => {
@@ -309,7 +308,7 @@ const CheckoutPage: React.FC = () => {
         return;
       }
 
-      // ✅ Fetch coordinates before sending payload
+      // Fetch coordinates before sending payload
       const cleanStreet = values.streetAddress.trim().replace(/,+$/, "");
       const coordinates = await getCoordinates(cleanStreet);
       console.log("Coordinates:", coordinates);
@@ -329,7 +328,7 @@ const CheckoutPage: React.FC = () => {
 
       console.log("payload", payload);
 
-      // --- TEMP: You can test until coords are confirmed ---
+  
       // return 0;
 
       const res = await createOrder(payload).unwrap();
@@ -520,44 +519,7 @@ const CheckoutPage: React.FC = () => {
                 </>
               )}
 
-              {/* Street Address Field with Live Coordinates */}
-              {/* <Form.Item
-                name="streetAddress"
-                label={<p className="text-md">Street Address</p>}
-                rules={[
-                  {
-                    required: true,
-                    message: "Please enter your Street Address",
-                  },
-                ]}
-              >
-                <Input
-                  placeholder="e.g. Building 25, Room 304, 123 Lexington Ave"
-                  onChange={handleAddressChange}
-                />
-              </Form.Item> */}
-
-              {/* Show Coordinates */}
-              {/* {geoLoading ? (
-                <p className="text-xs text-blue-500 mb-3">
-                  Fetching coordinates...
-                </p>
-              ) : coordinates.lat ? (
-                <p className="text-xs text-green-600 mb-3">
-                  📍 Latitude: {coordinates.lat}, Longitude: {coordinates.lon}
-                </p>
-              ) : null}
-              {distance !== null && (
-                <p
-                  className={`text-sm mb-3 ${
-                    isWithinRange ? "text-green-600" : "text-red-500"
-                  }`}
-                >
-                  🚗 Distance: {distance.toFixed(2)} miles{" "}
-                  {!isWithinRange && "(Out of delivery range)"}
-                </p>
-              )} */}
-
+            
               {/* UI portion where you show status under address field */}
               <Form.Item
                 name="streetAddress"
@@ -629,13 +591,7 @@ const CheckoutPage: React.FC = () => {
               </Form.Item>
 
               <Form.Item className="text-center">
-                {/* <button
-                  type="submit"
-                  className="w-full py-3 font-bold text-2xl bg-[#3f67bc] text-white rounded-md shadow-lg disabled:opacity-70"
-                  disabled={loading || cart.length === 0}
-                >
-                  {loading ? <Spin size="small" /> : "Pay with Stripe"}
-                </button> */}
+             
                 <button
                   type="submit"
                   className="w-full py-3 font-bold text-2xl bg-[#3f67bc] text-white rounded-md shadow-lg disabled:opacity-70"
@@ -646,13 +602,7 @@ const CheckoutPage: React.FC = () => {
               </Form.Item>
             </Form>
 
-            {/* <button
-              onClick={() => handleCashOndelivary(form.getFieldsValue())}
-              className="w-full mt-2 text-xs py-3 font-bold bg-[#3f67bc] text-white rounded-md shadow-lg disabled:opacity-70"
-              disabled={cashLoading || cart.length === 0}
-            >
-              {cashLoading ? <Spin size="small" /> : "Cash On Delivery"}
-            </button> */}
+        
             <button
               onClick={() => handleCashOndelivary(form.getFieldsValue())}
               className="w-full mt-2 text-xs py-3 font-bold bg-[#3f67bc] text-white rounded-md shadow-lg disabled:opacity-70"
