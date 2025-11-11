@@ -150,7 +150,7 @@ const CheckoutPage: React.FC = () => {
     long: coordinates?.lon,
     lat: coordinates?.lat,
   });
-  // console.log(ownerLocation?.data);
+  console.log(ownerLocation?.data);
   console.log("customerLocation,", customerLocation);
 
   // Load cart and decode token once on mount
@@ -404,6 +404,31 @@ const CheckoutPage: React.FC = () => {
     }
   };
 
+  async function getAddressFromLatLon(lat: number, lon: number) {
+    try {
+      const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`;
+      const res = await fetch(url, {
+        headers: { "User-Agent": "MyApp/1.0 (example@domain.com)" },
+      });
+      const data = await res.json();
+      return data.display_name || "Unknown address";
+    } catch (err) {
+      console.error("Reverse geocoding error:", err);
+      return "Address not found";
+    }
+  }
+
+  const [shopAddress, setShopAddress] = useState<string>("");
+
+  useEffect(() => {
+    if (ownerLocation?.data?.latitude && ownerLocation?.data?.longitude) {
+      getAddressFromLatLon(
+        Number(ownerLocation.data.latitude),
+        Number(ownerLocation.data.longitude)
+      ).then((addr) => setShopAddress(addr));
+    }
+  }, [ownerLocation]);
+
   return (
     <div className="container mx-auto my-12">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-28">
@@ -527,6 +552,7 @@ const CheckoutPage: React.FC = () => {
                 <Input placeholder="Phone Number" />
               </Form.Item>
               {/* UI portion where you show status under address field */}
+
               <Form.Item
                 name="streetAddress"
                 label={<p className="text-md">Street Address</p>}
@@ -558,22 +584,46 @@ const CheckoutPage: React.FC = () => {
                   </p>
                 )}
 
-              {coordinates.lat && distance !== null && (
-                <div className="mb-3">
+              <div className="my-2 space-y-1">
+                <p className="text-sm text-gray-700">
+                  🏬 <strong>Shop Address:</strong>{" "}
+                  {ownerLocation?.data?.address
+                    ? ownerLocation?.data?.address
+                    : "Loading address..."}
+                </p>
+
+                {/* {ownerLocation?.data?.latitude &&
+                  ownerLocation?.data?.longitude && (
+                    <p className="text-xs text-gray-500">
+                      (Lat: {ownerLocation.data.latitude}, Lon:{" "}
+                      {ownerLocation.data.longitude})
+                    </p>
+                  )} */}
+
+                {distance !== null && (
                   <p
                     className={`text-sm ${
                       isWithinRange ? "text-green-600" : "text-red-500"
                     }`}
                   >
-                    🚗 Distance: {distance.toFixed(2)} miles
+                    🚗 Distance from shop: {distance.toFixed(2)} miles
                   </p>
-                  {!isWithinRange && (
-                    <p className="text-xs text-red-500 font-medium">
-                      Sorry, this address is outside our 5-mile delivery range.
-                    </p>
-                  )}
-                </div>
-              )}
+                )}
+
+                {distance !== null && (
+                  <p
+                    className={`text-xs font-medium ${
+                      isWithinRange ? "text-green-600" : "text-red-500"
+                    }`}
+                  >
+                    {isWithinRange
+                      ? `✅ You are within the ${distance.toFixed(
+                          2
+                        )} mile range.`
+                      : `❌ Please order within the 5-mile range.`}
+                  </p>
+                )}
+              </div>
 
               {/* <Form.Item
                 name="phone"
