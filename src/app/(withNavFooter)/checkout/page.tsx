@@ -430,7 +430,7 @@ const CheckoutPage: React.FC = () => {
   // }, [ownerLocation]);
 
   return (
-    <div className="container mx-auto my-12">
+    <div className="container mx-auto my-12 px-2 md:px-0">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-28">
         {/* ===== Left: Order Summary ===== */}
         <div>
