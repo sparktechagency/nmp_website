@@ -62,7 +62,7 @@ const ConatctUs = () => {
                   Contact Us
                 </h2>
                 <p className="text-neutral-400 lg:text-lg font-bold">
-                  Feel Free to contact us
+                  Feel free to contact us
                 </p>
               </div>
 
