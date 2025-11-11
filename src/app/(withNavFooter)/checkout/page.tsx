@@ -83,7 +83,7 @@ const getCartFromStorage = (): CartItem[] =>
 const buildCartProducts = (items: CartItem[]) =>
   items
     .filter((i) => i && i._id && Number.isFinite(i.quantity) && i.quantity > 0)
-    .map((i) => ({ productId: i._id, quantity: i.quantity }));
+    .map((i) => ({ productId: i._id, quantity: i.quantity, price: i.price }));
 
 const decodeJwtPayload = (token: string): Record<string, unknown> | null => {
   try {
@@ -663,7 +663,23 @@ const CheckoutPage: React.FC = () => {
                     className="w-full py-3 font-bold text-2xl bg-[#3f67bc] text-white rounded-md shadow-lg disabled:opacity-70"
                     disabled={loading || cart.length === 0 || !isWithinRange}
                   >
-                    {loading ? <Spin size="small" /> : "Pay with Stripe"}
+                    {loading ? (
+                      <ConfigProvider
+                        theme={{
+                          components: {
+                            Spin: {
+                              colorPrimary: "rgb(255,255,255)",
+                            },
+                          },
+                        }}
+                      >
+                        <Spin size="small" />
+                      </ConfigProvider>
+                    ) : (
+                      "Pay with Stripe"
+                    )}
+
+                    {/* {loading ? <Spin size="small" /> : "Pay with Stripe"} */}
                   </button>
                 </div>
               </Form.Item>
@@ -674,7 +690,21 @@ const CheckoutPage: React.FC = () => {
                 className="w-full mt-2 text-xs py-3 font-bold bg-[#3f67bc] text-white rounded-md shadow-lg disabled:opacity-70"
                 disabled={cashLoading || cart.length === 0 || !isWithinRange}
               >
-                {cashLoading ? <Spin size="small" /> : "Cash On Delivery"}
+                {cashLoading ? (
+                  <ConfigProvider
+                    theme={{
+                      components: {
+                        Spin: {
+                          colorPrimary: "rgb(255,255,255)",
+                        },
+                      },
+                    }}
+                  >
+                    <Spin size="small" />
+                  </ConfigProvider>
+                ) : (
+                  "Cash On Delivery"
+                )}
               </button>
             </div>
           </div>
