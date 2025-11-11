@@ -404,30 +404,30 @@ const CheckoutPage: React.FC = () => {
     }
   };
 
-  async function getAddressFromLatLon(lat: number, lon: number) {
-    try {
-      const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`;
-      const res = await fetch(url, {
-        headers: { "User-Agent": "MyApp/1.0 (example@domain.com)" },
-      });
-      const data = await res.json();
-      return data.display_name || "Unknown address";
-    } catch (err) {
-      console.error("Reverse geocoding error:", err);
-      return "Address not found";
-    }
-  }
+  // async function getAddressFromLatLon(lat: number, lon: number) {
+  //   try {
+  //     const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`;
+  //     const res = await fetch(url, {
+  //       headers: { "User-Agent": "MyApp/1.0 (example@domain.com)" },
+  //     });
+  //     const data = await res.json();
+  //     return data.display_name || "Unknown address";
+  //   } catch (err) {
+  //     console.error("Reverse geocoding error:", err);
+  //     return "Address not found";
+  //   }
+  // }
 
-  const [shopAddress, setShopAddress] = useState<string>("");
+  // const [shopAddress, setShopAddress] = useState<string>("");
 
-  useEffect(() => {
-    if (ownerLocation?.data?.latitude && ownerLocation?.data?.longitude) {
-      getAddressFromLatLon(
-        Number(ownerLocation.data.latitude),
-        Number(ownerLocation.data.longitude)
-      ).then((addr) => setShopAddress(addr));
-    }
-  }, [ownerLocation]);
+  // useEffect(() => {
+  //   if (ownerLocation?.data?.latitude && ownerLocation?.data?.longitude) {
+  //     getAddressFromLatLon(
+  //       Number(ownerLocation.data.latitude),
+  //       Number(ownerLocation.data.longitude)
+  //     ).then((addr) => setShopAddress(addr));
+  //   }
+  // }, [ownerLocation]);
 
   return (
     <div className="container mx-auto my-12">
