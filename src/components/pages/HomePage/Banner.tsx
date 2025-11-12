@@ -29,7 +29,7 @@ const Banner = () => {
         src={bannerData?.data?.heroImg}
         alt="banner"
         fill
-        className="object-cover brightness-75"
+        className="w-full object-cover "
         priority
       />
 

@@ -620,7 +620,7 @@ const CheckoutPage: React.FC = () => {
                       ? `✅ You are within the ${distance.toFixed(
                           2
                         )} mile range.`
-                      : `❌ Please order within the 5-mile range.`}
+                      : `❌ Please order within the ${ownerLocation?.data?.distance} mile range.`}
                   </p>
                 )}
               </div>
