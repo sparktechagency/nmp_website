@@ -519,11 +519,18 @@ const CheckoutPage: React.FC = () => {
                 <>
                   <Form.Item
                     name="fullName"
-                    label={<p className="text-md">Full Name</p>}
+                    label="Full Name"
+                    labelCol={{
+                      style: {
+                        fontSize: "16px",
+                        fontWeight: 500,
+                        color: "#444",
+                      },
+                    }}
                     rules={[
                       {
                         required: true,
-                        message: "Please enter your full name",
+                        message: "Please enter your Full Name",
                       },
                     ]}
                   >
@@ -532,7 +539,14 @@ const CheckoutPage: React.FC = () => {
 
                   <Form.Item
                     name="email"
-                    label={<p className="text-md">Email</p>}
+                    label="Email"
+                    labelCol={{
+                      style: {
+                        fontSize: "16px",
+                        fontWeight: 500,
+                        color: "#444",
+                      },
+                    }}
                     rules={[
                       { required: true, message: "Please enter your email" },
                       { type: "email", message: "Enter a valid email" },
@@ -542,7 +556,7 @@ const CheckoutPage: React.FC = () => {
                   </Form.Item>
                 </>
               )}
-              <Form.Item
+              {/* <Form.Item
                 name="phone"
                 label={<p className="text-md">Phone Number</p>}
                 rules={[
@@ -550,12 +564,29 @@ const CheckoutPage: React.FC = () => {
                 ]}
               >
                 <Input placeholder="Phone Number" />
+              </Form.Item> */}
+
+              <Form.Item
+                name="phone"
+                label="Phone Number"
+                labelCol={{
+                  style: { fontSize: "16px", fontWeight: 500, color: "#444" },
+                }}
+                rules={[
+                  { required: true, message: "Please enter your phone number" },
+                ]}
+              >
+                <Input placeholder="Phone Number" />
               </Form.Item>
+
               {/* UI portion where you show status under address field */}
 
               <Form.Item
                 name="streetAddress"
-                label={<p className="text-md">Street Address</p>}
+                label="Street Address"
+                labelCol={{
+                  style: { fontSize: "16px", fontWeight: 500, color: "#444" },
+                }}
                 rules={[
                   {
                     required: true,
