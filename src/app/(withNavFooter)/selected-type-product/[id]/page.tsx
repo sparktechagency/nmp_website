@@ -83,16 +83,7 @@ console.log("seleceted categories,",selectedCategories.join(','))
 console.log("seleceted selectedFlavours,",selectedFlavours)
 console.log("seleceted selectedBrands,",selectedBrands)
 
-  // Fetch product data based on the current filters
-  // const { data: productsData, isLoading } = useGetProductsQuery({
-  //   page: currentPage,
-  //   limit: pageSize,
-  //   searchTerm: searchText,
-  //   typedId: "691410362c0a671750de3dbf",
-  //   categoryId: "691410612c0a671750de3dd8", 
-  //   flavorId: selectedFlavours.join(','), 
-  //   brandId: selectedBrands.join(','), 
-  // });
+
   const { data: productsData, isLoading } = useGetProductsQuery({
     page: currentPage,
     limit: pageSize,
